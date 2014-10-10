@@ -11,4 +11,4 @@ Theorem: "Neorientovany graf G ma eulerovsky tah, prave kdyz je G souvisly a poc
 Corollary: "Orientovany graf G ma eulerovsky"
 
 Stupen  - pocet incidentnich vrcholu - u neorientovaneho grafu
-        - u orientovaneho se berou 2 stupne: -vystupni stupen a vstupni stupen MADAFAKAAAA
+        - u orientovaneho se berou 2 stupne: -vystupni stupen a vstupni stupen
