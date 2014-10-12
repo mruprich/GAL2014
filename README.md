@@ -21,3 +21,14 @@ Corollary: "Orientovany graf G ma eulerovsky tah, prave kdyz je G souvisly a poc
 
 Stupen  - pocet incidentnich vrcholu - u neorientovaneho grafu
         - u orientovaneho se berou 2 stupne: -vystupni stupen a vstupni stupen
+
+
+
+
+
+Postup pro GIT:
+
+1. Vzdy pred zacatkem prace dat git pull
+2. Po editaci nekterych souboru dat git commit -am "nejaka zprava o commitu"
+3. nakonec po 2. dat git push
+
