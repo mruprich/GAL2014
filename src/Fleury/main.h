@@ -4,7 +4,12 @@
 #include <QApplication>
 #include <string>
 #include <iostream>
+#include <iterator>
+#include <algorithm>
+#include <fstream>
 
+#include <boost/graph/graphml.hpp>
+#include <boost/graph/adjacency_list.hpp>
 /*
 Edge structure with all needed information
 To do

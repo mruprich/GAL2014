@@ -6,8 +6,33 @@ Int main, tak co bycaashom se tu asi tak dozvedeli... mozna to, ze jsme zprovozn
 */
 
 bool checkGraph(){
-    std::cout<<"Graph Check OK."<<std::endl;
-    return true;
+
+    using namespace boost;
+        typedef adjacency_list<vecS, vecS, directedS,property<vertex_name_t,std::string> > BoostGraphType;
+        typedef dynamic_properties BoostDynamicProperties;
+
+        std::string fn = "Test1.graphml";
+        std::ifstream is(fn.c_str());
+        if (!is.is_open())
+        {
+            std::cout << "loading file '" << fn << "'failed." << std::endl;
+            throw "Could not load file.";
+        }
+
+        BoostGraphType g;
+        BoostDynamicProperties dp ;
+        const std::string vn = "vertex_name";
+        dp.property(vn,get(vertex_name,g));
+        read_graphml(is, g, dp);
+/*
+        for (vp = vertices(g); vp.first != vp.second; ++vp.first)
+        {
+            std::cout << "index '" << get(vertex_index,g,*vp.first) << "' ";
+            std::cout << "name '" << get(vertex_name,g,*vp.first) << "'"
+            << std::endl;
+        }
+*/
+        return 0;
 }
 
 int main(int argc, char *argv[])

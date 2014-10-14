@@ -19,3 +19,6 @@ HEADERS  += mainwindow.h \
     main.h
 
 FORMS    += mainwindow.ui
+
+INCLUDEPATH += ../boost_1_56_0/
+LIBS += "-L../boost_1_56_0/"
