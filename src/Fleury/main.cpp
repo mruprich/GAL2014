@@ -6,7 +6,7 @@ Int main, tak co bycaashom se tu asi tak dozvedeli... mozna to, ze jsme zprovozn
 */
 
 bool checkGraph(){
-
+/*
     using namespace boost;
         typedef adjacency_list<vecS, vecS, directedS,property<vertex_name_t,std::string> > BoostGraphType;
         typedef dynamic_properties BoostDynamicProperties;
@@ -23,7 +23,7 @@ bool checkGraph(){
         BoostDynamicProperties dp ;
         const std::string vn = "vertex_name";
         dp.property(vn,get(vertex_name,g));
-        read_graphml(is, g, dp);
+        read_graphml(is, g, dp);*/
 /*
         for (vp = vertices(g); vp.first != vp.second; ++vp.first)
         {
@@ -39,6 +39,8 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     MainWindow w;
+    w.createActions(); //vytvori se akce prirazeny
+
     w.show();
     checkGraph();
     return a.exec();

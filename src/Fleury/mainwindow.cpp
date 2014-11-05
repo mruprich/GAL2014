@@ -12,3 +12,13 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+void MainWindow::actionExit()
+{
+
+}
+
+void MainWindow::createActions()
+{
+    connect();
+}
