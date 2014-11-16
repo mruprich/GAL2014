@@ -5,6 +5,7 @@
  */
 package MainWindow;
 
+
 import com.mxgraph.canvas.mxICanvas;
 import com.mxgraph.io.mxCodec;
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
@@ -319,7 +320,7 @@ public class MainFrame implements MouseListener,MouseWheelListener,KeyListener{
                 return;
             }
             XMLconvertor graphmlToMxgraph = new XMLconvertor(soubor);
-            xml = graphmlToMxgraph.convertLoaded(soubor);
+            xml = graphmlToMxgraph.convertLoaded(soubor);;
     }
      /* Unoriented edges */
      private void applyEdgeDefaults() {
