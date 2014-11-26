@@ -30,6 +30,7 @@ import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import javax.swing.BoxLayout;
 import static java.awt.PageAttributes.ColorType.COLOR;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -67,6 +68,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.JScrollPane;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -88,6 +90,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import java.awt.FlowLayout;
 
 /**
  *
@@ -95,44 +98,150 @@ import org.xml.sax.SAXException;
  */
 public class MainFrame implements MouseListener,MouseWheelListener,KeyListener{
 
+    /*****  "global" variables  *****/
     public int x,y;
     public int vertex_id = 0;
     public String xml;
     File soubor = null;
     public int vertex_num, edge_num = 0;
-    public JTextArea vertex_text = new JTextArea();
-    public JTextArea edge_text = new JTextArea();
+    private boolean edge_style = false; //false = unoriented, true = oriented
+    
+    /*****   swing components *****/
+    public JTextArea vertex_text;
+    public JTextArea edge_text;
     public mxGraphComponent graphComponent;
     public mxGraph graph;
     private JFrame f;
     private JTextArea action_performed;
-    private boolean edge_style = false; //false = unoriented, true = oriented
+    private JScrollPane scroll_area;
+    private JTextArea chart_title;
+    private JPanel mainPanel;
+    private JPanel infoPanel;
+    private JPanel graphPanel;
+    private JPanel controlsPanel;
+    private JPanel buttonPanel;
+    private JPanel startPanel;
+    
+    
     private ArrayList<Object> vertex_array = new ArrayList<Object>();
         
     
     public MainFrame() {
+        
+        /***** Main window *****/
         f = new JFrame();
         f.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.addMouseWheelListener(this);
-        f.setLocation(300, 200);
+        //f.setLocation(300, 200); //neni potreba vzhledem k tomu ze pouzivame MAXIMIZED_BOTH
+        
+                
+        /**********************************************************
+                               Inside Pannels
+         *********************************************************/
+        
+        /***** Pannel for controls inside graph *****/
+        controlsPanel = new JPanel();
+        //controlsPanel.setBorder(new LineBorder(Color.YELLOW));
+        controlsPanel.setLayout(new GridLayout(1, 7));
+        controlsPanel.setPreferredSize(new Dimension(300, 70));
+        
+        /***** Pannel for displying info about graph *****/
+        infoPanel = new JPanel();
+        //infoPanel.setBorder(new LineBorder(Color.CYAN));
+        infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
+        infoPanel.setPreferredSize(new Dimension(100, 270));
+        
+        /***** Panel for buttons *****/
+        buttonPanel = new JPanel();
+        //buttonPanel.setBorder(new LineBorder(Color.BLACK));
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
+        buttonPanel.setPreferredSize(new Dimension(100, 70));
+        
+        /***** Panel for start button *****/
+        startPanel = new JPanel();
+        //startPanel.setBorder(new LineBorder(Color.ORANGE));
+        startPanel.setLayout(new BorderLayout());
+        startPanel.setPreferredSize(new Dimension(100, 70));
+        
+        /********************************************************************
+                                  Main pannels 
+        ********************************************************************/
+        
+        /***** Pannel for graph creation *****/
+        graphPanel = new JPanel();
+        //graphPanel.setBorder(new LineBorder(Color.RED));
+        graphPanel.setLayout(new BorderLayout());
+        graphPanel.add(controlsPanel, BorderLayout.PAGE_END);
+        f.getContentPane().add(BorderLayout.CENTER, graphPanel);
+        
+        /***** Pannel on the right side *****/
+        mainPanel = new JPanel();
+        //mainPanel.setBorder(new LineBorder(Color.BLACK));
+        mainPanel.setLayout(new BorderLayout());
+        mainPanel.setPreferredSize(new Dimension(350,350));
+        f.getContentPane().add(BorderLayout.EAST, mainPanel);
+        
+        mainPanel.add(infoPanel, BorderLayout.PAGE_START);
+        mainPanel.add(buttonPanel, BorderLayout.CENTER);
+        mainPanel.add(startPanel, BorderLayout.PAGE_END);
+
         
         Random rand = new Random();
-        Border border = BorderFactory.createLineBorder(Color.BLACK);
-        JTextArea chart_title = new JTextArea();
-        action_performed = new JTextArea();
-        action_performed.setBorder(border);
-        chart_title.setBorder(border);
+        Border border = BorderFactory.createLineBorder(Color.RED); //ramecek u stats vpravo nahore
+        
+        
+        /******************************************************
+                       Frames in infoPanel
+         ******************************************************/
+        Dimension basicDim = new Dimension(Integer.MAX_VALUE, 20);
+        
+        /*****  Frame NAME  *****/
+        chart_title = new JTextArea(); //nazev vprevo nahore
+        //chart_title.setBorder(border);
+        chart_title.setMaximumSize(basicDim);
         chart_title.append("Chart" + rand.nextInt(100-1));
+        
+        /*****  Frame INFO  *****/
+        action_performed = new JTextArea(4,1);//JTextArea(Document doc, String text, int rows, int columns)
+        //action_performed.setBorder(border);
+        action_performed.setSize(new Dimension(100,150));
         action_performed.append("Chart inicialized");
+        
+        scroll_area = new JScrollPane(action_performed);
+   
+        
+        
+        /***** Vertex info *****/
+        vertex_text = new JTextArea();
+        vertex_text.setEditable(false);
+        //vertex_text.setBorder(border);
+        vertex_text.setMaximumSize(basicDim);
+        vertex_text.append("Number of vertexes: " + vertex_num);
+        
+        /***** Edge info *****/
+        edge_text = new JTextArea();
+        edge_text.setEditable(false);
+        //edge_text.setBorder(border);
+        edge_text.setMaximumSize(basicDim);
+        edge_text.append("Number of edges: " + edge_num);
+        
+        
+        /***** Graph area *****/
         graph = new mxGraph();
         applyEdgeDefaults();
         mxGraphView view = graph.getView();
         createComp();
-        JPanel infopanel = new JPanel();
-        GridLayout experimentLayout = new GridLayout(20,10);
-        infopanel.setLayout(experimentLayout);
         
+
+
+        
+        
+        /*************************************************
+                         Buttons creation
+         *************************************************/
+        
+        /***** SAVE button *****/
         JButton SaveButton = new JButton("Save");
         
         SaveButton.setBounds(900, 110, 200, 20);
@@ -148,7 +257,7 @@ public class MainFrame implements MouseListener,MouseWheelListener,KeyListener{
                     PrintWriter out = new PrintWriter(".\\Graph\\" + filename + ".xml");
                     out.println(xml);
                     out.close();
-                    action_performed.setText("Graph saved to file" + filename + ".xml");
+                    action_performed.setText(action_performed.getText()+"\n"+"Graph saved to file" + filename + ".xml");
                 } catch (FileNotFoundException ex) {
                     Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -156,6 +265,8 @@ public class MainFrame implements MouseListener,MouseWheelListener,KeyListener{
             }
         });
         
+        
+        /***** LOAD button *****/
         JButton LoadButton = new JButton("Load");
         LoadButton.addActionListener( new ActionListener()
         {
@@ -174,15 +285,17 @@ public class MainFrame implements MouseListener,MouseWheelListener,KeyListener{
                 }
                 try {
                     setGraph();
-                    action_performed.setText("Graph loaded.");
+                    action_performed.setText(action_performed.getText()+"\n"+"Graph loaded.");
                 } catch (Exception ex) {
                     Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
         
-        JButton PlayButton = new JButton("Play");
-        PlayButton.addActionListener( new ActionListener()
+        
+        /***** PLAY button *****/
+        JButton StartButton = new JButton("Start!!!!!!");
+        StartButton.addActionListener( new ActionListener()
         {
             public void actionPerformed(ActionEvent e)
             {
@@ -190,16 +303,20 @@ public class MainFrame implements MouseListener,MouseWheelListener,KeyListener{
             }
         });
         
+        
+        /***** BACK button *****/
         JButton BackwardButton = new JButton("<-");
         BackwardButton.addActionListener( new ActionListener()
         {
             public void actionPerformed(ActionEvent e)
             {
                 System.out.println("-");
-                action_performed.setText("One step backward.");
+                action_performed.setText(action_performed.getText()+"\n"+"One step backward.");
             }
         });
         
+        
+        /***** FWD button *****/
         JButton FurtherButton = new JButton("->");
         FurtherButton.addActionListener( new ActionListener()
         {
@@ -209,20 +326,24 @@ public class MainFrame implements MouseListener,MouseWheelListener,KeyListener{
                  Rectangle rect = graphComponent.getGraphControl().getVisibleRect();
                 rect.translate(50, 100);
                 graphComponent.getGraphControl().scrollRectToVisible(rect, true);
-                action_performed.setText("Forward step.");
+                action_performed.setText(action_performed.getText()+"\n"+"Forward step.");
             }
         });
         
+        
+        /***** CRUSH button *****/
         JButton DeleteButton = new JButton("Crush Graph!");
         DeleteButton.addActionListener( new ActionListener()
         {
             public void actionPerformed(ActionEvent e)
             {
                 deleteAll();
-                action_performed.setText("Graph deleted.");
+                action_performed.setText(action_performed.getText()+"\n"+"Graph deleted.");
             }
         });
         
+        
+        /***** SAVE as image button *****/
         JButton ImageButton = new JButton("Save as image");
         ImageButton.addActionListener( new ActionListener()
         {
@@ -232,13 +353,15 @@ public class MainFrame implements MouseListener,MouseWheelListener,KeyListener{
                 String filename = chart_title.getText();
                 try {
                     ImageIO.write(image, "PNG", new File(".\\Image\\"+filename+".png"));
-                    action_performed.setText("Image saved to " + filename + ".png");
+                    action_performed.setText(action_performed.getText()+"\n"+"Image saved to " + filename + ".png");
                 } catch (IOException ex) {
                     Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
         
+        
+        /***** ORIENTED button *****/
         JButton OrientButton = new JButton("Oriented edges");
         OrientButton.addActionListener( new ActionListener()
         {
@@ -248,40 +371,125 @@ public class MainFrame implements MouseListener,MouseWheelListener,KeyListener{
                     applyEdgeDefaults();
                     OrientButton.setText("Oriented edges");
                     edge_style = false;
-                    action_performed.setText("Edges arent oriented.");
+                    action_performed.setText(action_performed.getText()+"\n"+"Edges arent oriented.");
                 }
                 else{
                     applyEdgeDefaultsOriented();
                     OrientButton.setText("Unoriented edges");
-                    action_performed.setText("Edges are now oriented.");
+                    action_performed.setText(action_performed.getText()+"\n"+"Edges are now oriented.");
                     edge_style = true;
                 }
             }
         });
-        vertex_text.setEditable(false);
-        edge_text.setEditable(false);
-        vertex_text.setBorder(border);
-        edge_text.setBorder(border);
-        vertex_text.append("Number of vertexes: " + vertex_num);
-        edge_text.append("Number of edges: " + edge_num);
-        infopanel.add(chart_title);
-        infopanel.add(action_performed);
-        infopanel.add(vertex_text);
-        infopanel.add(edge_text);
-        infopanel.add(SaveButton);
-        infopanel.add(LoadButton);
-        infopanel.add(ImageButton);
-        infopanel.add(DeleteButton);
-        infopanel.add(PlayButton);
-        infopanel.add(FurtherButton);
-        infopanel.add(BackwardButton);
-        infopanel.add(OrientButton);
-        /* Infopanel of building */
         
-        infopanel.setBorder(new LineBorder(Color.BLACK));
-        infopanel.setPreferredSize(new Dimension(200,200));
-        f.getContentPane().add(BorderLayout.EAST, infopanel);
         
+        
+        /***** PlayButton *****/
+        JButton PlayButton = new JButton("LAUNCH!");
+        PlayButton.addActionListener( new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                action_performed.setText(action_performed.getText()+"\n"+"Algorithm is being launched!");
+            }
+        });
+        
+        
+        /***** PauseButton *****/
+        JButton PauseButton = new JButton("PAUSE!");
+        PauseButton.addActionListener( new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                action_performed.setText(action_performed.getText()+"\n"+"Algorithm was put on hold...");
+            }
+        });
+       
+        
+        /***** StopButton *****/
+        JButton StopButton = new JButton("ABORT!");
+        StopButton.addActionListener( new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                action_performed.setText(action_performed.getText()+"\n"+"Algorithm was aborted!");
+            }
+        });
+        
+        /***** StepBackButton *****/
+        JButton StepBackButton = new JButton("STEP BACK!");
+        StepBackButton.addActionListener( new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                action_performed.setText(action_performed.getText()+"\n"+"One small step back...");
+            }
+        });
+        
+        /***** StepFwdButton *****/
+        JButton StepFwdButton = new JButton("FORWARD!");
+        StepFwdButton.addActionListener( new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                action_performed.setText(action_performed.getText()+"\n"+"One small step forward...");
+            }
+        });
+        
+        /***** SpeedUpButton *****/
+        JButton SpeedUpButton = new JButton("FASTER!");
+        SpeedUpButton.addActionListener( new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                action_performed.setText(action_performed.getText()+"\n"+"Faster! Faster!");
+            }
+        });
+        
+        /***** SlowDownButton *****/
+        JButton SlowDownButton = new JButton("SLOWER!");
+        SlowDownButton.addActionListener( new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                action_performed.setText(action_performed.getText()+"\n"+"Not so fast dude!");
+            }
+        });
+        
+        
+        
+        
+        /******************************************************
+                Adding buttons to their locations
+         *****************************************************/
+        /* infoPanel */
+        infoPanel.add(chart_title);
+        infoPanel.add(scroll_area);
+        infoPanel.add(vertex_text);
+        infoPanel.add(edge_text);
+        
+        
+        /*buttonsPanel */
+        buttonPanel.add(SaveButton);
+        buttonPanel.add(LoadButton);
+        buttonPanel.add(ImageButton);
+        buttonPanel.add(DeleteButton);
+        buttonPanel.add(FurtherButton);
+        buttonPanel.add(BackwardButton);
+        buttonPanel.add(OrientButton);
+        
+        /* startPanel */ 
+        startPanel.add(StartButton);
+        
+        /* controlsPanel */
+        controlsPanel.add(SlowDownButton);
+        controlsPanel.add(StepBackButton);
+        controlsPanel.add(StopButton);
+        controlsPanel.add(PlayButton);
+        controlsPanel.add(PauseButton);
+        controlsPanel.add(StepFwdButton);
+        controlsPanel.add(SpeedUpButton);
+         
         graph.getModel().beginUpdate();
         try {
              
@@ -304,6 +512,10 @@ public class MainFrame implements MouseListener,MouseWheelListener,KeyListener{
         f.setVisible(true);
 
     }
+    
+    
+    
+    
     private void OpenFile() throws SAXException, IOException, ParserConfigurationException, TransformerException{
         final JFileChooser fc = new JFileChooser();
         int returnVal; 
@@ -326,9 +538,9 @@ public class MainFrame implements MouseListener,MouseWheelListener,KeyListener{
      private void applyEdgeDefaults() {
         // Settings for edges
         Map<String, Object> edge = new HashMap<String, Object>();
-        edge.put(mxConstants.STYLE_ROUNDED, true);
+        edge.put(mxConstants.STYLE_ROUNDED, true);//TODO
         edge.put(mxConstants.STYLE_ORTHOGONAL, false);
-        edge.put(mxConstants.STYLE_EDGE, "elbowEdgeStyle");
+        edge.put(mxConstants.STYLE_EDGE, "elbowEdgeStyle");//TODO
         edge.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_CONNECTOR);
         edge.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_MIDDLE);
         edge.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_CENTER);
@@ -433,13 +645,14 @@ public class MainFrame implements MouseListener,MouseWheelListener,KeyListener{
     /* Create graphComponent */
     public void createComp(){
         graphComponent = new mxGraphComponent(graph);
+        //graphComponent.setSize(new Dimension(300, 300));
         java.lang.Object parent = graph.getDefaultParent();
         graphComponent.getConnectionHandler().addListener(mxEvent.CONNECT, new mxIEventListener(){  
             @Override
             public void invoke(Object sender, mxEventObject evt)  {
                 edge_num++;
                 edge_text.setText("Number of edges: " + edge_num);
-                action_performed.setText("Edge created.");
+                action_performed.setText(action_performed.getText()+"\n"+"Edge created.");
             }
         });
         
@@ -452,10 +665,11 @@ public class MainFrame implements MouseListener,MouseWheelListener,KeyListener{
                  vertex_id++;
                  vertex_num++;
                  vertex_text.setText("Number of vertexes: " + vertex_num);
-                 action_performed.setText("Vertex created.");
+                 action_performed.setText(action_performed.getText()+"\n"+"Vertex created.");
              }
         });      
-        f.getContentPane().add(BorderLayout.CENTER, graphComponent);
+        //f.getContentPane().add(BorderLayout.CENTER, graphComponent);
+        graphPanel.add(graphComponent, BorderLayout.CENTER);
     }
     
     public static void main(String[] args) {
