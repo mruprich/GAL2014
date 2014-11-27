@@ -1,8 +1,8 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
+*/
 package MainWindow;
 
 
@@ -91,13 +91,16 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import java.awt.FlowLayout;
+import java.awt.Image;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 
 /**
  *
  * @author Dan
  */
 public class MainFrame implements MouseListener,MouseWheelListener,KeyListener{
-
+    
     /*****  "global" variables  *****/
     public int x,y;
     public int vertex_id = 0;
@@ -124,20 +127,20 @@ public class MainFrame implements MouseListener,MouseWheelListener,KeyListener{
     
     
     private ArrayList<Object> vertex_array = new ArrayList<Object>();
-        
+    
     
     public MainFrame() {
         
         /***** Main window *****/
         f = new JFrame();
-        f.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+        f.setExtendedState(JFrame.MAXIMIZED_BOTH);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.addMouseWheelListener(this);
         //f.setLocation(300, 200); //neni potreba vzhledem k tomu ze pouzivame MAXIMIZED_BOTH
         
-                
+        
         /**********************************************************
-                               Inside Pannels
+         * Inside Pannels
          *********************************************************/
         
         /***** Pannel for controls inside graph *****/
@@ -165,8 +168,8 @@ public class MainFrame implements MouseListener,MouseWheelListener,KeyListener{
         startPanel.setPreferredSize(new Dimension(100, 70));
         
         /********************************************************************
-                                  Main pannels 
-        ********************************************************************/
+         * Main pannels
+         ********************************************************************/
         
         /***** Pannel for graph creation *****/
         graphPanel = new JPanel();
@@ -185,14 +188,14 @@ public class MainFrame implements MouseListener,MouseWheelListener,KeyListener{
         mainPanel.add(infoPanel, BorderLayout.PAGE_START);
         mainPanel.add(buttonPanel, BorderLayout.CENTER);
         mainPanel.add(startPanel, BorderLayout.PAGE_END);
-
+        
         
         Random rand = new Random();
         Border border = BorderFactory.createLineBorder(Color.RED); //ramecek u stats vpravo nahore
         
         
         /******************************************************
-                       Frames in infoPanel
+         * Frames in infoPanel
          ******************************************************/
         Dimension basicDim = new Dimension(Integer.MAX_VALUE, 20);
         
@@ -209,7 +212,7 @@ public class MainFrame implements MouseListener,MouseWheelListener,KeyListener{
         action_performed.append("Chart inicialized");
         
         scroll_area = new JScrollPane(action_performed);
-   
+        
         
         
         /***** Vertex info *****/
@@ -233,12 +236,12 @@ public class MainFrame implements MouseListener,MouseWheelListener,KeyListener{
         mxGraphView view = graph.getView();
         createComp();
         
-
-
+        
+        
         
         
         /*************************************************
-                         Buttons creation
+         * Buttons creation
          *************************************************/
         
         /***** SAVE button *****/
@@ -247,25 +250,58 @@ public class MainFrame implements MouseListener,MouseWheelListener,KeyListener{
         SaveButton.setBounds(900, 110, 200, 20);
         SaveButton.addActionListener( new ActionListener()
         {
+            boolean notSaved = true;
+            String saveName = "";
+            String fileName = "";
             public void actionPerformed(ActionEvent e)
             {
                 graph.getChildVertices(graph.getDefaultParent());
                 mxCodec codec = new mxCodec();
-                xml = mxUtils.getXml(codec.encode(graph.getModel()));   
-                String filename = chart_title.getText();
-                try {
-                    PrintWriter out = new PrintWriter(".\\Graph\\" + filename + ".xml");
-                    out.println(xml);
-                    out.close();
-                    action_performed.setText(action_performed.getText()+"\n"+"Graph saved to file" + filename + ".xml");
-                } catch (FileNotFoundException ex) {
-                    Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                xml = mxUtils.getXml(codec.encode(graph.getModel()));
                 
+                
+                if(notSaved){//this branch is for the first save - user needs to provide location for the file to be saved
+                    action_performed.setText(action_performed.getText() + "\n" + "Choosing location to save your graph ;)");
+                    JFileChooser saveLoc = new JFileChooser();
+                    FileNameExtensionFilter locFilter = new FileNameExtensionFilter("xml files (*.xml)", "xml");//only xml files will be used
+                    saveLoc.setFileFilter(locFilter);
+                    int retVal = saveLoc.showSaveDialog(f);
+                    
+                    /***** Checking extension and getting absolute path to chosen file *****/
+                    if(retVal == saveLoc.APPROVE_OPTION) {
+                        saveName = saveLoc.getSelectedFile().getName();
+                        if (saveName.endsWith(".xml")){
+                            saveName = saveLoc.getSelectedFile().getAbsolutePath();
+                            fileName = saveLoc.getSelectedFile().getName();
+                            action_performed.setText(action_performed.getText() + "\n" + saveName);
+                            try{//saving file to its chosen location
+                                PrintWriter out = new PrintWriter(saveName);
+                                out.println(xml);
+                                out.close();
+                            }catch (FileNotFoundException ex) {
+                                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            notSaved = false;
+                        }
+                        else{
+                            action_performed.setText(action_performed.getText() + "\n" + "Extension needs to be .xml");
+                        }
+                    }
+                }
+                else{//File location has already been chosen, the file is just overwritten
+                    try {
+                        PrintWriter out = new PrintWriter(saveName);
+                        out.println(xml);
+                        out.close();
+                        action_performed.setText(action_performed.getText()+"\n"+fileName+" succesfully saved");
+                    } catch (FileNotFoundException ex) {
+                        Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         });
-        
-        
+                
+                
         /***** LOAD button *****/
         JButton LoadButton = new JButton("Load");
         LoadButton.addActionListener( new ActionListener()
@@ -291,8 +327,8 @@ public class MainFrame implements MouseListener,MouseWheelListener,KeyListener{
                 }
             }
         });
-        
-        
+
+
         /***** PLAY button *****/
         JButton StartButton = new JButton("Start!!!!!!");
         StartButton.addActionListener( new ActionListener()
@@ -323,7 +359,7 @@ public class MainFrame implements MouseListener,MouseWheelListener,KeyListener{
             public void actionPerformed(ActionEvent e)
             {
                 double s = graph.getView().getScale();
-                 Rectangle rect = graphComponent.getGraphControl().getVisibleRect();
+                Rectangle rect = graphComponent.getGraphControl().getVisibleRect();
                 rect.translate(50, 100);
                 graphComponent.getGraphControl().scrollRectToVisible(rect, true);
                 action_performed.setText(action_performed.getText()+"\n"+"Forward step.");
@@ -404,7 +440,7 @@ public class MainFrame implements MouseListener,MouseWheelListener,KeyListener{
                 action_performed.setText(action_performed.getText()+"\n"+"Algorithm was put on hold...");
             }
         });
-       
+        
         
         /***** StopButton *****/
         JButton StopButton = new JButton("ABORT!");
@@ -418,6 +454,13 @@ public class MainFrame implements MouseListener,MouseWheelListener,KeyListener{
         
         /***** StepBackButton *****/
         JButton StepBackButton = new JButton("STEP BACK!");
+//StepBackButton.setSize(new Dimension(100, 80));
+//try {
+//    Image img = ImageIO.read(getClass().getResource("pokus.png"));
+//    StepBackButton.setIcon(new ImageIcon(img.getScaledInstance(StepBackButton.getWidth(), StepBackButton.getHeight(), 0)));
+//} catch (IOException ex) {
+//}
+        
         StepBackButton.addActionListener( new ActionListener()
         {
             public void actionPerformed(ActionEvent e)
@@ -460,7 +503,7 @@ public class MainFrame implements MouseListener,MouseWheelListener,KeyListener{
         
         
         /******************************************************
-                Adding buttons to their locations
+         * Adding buttons to their locations
          *****************************************************/
         /* infoPanel */
         infoPanel.add(chart_title);
@@ -478,7 +521,7 @@ public class MainFrame implements MouseListener,MouseWheelListener,KeyListener{
         buttonPanel.add(BackwardButton);
         buttonPanel.add(OrientButton);
         
-        /* startPanel */ 
+        /* startPanel */
         startPanel.add(StartButton);
         
         /* controlsPanel */
@@ -489,69 +532,69 @@ public class MainFrame implements MouseListener,MouseWheelListener,KeyListener{
         controlsPanel.add(PauseButton);
         controlsPanel.add(StepFwdButton);
         controlsPanel.add(SpeedUpButton);
-         
+        
         graph.getModel().beginUpdate();
         try {
-             
-
+            
+            
         } finally {
             graph.getModel().endUpdate();
         }
-
-        // define layout
+        
+// define layout
         mxIGraphLayout layout = new mxHierarchicalLayout(graph);
-
-        // layout using morphing
+        
+// layout using morphing
         graph.getModel().beginUpdate();
         try {
             layout.execute(graph.getDefaultParent());
         } finally {
-                    graph.getModel().endUpdate();
-                    // fitViewport();
+            graph.getModel().endUpdate();
+// fitViewport();
         }
         f.setVisible(true);
-
+        
     }
     
     
     
-    
+    /***** OpenFile funkce pro Load *****/
     private void OpenFile() throws SAXException, IOException, ParserConfigurationException, TransformerException{
         final JFileChooser fc = new JFileChooser();
-        int returnVal; 
+        int returnVal;
         FileNameExtensionFilter xmlfilter = new FileNameExtensionFilter("xml files (*.xml)", "xml");
         fc.addChoosableFileFilter(xmlfilter);
         fc.setDialogTitle("Choose file");
         returnVal = fc.showOpenDialog(null);
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                 soubor = fc.getSelectedFile();
-                //location of file
-                System.err.println("Opening: " + soubor.getName());
-            } else {
-                System.err.println("Otevirani zruseno uzivatelem.");
-                return;
-            }
-            XMLconvertor graphmlToMxgraph = new XMLconvertor(soubor);
-            xml = graphmlToMxgraph.convertLoaded(soubor);;
+        
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            soubor = fc.getSelectedFile();
+            System.err.println("Opening: " + soubor.getName());//location of file
+        } else {
+            System.err.println("Otevirani zruseno uzivatelem.");
+            return;
+        }
+        XMLconvertor graphmlToMxgraph = new XMLconvertor(soubor);
+        xml = graphmlToMxgraph.convertLoaded(soubor);;
     }
-     /* Unoriented edges */
-     private void applyEdgeDefaults() {
-        // Settings for edges
+    /* Unoriented edges */
+    private void applyEdgeDefaults() {
+// Settings for edges
         Map<String, Object> edge = new HashMap<String, Object>();
-        edge.put(mxConstants.STYLE_ROUNDED, true);//TODO
+        edge.put(mxConstants.STYLE_ROUNDED, false);//TODO
         edge.put(mxConstants.STYLE_ORTHOGONAL, false);
-        edge.put(mxConstants.STYLE_EDGE, "elbowEdgeStyle");//TODO
+//edge.put(mxConstants.STYLE_EDGE, "elbowEdgeStyle");//TODO
         edge.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_CONNECTOR);
         edge.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_MIDDLE);
         edge.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_CENTER);
         edge.put(mxConstants.STYLE_STROKECOLOR, "#000000"); // default is #6482B9
         edge.put(mxConstants.STYLE_FONTCOLOR, "#446299");
-
+        
         mxStylesheet edgeStyle = new mxStylesheet();
         edgeStyle.setDefaultEdgeStyle(edge);
         graph.setStylesheet(edgeStyle);
     }
-    /* Oriented edges */ 
+    /* Oriented edges */
     private void applyEdgeDefaultsOriented() {
         Map<String, Object> edge = new HashMap<String, Object>();
         edge.put(mxConstants.STYLE_ROUNDED, true);
@@ -563,7 +606,7 @@ public class MainFrame implements MouseListener,MouseWheelListener,KeyListener{
         edge.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_CENTER);
         edge.put(mxConstants.STYLE_STROKECOLOR, "#000000"); // default is #6482B9
         edge.put(mxConstants.STYLE_FONTCOLOR, "#446299");
-
+        
         mxStylesheet edgeStyle = new mxStylesheet();
         edgeStyle.setDefaultEdgeStyle(edge);
         graph.setStylesheet(edgeStyle);
@@ -591,7 +634,7 @@ public class MainFrame implements MouseListener,MouseWheelListener,KeyListener{
         deleteAll();
         java.lang.Object parent = graph.getDefaultParent();
         Document doc;
-         //graphml was loaded at first
+//graphml was loaded at first
         System.out.println(xml);
         if("MxGraph".equals(xml)){
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -622,9 +665,9 @@ public class MainFrame implements MouseListener,MouseWheelListener,KeyListener{
                     vertex_num++;
                 }
             }
-        System.out.println("Inserted");
+            System.out.println("Inserted");
         }
-
+        
         if(nList.getLength()>0){
             for (int i = 0; i < nList.getLength(); i++) {
                 if("1".equals(((Element) nList.item(i)).getAttribute("edge"))){ //vertex
@@ -637,17 +680,17 @@ public class MainFrame implements MouseListener,MouseWheelListener,KeyListener{
                     edge_num++;
                 }
             }
-        System.out.println("Inserted edges");
+            System.out.println("Inserted edges");
         }
-    vertex_text.setText("Number of vertexes: " + vertex_num);
-    edge_text.setText("Number of edges: " + edge_num);
+        vertex_text.setText("Number of vertexes: " + vertex_num);
+        edge_text.setText("Number of edges: " + edge_num);
     }
     /* Create graphComponent */
     public void createComp(){
         graphComponent = new mxGraphComponent(graph);
-        //graphComponent.setSize(new Dimension(300, 300));
+//graphComponent.setSize(new Dimension(300, 300));
         java.lang.Object parent = graph.getDefaultParent();
-        graphComponent.getConnectionHandler().addListener(mxEvent.CONNECT, new mxIEventListener(){  
+        graphComponent.getConnectionHandler().addListener(mxEvent.CONNECT, new mxIEventListener(){
             @Override
             public void invoke(Object sender, mxEventObject evt)  {
                 edge_num++;
@@ -658,60 +701,60 @@ public class MainFrame implements MouseListener,MouseWheelListener,KeyListener{
         
         graphComponent.getGraphControl().addMouseListener(new MouseAdapter(){
             @Override
-             public void mouseClicked(MouseEvent e) {
-                 x = e.getX();
-                 y = e.getY();
-                 graph.insertVertex(parent, null, vertex_id, x-40, y-10, 80, 30);
-                 vertex_id++;
-                 vertex_num++;
-                 vertex_text.setText("Number of vertexes: " + vertex_num);
-                 action_performed.setText(action_performed.getText()+"\n"+"Vertex created.");
-             }
-        });      
-        //f.getContentPane().add(BorderLayout.CENTER, graphComponent);
+            public void mouseClicked(MouseEvent e) {
+                x = e.getX();
+                y = e.getY();
+                graph.insertVertex(parent, null, vertex_id, x-40, y-10, 80, 30);
+                vertex_id++;
+                vertex_num++;
+                vertex_text.setText("Number of vertexes: " + vertex_num);
+                action_performed.setText(action_performed.getText()+"\n"+"Vertex created.");
+            }
+        });
+//f.getContentPane().add(BorderLayout.CENTER, graphComponent);
         graphPanel.add(graphComponent, BorderLayout.CENTER);
     }
     
     public static void main(String[] args) {
         MainFrame f = new MainFrame();
-
+        
     }
-
+    
     @Override
     public void mouseClicked(MouseEvent me) {
     }
-
+    
     @Override
     public void mousePressed(MouseEvent me) {
     }
-
+    
     @Override
     public void mouseReleased(MouseEvent me) {
     }
-
+    
     @Override
     public void mouseEntered(MouseEvent me) {
     }
-
+    
     @Override
     public void mouseExited(MouseEvent me) {
     }
-
+    
     @Override
     public void mouseWheelMoved(MouseWheelEvent mwe) {
         System.out.println(mwe.getWheelRotation());
     }
-
+    
     @Override
     public void keyTyped(KeyEvent ke) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
     public void keyPressed(KeyEvent ke) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
     public void keyReleased(KeyEvent ke) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
