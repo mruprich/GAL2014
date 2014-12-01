@@ -90,7 +90,6 @@ public class Utils {
         java.lang.Object parent = inner.graph.getDefaultParent();
         Document doc;
         //graphml was loaded at first
-        System.out.println(inner.xml);
         if("MxGraph".equals(inner.xml)){
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -103,24 +102,26 @@ public class Utils {
         NodeList nListGeo = doc.getElementsByTagName("mxGeometry");
         String value = "";
         int source_v, target_v = 0;
+        String vertex_id = "";
         Double x_coord,y_coord,w,h = 0.0;
-        int begin = Integer.parseInt(((Element) nList.item(2)).getAttribute("id"));
-        System.out.println(begin);
         if(nList.getLength()>0){
             for (int i = 0; i < nList.getLength(); i++) {
                 if("1".equals(((Element) nList.item(i)).getAttribute("vertex"))){ //vertex
                     value = ((Element) nList.item(i)).getAttribute("value");
                     x_coord = Double.parseDouble(((Element) nListGeo.item(i-2)).getAttribute("x"));
+                    vertex_id = ((Element) nList.item(i-2)).getAttribute("id");
                     y_coord = Double.parseDouble(((Element) nListGeo.item(i-2)).getAttribute("y"));
                     w = Double.parseDouble(((Element) nListGeo.item(i-2)).getAttribute("width"));
                     h = Double.parseDouble(((Element) nListGeo.item(i-2)).getAttribute("height"));
-                    Object v = inner.graph.insertVertex(parent, null, value, x_coord, y_coord, w, h);
+                    Object v = inner.graph.insertVertex(parent, vertex_id, value, x_coord, y_coord, w, h);
                     inner.vertex_array.add(v);
                     inner.vertex_id++;
                     inner.vertex_count++;
                 }
+                else{
+                    inner.vertex_array.add(null);
+                }
             }
-            System.out.println("Inserted");
         }
         
         if(nList.getLength()>0){
@@ -128,8 +129,9 @@ public class Utils {
                 if("1".equals(((Element) nList.item(i)).getAttribute("edge"))){ //vertex
                     source_v = Integer.parseInt(((Element) nList.item(i)).getAttribute("source"));
                     target_v = Integer.parseInt(((Element) nList.item(i)).getAttribute("target"));
+                //    System.out.println("Source id:" + source_v + "Dest id:" + target_v);
                     if("MxGraph".equals(inner.xml))
-                        inner.graph.insertEdge(parent, null, "", inner.vertex_array.get(source_v-begin), inner.vertex_array.get(target_v-begin));
+                        inner.graph.insertEdge(parent, null, "", inner.vertex_array.get(source_v), inner.vertex_array.get(target_v));
                     else
                         inner.graph.insertEdge(parent, null, "", inner.vertex_array.get(source_v), inner.vertex_array.get(target_v));
                     inner.edge_count++;

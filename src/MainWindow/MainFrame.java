@@ -151,7 +151,6 @@ public class MainFrame extends JFrame implements MouseListener,MouseWheelListene
         Main.f = new JFrame();
         Main.f.setExtendedState(JFrame.MAXIMIZED_BOTH);
         Main.f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        Main.f.addMouseWheelListener(this);
         
         /********************************************************************
         * Main pannels
@@ -160,24 +159,24 @@ public class MainFrame extends JFrame implements MouseListener,MouseWheelListene
         /***** Pannel for graph creation - multidocument interface *****/
         Main.graphPanel = new JPanel();
         Main.graphPanel.setLayout(new BorderLayout());
-        Main.f.getContentPane().add(BorderLayout.CENTER, Main.graphPanel);
+        
         
         //add multidocument panel to center panel area
         Main.desktopPanel = new JDesktopPane();
-        Main.graphPanel.add(BorderLayout.CENTER,Main.desktopPanel);
         
-        InnerFrame initialFrame = new InnerFrame(500,500, ++innerFrameCount);
-        initialFrame.setInnerFrameBorder(new LineBorder(Color.CYAN));
         
-        innerFrameArray.add(initialFrame);
-        Main.utils.createComp(initialFrame);
+        //InnerFrame initialFrame = new InnerFrame(500,500, ++innerFrameCount);
+        //initialFrame.setInnerFrameBorder(new LineBorder(Color.CYAN));
+        
+        //innerFrameArray.add(initialFrame);
+        //Main.utils.createComp(initialFrame);
         
         /***** Pannel for controls inside graph *****/
         Main.controlsPanel = new JPanel();
         Main.controlsPanel.setLayout(new BorderLayout());
         Main.controlsPanel.setPreferredSize(new Dimension(300, 70));
         Main.controlsPanel.setLayout(new GridLayout(1,7));
-        Main.graphPanel.add(BorderLayout.PAGE_END, Main.controlsPanel);
+        
         
         
         /***** Pannel on the right side *****/
@@ -185,7 +184,7 @@ public class MainFrame extends JFrame implements MouseListener,MouseWheelListene
         Main.mainPanel.setBorder(new LineBorder(Color.BLACK));
         Main.mainPanel.setLayout(new BorderLayout());
         Main.mainPanel.setPreferredSize(new Dimension(350,350));
-        Main.f.getContentPane().add(BorderLayout.EAST, Main.mainPanel);
+
                     
         /**********************************************************
          * Inside Pannels
@@ -466,8 +465,23 @@ public class MainFrame extends JFrame implements MouseListener,MouseWheelListene
 //            graph.getModel().endUpdate();
 //// fitViewport();
 //        }
+        /* ADD COMPONENTS TO FRAME AT THE END */
+        Main.graphPanel.add(BorderLayout.CENTER,Main.desktopPanel);
+        Main.graphPanel.add(BorderLayout.PAGE_END, Main.controlsPanel);
+        Main.f.getContentPane().add(BorderLayout.CENTER, Main.graphPanel);
+        Main.f.getContentPane().add(BorderLayout.EAST, Main.mainPanel);
+        /* END OF ADDING */
         Main.f.setVisible(true);
-        
+        /* REVALIDATE ALL JPANELS AND JFRAME AFTER INICIALIZATION */
+        Main.graphPanel.revalidate();
+        Main.graphPanel.repaint();
+        Main.controlsPanel.revalidate();
+        Main.controlsPanel.repaint();      
+        Main.mainPanel.revalidate();
+        Main.mainPanel.repaint();
+        Main.f.revalidate();
+        Main.f.repaint();
+        /* END OF REVALIDATION */ 
     }
     
 //    private void newInnerFrame(int width, int height, LineBorder border){
