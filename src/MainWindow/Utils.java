@@ -15,10 +15,14 @@ import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.parsers.DocumentBuilder;
@@ -92,6 +96,7 @@ public class Utils {
         deleteAll(inner);
         java.lang.Object parent = inner.graph.getDefaultParent();
         Document doc;
+        
         //graphml was loaded at first
         if("MxGraph".equals(inner.xml)){
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -101,12 +106,14 @@ public class Utils {
         else{
             doc = loadXMLFromString(inner.xml);
         }
+        
         NodeList nList = doc.getElementsByTagName("mxCell");
         NodeList nListGeo = doc.getElementsByTagName("mxGeometry");
         String value = "";
         int source_v, target_v = 0;
         String vertex_id = "";
         Double x_coord,y_coord,w,h = 0.0;
+        
         if(nList.getLength()>0){
             for (int i = 0; i < nList.getLength(); i++) {
                 if("1".equals(((Element) nList.item(i)).getAttribute("vertex"))){ //vertex
@@ -170,7 +177,7 @@ public class Utils {
     /* Oriented edges */
     public void applyEdgeDefaultsOriented(InnerFrame inner) {
         Map<String, Object> edge = new HashMap<String, Object>();
-        edge.put(mxConstants.STYLE_ROUNDED, true);
+        edge.put(mxConstants.STYLE_ROUNDED, false);
         edge.put(mxConstants.STYLE_ORTHOGONAL, false);
         edge.put(mxConstants.STYLE_EDGE, "elbowEdgeStyle");
         edge.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_CONNECTOR);
@@ -201,5 +208,18 @@ public class Utils {
         mxStylesheet edgeStyle = new mxStylesheet();
         edgeStyle.setDefaultEdgeStyle(edge);
         inner.graph.setStylesheet(edgeStyle);
+    }
+    
+    public boolean saveFile(String location, InnerFrame inner, String filename){
+        try{
+            PrintWriter out = new PrintWriter(location);
+            out.println(inner.xml);
+            out.close();
+            Main.action_performed.setText(Main.action_performed.getText()+"\n"+filename+" succesfully saved");
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return true;
     }
 }

@@ -37,6 +37,8 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
     public String chartName;
     public boolean edge_style = false; //false = unoriented, true = oriented
     public boolean clickable = false;
+    public boolean edited = false;
+    public boolean menu = true;
     
     public ArrayList<Object> vertex_array;
     
@@ -98,6 +100,7 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
     }
     
     private void setDefaults(int count){
+        this.addInternalFrameListener(this);
         this.closable = true;
         this.maximizable = true;
         this.title = "chart" + count;
@@ -105,9 +108,6 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
         
         this.notSaved = true;
         this.chartName = this.title;
-        
-        this.addInternalFrameListener(this);
-        
         
         this.vertex_array = new ArrayList<Object>();
     }
@@ -125,19 +125,18 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
     
     @Override
     public void internalFrameOpened(InternalFrameEvent e) {
-        Main.action_performed.setText(Main.action_performed.getText()+"\n"+"novy graaaaaaaaf");
+        
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void internalFrameClosing(InternalFrameEvent e) {
-        Main.action_performed.setText(Main.action_performed.getText()+"\n"+"zaviraaam graaaaaaaaf");
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.dispose();
     }
 
     @Override
     public void internalFrameClosed(InternalFrameEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 
     @Override
@@ -160,6 +159,15 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
         this.parent.AbortButton.setEnabled(this.clickable);
         this.parent.StepFwdButton.setEnabled(this.clickable);
         this.parent.SpeedUpButton.setEnabled(this.clickable);
+        this.parent.ReeditButton.setEnabled(this.clickable);
+        
+        this.parent.NewButton.setEnabled(this.menu);
+        this.parent.SaveButton.setEnabled(this.menu);
+        this.parent.LoadButton.setEnabled(this.menu);
+        this.parent.SaveAsImage.setEnabled(this.menu);
+        this.parent.DeleteButton.setEnabled(this.menu);
+        this.parent.OrientedButton.setEnabled(this.menu);
+        this.parent.StartButton.setEnabled(this.menu);
         
         this.moveToFront();
     }

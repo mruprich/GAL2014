@@ -8,6 +8,7 @@ package MainWindow;
 import MainWindow.MainFrame;
 
 import com.mxgraph.io.mxCodec;
+import com.mxgraph.model.mxCell;
 import com.mxgraph.util.mxCellRenderer;
 import com.mxgraph.util.mxUtils;
 import java.awt.Color;
@@ -18,6 +19,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -71,7 +73,7 @@ public class Actions{
                 
                 
                 if(inner.notSaved){//this branch is for the first save - user needs to provide location for the file to be saved
-                    Main.action_performed.setText(Main.action_performed.getText() + "\n" + "Choosing location to save your graph ;)");
+                    Main.action_performed.setText(Main.action_performed.getText() + "\n" + "Choosing location to save your graph");
                     JFileChooser saveLoc = new JFileChooser();
                     FileNameExtensionFilter locFilter = new FileNameExtensionFilter("xml files (*.xml)", "xml");//only xml files will be used
                     saveLoc.setFileFilter(locFilter);
@@ -100,14 +102,7 @@ public class Actions{
                     }
                 }
                 else{//File location has already been chosen, the file is just overwritten
-                    try {
-                        PrintWriter out = new PrintWriter(saveName);
-                        //out.println(xml);
-                        out.close();
-                        Main.action_performed.setText(Main.action_performed.getText()+"\n"+fileName+" succesfully saved");
-                    } catch (FileNotFoundException ex) {
-                        Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    Main.utils.saveFile(saveName, inner, fileName);
                 }
             }
         });
@@ -205,7 +200,7 @@ public class Actions{
             }
         });
         
-        /***** ORIENTED button *****/
+        /***** START button *****/
         frame.StartButton = new JButton("Start!!");
         Main.buttonPanel.add(frame.StartButton);
         frame.StartButton.addActionListener( new ActionListener()
@@ -214,17 +209,53 @@ public class Actions{
             public void actionPerformed(ActionEvent e)
             {
                 InnerFrame inner = (InnerFrame)Main.desktopPanel.getSelectedFrame();
-                inner.clickable = true;
                 
-                inner.parent.SlowDownButton.setEnabled(inner.clickable);
-                inner.parent.StepBackButton.setEnabled(inner.clickable);
-                inner.parent.PlayButton.setEnabled(inner.clickable);
-                inner.parent.PauseButton.setEnabled(inner.clickable);
-                inner.parent.AbortButton.setEnabled(inner.clickable);
-                inner.parent.StepFwdButton.setEnabled(inner.clickable);
-                inner.parent.SpeedUpButton.setEnabled(inner.clickable);
+                inner.graph.selectAll();
+                Object[] cells = inner.graph.getSelectionCells();
+                
+                int even_vertexes = 0;
+                
+                for(Object c: cells){
+                    mxCell cell = (mxCell) c;
+                    if(cell.isVertex()){
+                        if(cell.getEdgeCount()%2 == 1){
+                            even_vertexes++;
+                        }
+                    }
+                    else{
+                        continue;
+                    }
+                }
+                
+                //check whether the algorithm is even possible
+                if(even_vertexes != 0 && even_vertexes != 2){
+                    JOptionPane.showMessageDialog(frame, "The graph does not fulfill conditions for Fleury algorithm");
+                }
+                else{
+                    inner.clickable = true;
+                    inner.menu = false;
+                    
+                    inner.parent.SlowDownButton.setEnabled(inner.clickable);
+                    inner.parent.StepBackButton.setEnabled(inner.clickable);
+                    inner.parent.PlayButton.setEnabled(inner.clickable);
+                    inner.parent.PauseButton.setEnabled(inner.clickable);
+                    inner.parent.AbortButton.setEnabled(inner.clickable);
+                    inner.parent.StepFwdButton.setEnabled(inner.clickable);
+                    inner.parent.SpeedUpButton.setEnabled(inner.clickable);
+                    inner.parent.ReeditButton.setEnabled(inner.clickable);
+                    
+                    inner.parent.NewButton.setEnabled(inner.menu);
+                    inner.parent.SaveButton.setEnabled(inner.menu);
+                    inner.parent.LoadButton.setEnabled(inner.menu);
+                    inner.parent.SaveAsImage.setEnabled(inner.menu);
+                    inner.parent.DeleteButton.setEnabled(inner.menu);
+                    inner.parent.OrientedButton.setEnabled(inner.menu);
+                    inner.parent.StartButton.setEnabled(inner.menu);
+                }
+                //inner.graphComponent.setConnectable(false);
+                //inner.graph.setEnabled(false);
+                //inner.graphComponent.setEnabled(false);
             }
-        });
+        });        
     }
-    
 }

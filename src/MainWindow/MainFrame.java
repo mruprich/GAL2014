@@ -109,7 +109,6 @@ public class MainFrame extends JFrame implements MouseListener,MouseWheelListene
       public static JDesktopPane deskPanel;
       
       public ArrayList<Object> innerFrameArray;
-      private ArrayList<Object> vertex_array = new ArrayList<Object>();
       
       /***** Buttons *****/
       public JButton NewButton;
@@ -128,24 +127,9 @@ public class MainFrame extends JFrame implements MouseListener,MouseWheelListene
       public JButton AbortButton;
       public JButton StepFwdButton;
       public JButton SpeedUpButton;
+      public JButton ReeditButton;
       
-//    public int vertex_id = 0;
-//    public String xml;
-//    File soubor = null;
-//    public int vertex_num, edge_num = 0;
-//    private boolean edge_style = false; //false = unoriented, true = oriented
-//    
-//    /*****   swing components *****/
-//    public JTextArea vertex_text;
-//    public JTextArea edge_text;
-//    public mxGraphComponent graphComponent;
-//    public mxGraph graph;
-//    private JFrame f;
-//    private JTextArea action_performed;
-  
-//    private ArrayList<Object> vertex_array = new ArrayList<Object>();
-    
-    
+
     public MainFrame() {
         innerFrameArray = new ArrayList<Object>();
         Main.utils = new Utils();
@@ -167,12 +151,6 @@ public class MainFrame extends JFrame implements MouseListener,MouseWheelListene
         //add multidocument panel to center panel area
         Main.desktopPanel = new JDesktopPane();
         
-        
-        //InnerFrame initialFrame = new InnerFrame(500,500, ++innerFrameCount);
-        //initialFrame.setInnerFrameBorder(new LineBorder(Color.CYAN));
-        
-        //innerFrameArray.add(initialFrame);
-        //Main.utils.createComp(initialFrame);
         
         /***** Pannel for controls inside graph *****/
         Main.controlsPanel = new JPanel();
@@ -199,7 +177,7 @@ public class MainFrame extends JFrame implements MouseListener,MouseWheelListene
         
         /***** Panel for buttons *****/
         Main.buttonPanel = new JPanel();
-        Main.buttonPanel.setLayout(new GridLayout(6,1));
+        Main.buttonPanel.setLayout(new GridLayout(7,1));
         Main.buttonPanel.setPreferredSize(new Dimension(100, 70));
         
         /***** Panel for start button *****/
@@ -219,7 +197,6 @@ public class MainFrame extends JFrame implements MouseListener,MouseWheelListene
         
         /*****  Frame INFO  *****/
         Main.action_performed = new JTextArea(4,1);//JTextArea(Document doc, String text, int rows, int columns)
-        //action_performed.setBorder(border);
         Main.action_performed.setSize(new Dimension(100,150));
         Main.action_performed.append("Chart inicialized");
         
@@ -229,14 +206,12 @@ public class MainFrame extends JFrame implements MouseListener,MouseWheelListene
         /***** Vertex info *****/
         Main.vertex_text = new JTextArea();
         Main.vertex_text.setEditable(false);
-        //vertex_text.setBorder(border);
         Main.vertex_text.setMaximumSize(basicDim);
         Main.vertex_text.append("Number of vertexes: 0");
         
         /***** Edge info *****/
         Main.edge_text = new JTextArea();
         Main.edge_text.setEditable(false);
-        //edge_text.setBorder(border);
         Main.edge_text.setMaximumSize(basicDim);
         Main.edge_text.append("Number of edges: 0");
         
@@ -323,7 +298,9 @@ public class MainFrame extends JFrame implements MouseListener,MouseWheelListene
         Main.f.getContentPane().add(BorderLayout.CENTER, Main.graphPanel);
         Main.f.getContentPane().add(BorderLayout.EAST, Main.mainPanel);
         /* END OF ADDING */
+        
         Main.f.setVisible(true);
+        
         /* REVALIDATE ALL JPANELS AND JFRAME AFTER INICIALIZATION */
         Main.graphPanel.revalidate();
         Main.graphPanel.repaint();

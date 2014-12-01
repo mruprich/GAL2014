@@ -8,7 +8,9 @@ package MainWindow;
 
 //TODO
 /*
-
+dodelat osetreni kdyz nenivybrany graf
+load musi splnovat .xml
+zkusit obarvit nejaky uzly
 chyba pri loadu nacteneho grafu a pridani fci(na to se podivam ja)
 vybrani umisteni na ulozeni obrazku
 */

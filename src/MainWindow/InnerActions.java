@@ -10,16 +10,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 
-
-
-
-//public JButton SlowDownButton;
-//      public JButton StepBackButton;
-//      public JButton PlayButton;
-//      public JButton PauseButton;
-//      public JButton AbortButton;
-//      public JButton StepFwdButton;
-//      public JButton SpeedUpButton;
 /**
  *
  * @author Formaiko
@@ -105,6 +95,42 @@ public class InnerActions {
             public void actionPerformed(ActionEvent e)
             {
                 Main.action_performed.setText(Main.action_performed.getText() + "\nSpeedUp Pressed");
+            }
+        });
+        
+        /***** Reedit button *****/
+        main.ReeditButton = new JButton("Reedit");
+        Main.controlsPanel.add(main.ReeditButton);
+        main.ReeditButton.addActionListener( new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                InnerFrame inner = (InnerFrame)Main.desktopPanel.getSelectedFrame();
+                inner.clickable = false;
+                inner.menu = true;
+                
+                inner.parent.SlowDownButton.setEnabled(inner.clickable);
+                inner.parent.StepBackButton.setEnabled(inner.clickable);
+                inner.parent.PlayButton.setEnabled(inner.clickable);
+                inner.parent.PauseButton.setEnabled(inner.clickable);
+                inner.parent.AbortButton.setEnabled(inner.clickable);
+                inner.parent.StepFwdButton.setEnabled(inner.clickable);
+                inner.parent.SpeedUpButton.setEnabled(inner.clickable);
+                inner.parent.ReeditButton.setEnabled(inner.clickable);
+                
+                inner.parent.NewButton.setEnabled(inner.menu);
+                inner.parent.SaveButton.setEnabled(inner.menu);
+                inner.parent.LoadButton.setEnabled(inner.menu);
+                inner.parent.SaveAsImage.setEnabled(inner.menu);
+                inner.parent.DeleteButton.setEnabled(inner.menu);
+                inner.parent.OrientedButton.setEnabled(inner.menu);
+                inner.parent.StartButton.setEnabled(inner.menu);
+                
+                //inner.graphComponent.setConnectable(true);
+                //inner.graph.setEnabled(true);
+                //inner.graphComponent.setEnabled(true);
+                
             }
         });
     }
