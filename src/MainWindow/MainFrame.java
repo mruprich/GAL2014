@@ -116,6 +116,9 @@ public class MainFrame extends JFrame implements MouseListener,MouseWheelListene
       public JButton SaveButton;
       public JButton LoadButton;
       public JButton DeleteButton;
+      public JButton SaveAsImage;
+      public JButton OrientedButton;
+      public JButton StartButton;
       
       /***** controls buttons *****/
       public JButton SlowDownButton;
@@ -238,33 +241,8 @@ public class MainFrame extends JFrame implements MouseListener,MouseWheelListene
         Main.edge_text.append("Number of edges: 0");
         
         
-        /*************************************************
-         * Buttons creation
-         *************************************************/
-
-//        /***** PLAY button *****/
-//        JButton StartButton = new JButton("Start!!!!!!");
-//        StartButton.addActionListener( new ActionListener()
-//        {
-//            public void actionPerformed(ActionEvent e)
-//            {
-//                System.out.println("play");
-//            }
-//        });
-//        
-//        
-//        /***** BACK button *****/
-//        JButton BackwardButton = new JButton("<-");
-//        BackwardButton.addActionListener( new ActionListener()
-//        {
-//            public void actionPerformed(ActionEvent e)
-//            {
-//                System.out.println("-");
-//                action_performed.setText(action_performed.getText()+"\n"+"One step backward.");
-//            }
-//        });
-//        
-//        
+ 
+       
 //        /***** FWD button *****/
 //        JButton FurtherButton = new JButton("->");
 //        FurtherButton.addActionListener( new ActionListener()
@@ -278,92 +256,8 @@ public class MainFrame extends JFrame implements MouseListener,MouseWheelListene
 //                action_performed.setText(action_performed.getText()+"\n"+"Forward step.");
 //            }
 //        });
-//        
-//        
-//        /***** CRUSH button *****/
-//        JButton DeleteButton = new JButton("Crush Graph!");
-//        DeleteButton.addActionListener( new ActionListener()
-//        {
-//            public void actionPerformed(ActionEvent e)
-//            {
-//                deleteAll();
-//                action_performed.setText(action_performed.getText()+"\n"+"Graph deleted.");
-//            }
-//        });
-//        
-//        
-//        /***** SAVE as image button *****/
-//        JButton ImageButton = new JButton("Save as image");
-//        ImageButton.addActionListener( new ActionListener()
-//        {
-//            public void actionPerformed(ActionEvent e)
-//            {
-//                BufferedImage image = mxCellRenderer.createBufferedImage(graph, null, 1, Color.WHITE, true, null);
-//                String filename = chart_title.getText();
-//                try {
-//                    ImageIO.write(image, "PNG", new File(".\\Image\\"+filename+".png"));
-//                    action_performed.setText(action_performed.getText()+"\n"+"Image saved to " + filename + ".png");
-//                } catch (IOException ex) {
-//                    Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//            }
-//        });
-//        
-//        
-//        /***** ORIENTED button *****/
-//        JButton OrientButton = new JButton("Oriented edges");
-//        OrientButton.addActionListener( new ActionListener()
-//        {
-//            public void actionPerformed(ActionEvent e)
-//            {
-//                if(edge_style){
-//                    applyEdgeDefaults();
-//                    OrientButton.setText("Oriented edges");
-//                    edge_style = false;
-//                    action_performed.setText(action_performed.getText()+"\n"+"Edges arent oriented.");
-//                }
-//                else{
-//                    applyEdgeDefaultsOriented();
-//                    OrientButton.setText("Unoriented edges");
-//                    action_performed.setText(action_performed.getText()+"\n"+"Edges are now oriented.");
-//                    edge_style = true;
-//                }
-//            }
-//        });
-//        
-//        
-//        
-//        /***** PlayButton *****/
-//        JButton PlayButton = new JButton("LAUNCH!");
-//        PlayButton.addActionListener( new ActionListener()
-//        {
-//            public void actionPerformed(ActionEvent e)
-//            {
-//                action_performed.setText(action_performed.getText()+"\n"+"Algorithm is being launched!");
-//            }
-//        });
-//        
-//        
-//        /***** PauseButton *****/
-//        JButton PauseButton = new JButton("PAUSE!");
-//        PauseButton.addActionListener( new ActionListener()
-//        {
-//            public void actionPerformed(ActionEvent e)
-//            {
-//                action_performed.setText(action_performed.getText()+"\n"+"Algorithm was put on hold...");
-//            }
-//        });
-//        
-//        
-//        /***** StopButton *****/
-//        JButton StopButton = new JButton("ABORT!");
-//        StopButton.addActionListener( new ActionListener()
-//        {
-//            public void actionPerformed(ActionEvent e)
-//            {
-//                action_performed.setText(action_performed.getText()+"\n"+"Algorithm was aborted!");
-//            }
-//        });
+
+
 //        
 //        /***** StepBackButton *****/
 //        JButton StepBackButton = new JButton("STEP BACK!");
@@ -422,49 +316,7 @@ public class MainFrame extends JFrame implements MouseListener,MouseWheelListene
         Main.infoPanel.add(Main.scroll_area);
         Main.infoPanel.add(Main.vertex_text);
         Main.infoPanel.add(Main.edge_text);
-        
-        
-        /*buttonsPanel */
-        //Main.buttonPanel.add(NewButton);
-//        buttonPanel.add(SaveButton);
-//        buttonPanel.add(LoadButton);
-//        buttonPanel.add(ImageButton);
-//        buttonPanel.add(DeleteButton);
-//        buttonPanel.add(FurtherButton);
-//        buttonPanel.add(BackwardButton);
-//        buttonPanel.add(OrientButton);
-//        
-//        /* startPanel */
-//        startPanel.add(StartButton);
-//        
-//        /* controlsPanel */
-//        controlsPanel.add(SlowDownButton);
-//        controlsPanel.add(StpeBackButton);
-//        controlsPanel.add(StopButton);
-//        controlsPanel.add(PlayButton);
-//        controlsPanel.add(PauseButton);
-//        controlsPanel.add(StepFwdButton);
-//        controlsPanel.add(SpeedUpButton);
-//        
-//        graph.getModel().beginUpdate();
-//        try {
-//            
-//            
-//        } finally {
-//            graph.getModel().endUpdate();
-//        }
-//        
-//// define layout
-//        mxIGraphLayout layout = new mxHierarchicalLayout(graph);
-//        
-//// layout using morphing
-//        graph.getModel().beginUpdate();
-//        try {
-//            layout.execute(graph.getDefaultParent());
-//        } finally {
-//            graph.getModel().endUpdate();
-//// fitViewport();
-//        }
+
         /* ADD COMPONENTS TO FRAME AT THE END */
         Main.graphPanel.add(BorderLayout.CENTER,Main.desktopPanel);
         Main.graphPanel.add(BorderLayout.PAGE_END, Main.controlsPanel);
@@ -484,178 +336,9 @@ public class MainFrame extends JFrame implements MouseListener,MouseWheelListene
         /* END OF REVALIDATION */ 
     }
     
-//    private void newInnerFrame(int width, int height, LineBorder border){
-//        InnerFrame newFrame = new InnerFrame(width, height, border);
-//        newFrame.setVisible(true);
-//        
-//        Main.desktopPanel.add(newFrame); 
-//        try {
-//            newFrame.setSelected(true);
-//        } catch (java.beans.PropertyVetoException e) {}
-//    }
-    
-    
-    
-    
-    
-//    /***** OpenFile funkce pro Load *****/
-//    private void OpenFile() throws SAXException, IOException, ParserConfigurationException, TransformerException{
-//        final JFileChooser fc = new JFileChooser();
-//        int returnVal;
-//        FileNameExtensionFilter xmlfilter = new FileNameExtensionFilter("xml files (*.xml)", "xml");
-//        fc.addChoosableFileFilter(xmlfilter);
-//        fc.setDialogTitle("Choose file");
-//        returnVal = fc.showOpenDialog(null);
-//        
-//        if (returnVal == JFileChooser.APPROVE_OPTION) {
-//            Main.soubor = fc.getSelectedFile();
-//            System.err.println("Opening: " + soubor.getName());//location of file
-//        } else {
-//            System.err.println("Otevirani zruseno uzivatelem.");
-//            return;
-//        }
-//        XMLconvertor graphmlToMxgraph = new XMLconvertor(soubor);
-//        xml = graphmlToMxgraph.convertLoaded(soubor);;
-//    }
-//    /* Unoriented edges */
-//    private void applyEdgeDefaults() {
-//// Settings for edges
-//        Map<String, Object> edge = new HashMap<String, Object>();
-//        edge.put(mxConstants.STYLE_ROUNDED, false);//TODO
-//        edge.put(mxConstants.STYLE_ORTHOGONAL, false);
-////edge.put(mxConstants.STYLE_EDGE, "elbowEdgeStyle");//TODO
-//        edge.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_CONNECTOR);
-//        edge.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_MIDDLE);
-//        edge.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_CENTER);
-//        edge.put(mxConstants.STYLE_STROKECOLOR, "#000000"); // default is #6482B9
-//        edge.put(mxConstants.STYLE_FONTCOLOR, "#446299");
-//        
-//        mxStylesheet edgeStyle = new mxStylesheet();
-//        edgeStyle.setDefaultEdgeStyle(edge);
-//        graph.setStylesheet(edgeStyle);
-//    }
-//    /* Oriented edges */
-//    private void applyEdgeDefaultsOriented() {
-//        Map<String, Object> edge = new HashMap<String, Object>();
-//        edge.put(mxConstants.STYLE_ROUNDED, true);
-//        edge.put(mxConstants.STYLE_ORTHOGONAL, false);
-//        edge.put(mxConstants.STYLE_EDGE, "elbowEdgeStyle");
-//        edge.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_CONNECTOR);
-//        edge.put(mxConstants.STYLE_ENDARROW, mxConstants.ARROW_CLASSIC);
-//        edge.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_MIDDLE);
-//        edge.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_CENTER);
-//        edge.put(mxConstants.STYLE_STROKECOLOR, "#000000"); // default is #6482B9
-//        edge.put(mxConstants.STYLE_FONTCOLOR, "#446299");
-//        
-//        mxStylesheet edgeStyle = new mxStylesheet();
-//        edgeStyle.setDefaultEdgeStyle(edge);
-//        graph.setStylesheet(edgeStyle);
-//    }
-//    
-//    public void deleteAll(){
-//        graph.removeCells(graph.getChildCells(graph.getDefaultParent(), true, true));
-//        vertex_id = 0;
-//        vertex_num = 0;
-//        edge_num = 0;
-//        vertex_array.clear();
-//        vertex_text.setText("Number of vertexes: " + vertex_num);
-//        edge_text.setText("Number of edges: " + edge_num);
-//    }
-//    /* DOM BUILDER FOR STRING */
-//    public static Document loadXMLFromString(String xml) throws Exception
-//    {
-//        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-//        DocumentBuilder builder = factory.newDocumentBuilder();
-//        InputSource is = new InputSource(new StringReader(xml));
-//        return builder.parse(is);
-//    }
-//    /* SETS GRAPH FROM XML */
-//    public void setGraph() throws Exception{
-//        deleteAll();
-//        java.lang.Object parent = graph.getDefaultParent();
-//        Document doc;
-////graphml was loaded at first
-//        System.out.println(xml);
-//        if("MxGraph".equals(xml)){
-//            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-//            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-//            doc = dBuilder.parse(soubor);//mxgraph load
-//        }
-//        else{
-//            doc = loadXMLFromString(xml);
-//        }
-//        NodeList nList = doc.getElementsByTagName("mxCell");
-//        NodeList nListGeo = doc.getElementsByTagName("mxGeometry");
-//        String value = "";
-//        int source_v, target_v = 0;
-//        Double x_coord,y_coord,w,h = 0.0;
-//        int begin = Integer.parseInt(((Element) nList.item(2)).getAttribute("id"));
-//        System.out.println(begin);
-//        if(nList.getLength()>0){
-//            for (int i = 0; i < nList.getLength(); i++) {
-//                if("1".equals(((Element) nList.item(i)).getAttribute("vertex"))){ //vertex
-//                    value = ((Element) nList.item(i)).getAttribute("value");
-//                    x_coord = Double.parseDouble(((Element) nListGeo.item(i-2)).getAttribute("x"));
-//                    y_coord = Double.parseDouble(((Element) nListGeo.item(i-2)).getAttribute("y"));
-//                    w = Double.parseDouble(((Element) nListGeo.item(i-2)).getAttribute("width"));
-//                    h = Double.parseDouble(((Element) nListGeo.item(i-2)).getAttribute("height"));
-//                    Object v = graph.insertVertex(parent, null, value, x_coord, y_coord, w, h);
-//                    vertex_array.add(v);
-//                    vertex_id++;
-//                    vertex_num++;
-//                }
-//            }
-//            System.out.println("Inserted");
-//        }
-//        
-//        if(nList.getLength()>0){
-//            for (int i = 0; i < nList.getLength(); i++) {
-//                if("1".equals(((Element) nList.item(i)).getAttribute("edge"))){ //vertex
-//                    source_v = Integer.parseInt(((Element) nList.item(i)).getAttribute("source"));
-//                    target_v = Integer.parseInt(((Element) nList.item(i)).getAttribute("target"));
-//                    if("MxGraph".equals(xml))
-//                        graph.insertEdge(parent, null, "", vertex_array.get(source_v-begin), vertex_array.get(target_v-begin));
-//                    else
-//                        graph.insertEdge(parent, null, "", vertex_array.get(source_v), vertex_array.get(target_v));
-//                    edge_num++;
-//                }
-//            }
-//            System.out.println("Inserted edges");
-//        }
-//        vertex_text.setText("Number of vertexes: " + vertex_num);
-//        edge_text.setText("Number of edges: " + edge_num);
-//    }
-    /* Create graphComponent */
-//    public void createComp(){
-//        graphComponent = new mxGraphComponent(graph);
-////graphComponent.setSize(new Dimension(300, 300));
-//        java.lang.Object parent = graph.getDefaultParent();
-//        graphComponent.getConnectionHandler().addListener(mxEvent.CONNECT, new mxIEventListener(){
-//            @Override
-//            public void invoke(Object sender, mxEventObject evt)  {
-//                edge_num++;
-//                edge_text.setText("Number of edges: " + edge_num);
-//                action_performed.setText(action_performed.getText()+"\n"+"Edge created.");
-//            }
-//        });
-//        
-//        graphComponent.getGraphControl().addMouseListener(new MouseAdapter(){
-//            @Override
-//            public void mouseClicked(MouseEvent e) {
-//                x = e.getX();
-//                y = e.getY();
-//                graph.insertVertex(parent, null, vertex_id, x-40, y-10, 80, 30);
-//                vertex_id++;
-//                vertex_num++;
-//                vertex_text.setText("Number of vertexes: " + vertex_num);
-//                action_performed.setText(action_performed.getText()+"\n"+"Vertex created.");
-//            }
-//        });
-////f.getContentPane().add(BorderLayout.CENTER, graphComponent);
-//        graphPanel.add(graphComponent, BorderLayout.CENTER);
-//    }
-    
-    
+    public int getInnerFrameCount(){
+        return this.innerFrameCount;
+    }
     
     @Override
     public void mouseClicked(MouseEvent me) {

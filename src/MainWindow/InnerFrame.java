@@ -34,6 +34,9 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
     public int x,y;
     public int innerFrameId;
     public File soubor;
+    public String chartName;
+    public boolean edge_style = false; //false = unoriented, true = oriented
+    public boolean clickable = false;
     
     public ArrayList<Object> vertex_array;
     
@@ -44,7 +47,7 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
     
     public boolean notSaved;
     
-    
+    public MainFrame parent;
     
     public InnerFrame(int count){  
         Main.desktopPanel.add(this); 
@@ -59,9 +62,7 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
         this.setVisible(true);
     }
     
-    public InnerFrame(int width, int height, int count){
-        
-        
+    public InnerFrame(int width, int height, int count, MainFrame frame){
         Main.desktopPanel.add(this); 
         
         try {
@@ -71,7 +72,8 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
         this.setInnerFrameSize(width, height);
         setDefaults(count);
         engageGraph();
-        innerFrameId = count - 1;
+        innerFrameId = count;
+        this.parent = frame;
         
         this.setVisible(true);
     }
@@ -91,6 +93,8 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
             graph.getModel().endUpdate();
             // fitViewport();
         }
+        
+        Main.utils.applyEdgeDefaults(this);
     }
     
     private void setDefaults(int count){
@@ -100,6 +104,10 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
         this.resizable = true;
         
         this.notSaved = true;
+        this.chartName = this.title;
+        
+        this.addInternalFrameListener(this);
+        
         
         this.vertex_array = new ArrayList<Object>();
     }
@@ -112,14 +120,13 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
         this.setBorder(border);
     }
     
-    public mxGraph getMxGraph(){
-        return this.graph;
-    }
-
+    
+    
+    
     @Override
     public void internalFrameOpened(InternalFrameEvent e) {
         Main.action_performed.setText(Main.action_performed.getText()+"\n"+"novy graaaaaaaaf");
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -145,17 +152,27 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
 
     @Override
     public void internalFrameActivated(InternalFrameEvent e) {
-        this.setBackground(Color.YELLOW);
+        Main.action_performed.setText(Main.action_performed.getText()+"\nframe activated");
+        this.parent.SlowDownButton.setEnabled(this.clickable);
+        this.parent.StepBackButton.setEnabled(this.clickable);
+        this.parent.PlayButton.setEnabled(this.clickable);
+        this.parent.PauseButton.setEnabled(this.clickable);
+        this.parent.AbortButton.setEnabled(this.clickable);
+        this.parent.StepFwdButton.setEnabled(this.clickable);
+        this.parent.SpeedUpButton.setEnabled(this.clickable);
+        
+        this.moveToFront();
+    }
+
+   
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void internalFrameDeactivated(InternalFrameEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.moveToBack();
     }
 }

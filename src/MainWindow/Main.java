@@ -1,9 +1,17 @@
+package MainWindow;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package MainWindow;
+
+
+//TODO
+/*
+
+chyba pri loadu nacteneho grafu a pridani fci(na to se podivam ja)
+vybrani umisteni na ulozeni obrazku
+*/
 
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.view.mxGraph;

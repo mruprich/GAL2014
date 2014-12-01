@@ -6,15 +6,19 @@
 package MainWindow;
 
 import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxEventSource;
+import com.mxgraph.view.mxStylesheet;
 import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.parsers.DocumentBuilder;
@@ -73,9 +77,8 @@ public class Utils {
         returnVal = fc.showOpenDialog(inner);
         
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            System.err.println("debug" + fc.getSelectedFile().getName());
-            inner.soubor = new File(fc.getSelectedFile().getAbsolutePath());
-            System.err.println("Opening: " + inner.soubor.getName());//location of file
+            inner.soubor = fc.getSelectedFile();
+            inner.setTitle(fc.getSelectedFile().getName());
         } else {
             System.err.println("Otevirani zruseno uzivatelem.");
             return;
@@ -162,5 +165,41 @@ public class Utils {
         DocumentBuilder builder = factory.newDocumentBuilder();
         InputSource is = new InputSource(new StringReader(xml));
         return builder.parse(is);
+    }
+    
+    /* Oriented edges */
+    public void applyEdgeDefaultsOriented(InnerFrame inner) {
+        Map<String, Object> edge = new HashMap<String, Object>();
+        edge.put(mxConstants.STYLE_ROUNDED, true);
+        edge.put(mxConstants.STYLE_ORTHOGONAL, false);
+        edge.put(mxConstants.STYLE_EDGE, "elbowEdgeStyle");
+        edge.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_CONNECTOR);
+        edge.put(mxConstants.STYLE_ENDARROW, mxConstants.ARROW_CLASSIC);
+        edge.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_MIDDLE);
+        edge.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_CENTER);
+        edge.put(mxConstants.STYLE_STROKECOLOR, "#000000"); // default is #6482B9
+        edge.put(mxConstants.STYLE_FONTCOLOR, "#446299");
+        
+        mxStylesheet edgeStyle = new mxStylesheet();
+        edgeStyle.setDefaultEdgeStyle(edge);
+        inner.graph.setStylesheet(edgeStyle);
+    }
+    
+        /* Unoriented edges */
+    public void applyEdgeDefaults(InnerFrame inner) {
+        // Settings for edges
+        Map<String, Object> edge = new HashMap<String, Object>();
+        edge.put(mxConstants.STYLE_ROUNDED, false);//TODO
+        edge.put(mxConstants.STYLE_ORTHOGONAL, false);
+        //edge.put(mxConstants.STYLE_EDGE, "elbowEdgeStyle");//TODO
+        edge.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_CONNECTOR);
+        edge.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_MIDDLE);
+        edge.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_CENTER);
+        edge.put(mxConstants.STYLE_STROKECOLOR, "#000000"); // default is #6482B9
+        edge.put(mxConstants.STYLE_FONTCOLOR, "#446299");
+        
+        mxStylesheet edgeStyle = new mxStylesheet();
+        edgeStyle.setDefaultEdgeStyle(edge);
+        inner.graph.setStylesheet(edgeStyle);
     }
 }
