@@ -39,6 +39,7 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
     public boolean clickable = false;
     public boolean edited = false;
     public boolean menu = true;
+    public Object first,second = null;
     
     public ArrayList<Object> vertex_array;
     
@@ -82,7 +83,13 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
     
     //just some basic graph settings
     private void engageGraph(){
-        graph = new mxGraph();
+        graph = new mxGraph(){
+            public boolean isCellMovable(Object cell)
+            {
+                return !getModel().isEdge(cell);
+            }
+        };
+        
         view = graph.getView();
         Main.utils.createComp(this);
            
@@ -95,6 +102,7 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
             graph.getModel().endUpdate();
             // fitViewport();
         }
+        
         
         Main.utils.applyEdgeDefaults(this);
     }

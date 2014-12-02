@@ -208,6 +208,7 @@ public class Utils {
         mxStylesheet edgeStyle = new mxStylesheet();
         edgeStyle.setDefaultEdgeStyle(edge);
         inner.graph.setStylesheet(edgeStyle);
+        
     }
     
     public boolean saveFile(String location, InnerFrame inner, String filename){

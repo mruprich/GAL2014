@@ -213,23 +213,29 @@ public class Actions{
                 inner.graph.selectAll();
                 Object[] cells = inner.graph.getSelectionCells();
                 
-                int even_vertexes = 0;
+                int odd_vertexes = 0;
                 
                 for(Object c: cells){
                     mxCell cell = (mxCell) c;
                     if(cell.isVertex()){
                         if(cell.getEdgeCount()%2 == 1){
-                            even_vertexes++;
+                            odd_vertexes++;
+                            if (inner.first==null){
+                                inner.first = cell;
+                            }
+                            else if(inner.second==null){
+                                inner.second = cell;
+                            }
                         }
-                    }
-                    else{
-                        continue;
                     }
                 }
                 
                 //check whether the algorithm is even possible
-                if(even_vertexes != 0 && even_vertexes != 2){
+                if(odd_vertexes != 0 && odd_vertexes != 2){
                     JOptionPane.showMessageDialog(frame, "The graph does not fulfill conditions for Fleury algorithm");
+                    inner.first = null;
+                    inner.second = null;
+                    inner.graph.getSelectionModel().clear();
                 }
                 else{
                     inner.clickable = true;
@@ -251,10 +257,18 @@ public class Actions{
                     inner.parent.DeleteButton.setEnabled(inner.menu);
                     inner.parent.OrientedButton.setEnabled(inner.menu);
                     inner.parent.StartButton.setEnabled(inner.menu);
+                    
+                    inner.graph.getSelectionModel().clear();
+                    inner.graph.setCellsEditable(false);
+                    inner.graph.setEnabled(false);
+                    
+                    inner.graphComponent.setConnectable(false);
+                    inner.graphComponent.setEnabled(false);
+                    
                 }
-                //inner.graphComponent.setConnectable(false);
-                //inner.graph.setEnabled(false);
-                //inner.graphComponent.setEnabled(false);
+
+                
+                
             }
         });        
     }

@@ -8,11 +8,19 @@ package MainWindow;
 
 //TODO
 /*
-dodelat osetreni kdyz nenivybrany graf
-load musi splnovat .xml
-zkusit obarvit nejaky uzly
-chyba pri loadu nacteneho grafu a pridani fci(na to se podivam ja)
-vybrani umisteni na ulozeni obrazku
+-dodelat osetreni kdyz neni vybrany graf
+-load musi splnovat .xml - a hlavne loadovat graphml!!
+
+-zkusit obarvit nejaky uzly
+-chyba pri loadu nacteneho grafu a pridani fci(na to se podivam ja)
+-vybrani umisteni na ulozeni obrazku
+-muzes si vypsat vsechny uzly a priradit k nim hrany, do nejake Mapy
+-dva pruchody v jednom si projit vsecky uzly a dat do mapy v druhem vsechny hrany a prirazovat true false
+
+-umoznit mazani uzlu a hran!! - pri editaci nejdou smazat uzly ktery omylem vytvorim
+-hrany musi koncit v uzlech!! - nejlepe aby to neslo vytvorit mimo uzly ty hrany??!? jestli to jde
+-jediny co by melo zustat je moznost po startu zvolit nejaky uzel kde se zacne Fleury
+
 */
 
 import com.mxgraph.swing.mxGraphComponent;
@@ -61,19 +69,7 @@ public class Main {
     
     static public Utils utils;
     
-    
-    
-//    public mxGraphComponent graphComponent;
-//    public mxGraph graph;
 
-
-
-    
-    
-    
-    
-    
-    
     public static void main(String[] args) {
         MainFrame f = new MainFrame();
         Actions buttonActions = new Actions(f);

@@ -46,7 +46,15 @@ public class InnerActions {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                Main.action_performed.setText(Main.action_performed.getText() + "\nPlay Pressed");
+                InnerFrame inner = (InnerFrame)Main.desktopPanel.getSelectedFrame();
+                
+                if(inner.first != null && inner.second != null){
+                    
+                }
+                else{
+                    
+                }
+                
             }
         });
         
@@ -127,9 +135,13 @@ public class InnerActions {
                 inner.parent.OrientedButton.setEnabled(inner.menu);
                 inner.parent.StartButton.setEnabled(inner.menu);
                 
-                //inner.graphComponent.setConnectable(true);
-                //inner.graph.setEnabled(true);
-                //inner.graphComponent.setEnabled(true);
+                
+                inner.graph.getSelectionModel().clear();
+                
+                inner.graph.setCellsEditable(true);
+                inner.graphComponent.setConnectable(true);
+                inner.graph.setEnabled(true);
+                inner.graphComponent.setEnabled(true);
                 
             }
         });
