@@ -21,13 +21,11 @@ package MainWindow;
 -hrany musi koncit v uzlech!! - nejlepe aby to neslo vytvorit mimo uzly ty hrany??!? jestli to jde
 -jediny co by melo zustat je moznost po startu zvolit nejaky uzel kde se zacne Fleury
 
+-pri close nejak kontrolovat zda je graf nejak upravenej od posledniho savu?!?! jde to vubec??
+-u prvniho new chart neni krizek ani resize
+
 */
 
-import com.mxgraph.swing.mxGraphComponent;
-import com.mxgraph.view.mxGraph;
-import java.awt.BorderLayout;
-import java.io.File;
-import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -39,14 +37,6 @@ import javax.swing.JDesktopPane;
  * @author Formaiko
  */
 public class Main {
-    
-    /*****  "global" variables  *****/
-//    public int x,y;
-//    public int vertex_id = 0;
-//    public String xml;
-//    static public File soubor = null;
-//    public int vertex_num, edge_num = 0;
-//    private boolean edge_style = false; //false = unoriented, true = oriented
     
     /*****   swing components *****/
     static public JFrame f;

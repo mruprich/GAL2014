@@ -7,7 +7,6 @@ package MainWindow;
 
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.layout.mxIGraphLayout;
-import java.awt.Color;
 import javax.swing.JInternalFrame;
 import javax.swing.event.*;
 import javax.swing.border.LineBorder;
@@ -15,12 +14,11 @@ import javax.swing.border.LineBorder;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxGraphView;
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
-import javax.swing.JDesktopPane;
+import javax.swing.JOptionPane;
 
 
 /**
@@ -139,12 +137,26 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
 
     @Override
     public void internalFrameClosing(InternalFrameEvent e) {
-        this.dispose();
+        int ret = JOptionPane.showConfirmDialog(this, "All unsaved progress will be discarded!!\nDo you still wish to close this graph?", 
+                "Close graph", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        
+        if(ret == JOptionPane.YES_OPTION){
+            Main.action_performed.setText(Main.action_performed.getText() + "\nclosing");
+            this.dispose();
+        }
+        
+        
+        //throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public void internalFrameClosed(InternalFrameEvent e) {
+        /*int ret = JOptionPane.showConfirmDialog(this, "All unsaved progress will be discarded!!\nDo you still wish to close this graph?", 
+                "Close graph", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
         
+        if(ret == JOptionPane.YES_OPTION){
+            //this.dispose();
+        }*/
     }
 
     @Override
@@ -174,7 +186,6 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
         this.parent.LoadButton.setEnabled(this.menu);
         this.parent.SaveAsImage.setEnabled(this.menu);
         this.parent.DeleteButton.setEnabled(this.menu);
-        this.parent.OrientedButton.setEnabled(this.menu);
         this.parent.StartButton.setEnabled(this.menu);
         
         this.moveToFront();

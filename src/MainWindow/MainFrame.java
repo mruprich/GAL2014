@@ -5,96 +5,26 @@
 */
 package MainWindow; 
 
-
-import com.mxgraph.canvas.mxICanvas;
-import com.mxgraph.io.mxCodec;
-import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
-import com.mxgraph.layout.mxIGraphLayout;
-import com.mxgraph.reader.mxGraphViewImageReader;
-import com.mxgraph.reader.mxGraphViewReader;
-import com.mxgraph.util.mxCellRenderer;
-import com.mxgraph.util.mxConstants;
-import com.mxgraph.util.mxEvent;
-import com.mxgraph.util.mxEventObject;
-import com.mxgraph.util.mxEventSource.mxIEventListener;
-import com.mxgraph.util.mxUtils;
-
-
-import com.mxgraph.view.mxStylesheet;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import javax.swing.BoxLayout;
-import static java.awt.PageAttributes.ColorType.COLOR;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.TextArea;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
-import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import java.awt.FlowLayout;
-import java.awt.Image;
-import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
 import javax.swing.JDesktopPane;
-import javax.swing.JInternalFrame;
+import javax.swing.border.EmptyBorder;
 
 /**
  *
@@ -118,6 +48,7 @@ public class MainFrame extends JFrame implements MouseListener,MouseWheelListene
       public JButton SaveAsImage;
       public JButton OrientedButton;
       public JButton StartButton;
+      public JButton HelpButton;
       
       /***** controls buttons *****/
       public JButton SlowDownButton;
@@ -177,12 +108,13 @@ public class MainFrame extends JFrame implements MouseListener,MouseWheelListene
         
         /***** Panel for buttons *****/
         Main.buttonPanel = new JPanel();
-        Main.buttonPanel.setLayout(new GridLayout(7,1));
+        Main.buttonPanel.setLayout(new GridLayout(5,1));
         Main.buttonPanel.setPreferredSize(new Dimension(100, 70));
         
         /***** Panel for start button *****/
         Main.startPanel = new JPanel();
         Main.startPanel.setLayout(new BorderLayout());
+        Main.startPanel.setBorder(new EmptyBorder(15,20,15,20));
         Main.startPanel.setPreferredSize(new Dimension(100, 70));
           
         Main.mainPanel.add(Main.infoPanel, BorderLayout.PAGE_START);

@@ -12,6 +12,7 @@ import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxEventSource;
 import com.mxgraph.view.mxStylesheet;
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -24,6 +25,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -72,7 +75,7 @@ public class Utils {
     
     
     /***** OpenFile funkce pro Load *****/
-    public void OpenFile(InnerFrame inner) throws SAXException, IOException, ParserConfigurationException, TransformerException{
+    public boolean OpenFile(InnerFrame inner) throws SAXException, IOException, ParserConfigurationException, TransformerException{
         JFileChooser fc = new JFileChooser();
         int returnVal;
         FileNameExtensionFilter xmlfilter = new FileNameExtensionFilter("xml files (*.xml)", "xml");
@@ -85,10 +88,11 @@ public class Utils {
             inner.setTitle(fc.getSelectedFile().getName());
         } else {
             System.err.println("Otevirani zruseno uzivatelem.");
-            return;
+            return false;
         }
         XMLconvertor graphmlToMxgraph = new XMLconvertor(inner.soubor);
         inner.xml = graphmlToMxgraph.convertLoaded(inner.soubor);
+        return true;
     }
     
     
@@ -222,5 +226,15 @@ public class Utils {
         }
         
         return true;
+    }
+    
+    public JPanel createTab(){
+        JPanel panel = new JPanel();
+        JLabel aboutLabel = new JLabel();
+        aboutLabel.setHorizontalAlignment(JLabel.CENTER);
+        panel.setLayout(new GridLayout(1,1));
+        panel.add(aboutLabel);
+           
+        return panel;
     }
 }
