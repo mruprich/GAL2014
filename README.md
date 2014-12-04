@@ -32,3 +32,36 @@ Postup pro GIT:
 2. Po editaci nekterych souboru dat git commit -am "nejaka zprava o commitu"
 3. nakonec po 2. dat git push
 
+
+
+Algoritmus!!
+hlavni myslenka: Don’t burn your bridges behind you.
+a.) 0 lichych uzlu - okruh
+b.) 2 liche uzly - cesta
+
+Algoritmus:
+1.) pokud plati podminka a.) vyber jako startovni uzel libovolny uzel
+    pokud plati podminka b.) vyber jeden z lichych uzlu
+    
+2.) vyber takovou hranu, ktera neni BRIDGE, pokud nemas jinou moznost tak vyber prave ji
+    
+3.) Pokud nemas kam jit, konec. Konec je budto v pocatecnim bode (a) nebo v druhem lichem bode (b)
+    Pokud mas kam jit, opakuj 2.)
+
+-nejlepsi bude uchovavat 2 kopie grafu - jedna bude minulost (to co se uz proslo), druha bude budoucnost (to co jeste neni obarveny a musi se teprve projit)
+
+Jak zjistit jestli je nejaka hrana bridge??
+//nejdriv spocitam pocet dosazitelnych uzlu z uzlu u ve kterem jsem - pouziju uz seskrtany graf - visitedGraph
+count1 = DFS(visitedGraph, u)
+
+//odstranim hranu (u,v) kterou zkoumam zda neni bridge
+remove(visitedGraph, (u,v))
+
+//zjistim pocet dosazitelnych uzlu bez hrany (u,v) z uzlu u
+count2 = DFS(visitedGraph, u)
+
+//nakonec:
+if(count1 < count2){
+    (u,v) je bridge a nemuzu se timto smerem vydat
+    return true;
+}
