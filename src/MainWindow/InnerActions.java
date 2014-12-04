@@ -48,7 +48,7 @@ public class InnerActions {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                Main.utils.oneStepBack();
+                oneStepBack();
             }
         });
         
@@ -63,37 +63,26 @@ public class InnerActions {
             {
                 InnerFrame inner = (InnerFrame)Main.desktopPanel.getSelectedFrame();
                 
-                inner.graph.selectAll();
-                    
-                Object[] cells = inner.graph.getSelectionCells();
-                inner.graph.getSelectionModel().clear();
+                inner.pausePressed = false;
                 
-                for(Object c: cells){
-                    mxCell cell = (mxCell) c;
-                    if(!inner.pausePressed)
-                        if(cell.isVertex()){
-                            try{
-                                TimeUnit.SECONDS.sleep(inner.waitTime);
-                            } catch (InterruptedException ex) {
-                                Logger.getLogger(InnerActions.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                            
-                            inner.graph.setSelectionCell(c);
-                            Main.utils.oneStepFwd();   
-                        }
-                }
+                Thread play = new Thread(){
+                    @Override
+                    public void run(){
+                        performAlg();
+                    }
+                };
+                play.start();
                 
-                if(inner.first != null && inner.second != null){
+                //while(!inner.pausePressed){
+//                    try {
+//    Thread.sleep(1000);                 //1000 milliseconds is one second.
+//} catch(InterruptedException ex) {
+//    Thread.currentThread().interrupt();
+//}
                     
-                }
-                else{
                     
-                }
-                try{
-                    TimeUnit.SECONDS.sleep(inner.waitTime);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(InnerActions.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                    
+                //}
                 
             }
         });
@@ -110,7 +99,7 @@ public class InnerActions {
                 InnerFrame inner = (InnerFrame)Main.desktopPanel.getSelectedFrame();
                 
                 inner.pausePressed = true;
-                Main.action_performed.setText(Main.action_performed.getText() + "\nPause Pressed");
+                Main.action_performed.setText(Main.action_performed.getText() + "\nPause pressed, algorithm will now pause");
                 
             }
         });
@@ -137,7 +126,7 @@ public class InnerActions {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                Main.utils.oneStepFwd();
+                oneStepFwd();
             }
         });
         
@@ -202,5 +191,31 @@ public class InnerActions {
             }
         });
     }
-    
+
+    /***** this function will perform one step through the graph *****/
+    public void oneStepFwd(){
+        Main.action_performed.setText(Main.action_performed.getText()+"\nOneStepFwd");
+
+    }
+
+    /***** This function will perform one step backward *****/
+    public void oneStepBack(){
+        Main.action_performed.setText(Main.action_performed.getText()+"\nOneStepBack");
+    }
+
+    public void performAlg(){
+        InnerFrame inner = (InnerFrame)Main.desktopPanel.getSelectedFrame();
+        while(!inner.pausePressed){
+            try {
+                Thread.sleep(1000);                 //1000 milliseconds is one second.
+            } catch(InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+            
+            oneStepFwd();
+        }
+        
+        Thread.interrupted();
+    }
 }
+    

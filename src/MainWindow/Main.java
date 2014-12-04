@@ -11,7 +11,8 @@ package MainWindow;
 -dopsat Fleuryho algoritmus aspon pseudokodem na git
 -ukladani obrazku - chtelo by to aspon nejaky padding
 -pridat kontrolu zavreni celeho programu!!
-
+-kdyz upravim uzel - jeho id - a pak kliknu jinam tak se vytvori dalsi uzel
+-spravne jmena grafu pri load a save
 
 -load musi splnovat .xml - a hlavne loadovat graphml!!
 

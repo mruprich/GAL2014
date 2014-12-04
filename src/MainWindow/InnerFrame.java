@@ -7,6 +7,7 @@ package MainWindow;
 
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.layout.mxIGraphLayout;
+import com.mxgraph.model.mxCell;
 import javax.swing.JInternalFrame;
 import javax.swing.event.*;
 import javax.swing.border.LineBorder;
@@ -39,15 +40,27 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
     public boolean menu = true;
     public Object first,second = null;
     
+    public int[][] matrix;
+    
     public int waitTime = 1;
     public boolean pausePressed = false;
     
     public ArrayList<Object> vertex_array;
+    public ArrayList<Object> vertexes;//this is for actual vertexes only!!
     
     public mxGraphComponent graphComponent;
     public mxGraph graph;
     public mxGraphView view;
     public String xml;
+    
+    /***** These will be used by algorithm to delete original graph step by step *****/
+    public mxGraphComponent graphComponentCopy;
+    public mxGraph graphCopy;
+    public mxGraphView viewCopy;
+    
+    
+    public ArrayList<Object> walkthrough;//for particular steps
+    public ArrayList<String> finalSequence;//final sequence of vertexes
     
     public boolean notSaved;
     
@@ -95,6 +108,7 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
         Main.utils.createComp(this);
            
         mxIGraphLayout layout = new mxHierarchicalLayout(graph);
+        graph.setCellsDeletable(true);
         
         graph.getModel().beginUpdate();
         try {
@@ -119,6 +133,7 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
         this.chartName = this.title;
         
         this.vertex_array = new ArrayList<Object>();
+        this.vertexes = new ArrayList<Object>();
     }
     
     public void setInnerFrameSize(int width, int height){
@@ -204,5 +219,17 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
     @Override
     public void internalFrameDeactivated(InternalFrameEvent e) {
         this.moveToBack();
+        this.pausePressed = true;
+    }
+    
+    public int getArrayIndex(int id){
+        for(int i=0; i<this.vertexes.size(); i++){
+            mxCell vertex = (mxCell) this.vertexes.get(i);
+            
+            if(Integer.parseInt(vertex.getId()) == id){
+                return i;
+            }
+        }
+        return -1;
     }
 }

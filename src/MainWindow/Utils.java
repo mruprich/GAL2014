@@ -6,11 +6,14 @@
 package MainWindow;
 
 import com.mxgraph.model.mxCell;
+import com.mxgraph.model.mxGraphModel;
+import com.mxgraph.model.mxICell;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxEventSource;
+import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxStylesheet;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -24,6 +27,7 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -48,7 +52,7 @@ public class Utils {
     
     public void createComp(InnerFrame frame){
         frame.graphComponent = new mxGraphComponent(frame.graph);
-//graphComponent.setSize(new Dimension(300, 300));
+        //graphComponent.setSize(new Dimension(300, 300));
         java.lang.Object parent = frame.graph.getDefaultParent();
         frame.graphComponent.getConnectionHandler().addListener(mxEvent.CONNECT, new mxEventSource.mxIEventListener(){
             @Override
@@ -137,6 +141,11 @@ public class Utils {
                     Object v = inner.graph.insertVertex(parent, vertex_id, value, x_coord, y_coord, w, h);
                    // System.out.println(v);
                     inner.vertex_array.add(v);
+                    
+                    mxCell vert = (mxCell) v;
+                    if(vert.isVertex()){
+                        inner.vertexes.add(v);
+                    }
                     inner.vertex_id++;
                     inner.vertex_count++;
                 }
@@ -269,14 +278,92 @@ public class Utils {
         return panel;
     }
     
-    /***** this function will perform one step through the graph *****/
-    public void oneStepFwd(){
-        Main.action_performed.setText(Main.action_performed.getText()+"\nOneStepFwd");
+    /***** Function for DFS - returns number of vertexes accessible from the actual vertex *****/
+    public int countDFS(mxGraph graph, mxCell vertex){
+        int result = 0;
         
+        Stack stack = new Stack();
+        Object[] cells = graph.getSelectionCells();
+        
+        
+        stack.add(vertex);
+        
+        while(!stack.empty()){
+            mxCell actualVertex = (mxCell)stack.pop(); //take vertex from stack
+            
+            
+        }
+        
+        /*
+        for(Object c: cells){
+            mxCell cell = (mxCell) c;
+            if(cell.isVertex()){
+                Main.action_performed.setText(Main.action_performed.getText()+"\n"+"vertex: "+cell.getValue());
+            }
+        }*/
+        
+        return result;
     }
     
-    /***** This function will perform one step backward *****/
-    public void oneStepBack(){
-        Main.action_performed.setText(Main.action_performed.getText()+"\nOneStepBack");
+    
+    public void graphMatrix(InnerFrame inner){
+        InnerFrame frame = (InnerFrame) inner;
+        
+        frame.matrix = new int[(frame.vertex_count)][(frame.vertex_count)];
+        
+        
+        //inicialize
+        for(int i=0; i<frame.vertex_count; i++){
+            for(int j=0; j<frame.vertex_count; j++){
+                frame.matrix[i][j] = 0;
+            }
+        }
+        
+        frame.graph.selectAll();
+        Object[] cells = frame.graph.getSelectionCells();
+        
+        for(Object c:cells){
+            mxCell cell = (mxCell) c;
+            if(cell.isEdge()){
+                int x = Integer.parseInt(cell.getSource().getId());
+                int y = Integer.parseInt(cell.getTarget().getId());
+                
+                int index_x = frame.getArrayIndex(x);
+                int index_y = frame.getArrayIndex(y);
+                
+                if(index_x != -1 && index_y != -1){
+                    frame.matrix[index_x][index_y] = 1;
+                    frame.matrix[index_y][index_x] = 1;
+                }
+                //System.out.print("connection at: "+x+","+y+"\n");
+            }
+        }
+        
+        //debug
+        for(int i=0; i<frame.vertex_count; i++){
+            for(int j=0; j<frame.vertex_count; j++){
+                System.out.print(frame.matrix[i][j]);
+            }
+            System.out.print("\n");
+        }
     }
 }
+
+
+
+/*vertex
+<mxCell id="2" parent="1" value="0" vertex="1">
+    <mxGeometry as="geometry" height="30.0" width="80.0" x="230.0" y="103.0"/>
+</mxCell>
+
+vzdycky indexovat uzel s -2
+*/
+
+/*edge
+<mxCell edge="1" id="9" parent="1" source="2" style="" target="4" value="">
+    <mxGeometry as="geometry" relative="1">
+        <mxPoint as="sourcePoint" x="270.0" y="120.0"/>
+        <mxPoint as="targetPoint" x="160.0" y="250.0"/>
+    </mxGeometry>
+</mxCell>
+*/

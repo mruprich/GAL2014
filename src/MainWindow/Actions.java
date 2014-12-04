@@ -355,6 +355,8 @@ public class Actions{
                         inner.parent.DeleteButton.setEnabled(inner.menu);
                         inner.parent.StartButton.setEnabled(inner.menu);
                         
+                        Main.utils.graphMatrix(inner);
+                        
                         inner.graph.getSelectionModel().clear();
                         inner.graph.setCellsEditable(false);
                         inner.graph.setEnabled(false);
