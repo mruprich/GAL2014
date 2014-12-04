@@ -58,6 +58,7 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
     public mxGraph graphCopy;
     public mxGraphView viewCopy;
     
+    Thread play;
     
     public ArrayList<Object> walkthrough;//for particular steps
     public ArrayList<String> finalSequence;//final sequence of vertexes

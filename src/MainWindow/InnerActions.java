@@ -8,6 +8,7 @@ package MainWindow;
 import com.mxgraph.model.mxCell;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 import java.util.concurrent.TimeUnit;
@@ -65,13 +66,27 @@ public class InnerActions {
                 
                 inner.pausePressed = false;
                 
-                Thread play = new Thread(){
-                    @Override
-                    public void run(){
-                        performAlg();
+                inner.play = new Thread();
+                inner.play.start();
+                
+                
+                while(!inner.pausePressed){
+                    try{
+                        inner.play.sleep(1000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(InnerActions.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                };
-                play.start();
+            
+            
+                    oneStepFwd();
+                }
+//                Thread play = new Thread(){
+//                    @Override
+//                    public void run(){
+                        //performAlg();
+//                    }
+//                };
+//                play.start();
                 
                 //while(!inner.pausePressed){
 //                    try {
@@ -194,8 +209,11 @@ public class InnerActions {
 
     /***** this function will perform one step through the graph *****/
     public void oneStepFwd(){
+        InnerFrame inner = (InnerFrame)Main.desktopPanel.getSelectedFrame();
         Main.action_performed.setText(Main.action_performed.getText()+"\nOneStepFwd");
-
+        Random rand = new Random();
+        int  n = rand.nextInt(inner.vertexes.size()-1);
+        Main.utils.countDFS(inner.graph, (mxCell)inner.vertexes.get(n), inner);
     }
 
     /***** This function will perform one step backward *****/
@@ -205,17 +223,9 @@ public class InnerActions {
 
     public void performAlg(){
         InnerFrame inner = (InnerFrame)Main.desktopPanel.getSelectedFrame();
-        while(!inner.pausePressed){
-            try {
-                Thread.sleep(1000);                 //1000 milliseconds is one second.
-            } catch(InterruptedException ex) {
-                Thread.currentThread().interrupt();
-            }
-            
-            oneStepFwd();
-        }
         
-        Thread.interrupted();
+        
+        
     }
 }
     

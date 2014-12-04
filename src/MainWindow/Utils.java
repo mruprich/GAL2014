@@ -279,19 +279,33 @@ public class Utils {
     }
     
     /***** Function for DFS - returns number of vertexes accessible from the actual vertex *****/
-    public int countDFS(mxGraph graph, mxCell vertex){
+    public int countDFS(mxGraph graph, mxCell vertex, InnerFrame inner){
+        
         int result = 0;
         
         Stack stack = new Stack();
+        ArrayList<mxCell> array = new ArrayList();
         Object[] cells = graph.getSelectionCells();
         
+        for(Object c:cells){
+            mxCell cell = (mxCell) c;
+            if(cell.isVertex() && cell!=vertex){
+                array.add(cell);
+            }
+        }
         
         stack.add(vertex);
         
         while(!stack.empty()){
             mxCell actualVertex = (mxCell)stack.pop(); //take vertex from stack
+            Main.action_performed.setText(Main.action_performed.getText()+"\nvertex: "+actualVertex.getId());
+            int index = inner.getArrayIndex(Integer.getInteger(actualVertex.getId()));
             
-            
+            for(int i=0; i<inner.vertexes.size(); i++){
+                if(inner.matrix[index][i] == 1){
+                    stack.add(inner.vertexes.get(i));
+                }
+            }
         }
         
         /*
