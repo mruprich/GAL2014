@@ -92,7 +92,7 @@ public class XMLconvertor {
         width.setValue("80.0");
         vertex.setValue("1");
         as.setValue("geometry");
-        attr_loop1.setValue(Integer.toString(i+2));
+        attr_loop1.setValue(Integer.toString(i));
         attr2.setValue("1");
         
         mx = doc.createElement("mxCell");
@@ -166,10 +166,12 @@ public class XMLconvertor {
     // Output to console for testing
     StringWriter outWriter = new StringWriter();
     StreamResult res1 = new StreamResult(outWriter);
+    
     transformer.transform(source, res1);
     //get string
     StringBuffer sb = outWriter.getBuffer(); 
     String finalstring = sb.toString();
+    System.out.println(finalstring);
     return finalstring;
     }
     
@@ -200,12 +202,12 @@ public class XMLconvertor {
                 y_coord += 50;
             }
         }
-
+        
         for (int temp = 0; temp < nListE.getLength(); temp++) {
             Source_representation.add(((Element) nListE.item(temp)).getAttribute("source"));
             Target_representation.add(((Element) nListE.item(temp)).getAttribute("target"));
         }
-
+        System.out.println("a");
         result = convertToMx();
         return result;
     }

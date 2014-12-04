@@ -21,6 +21,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -111,12 +112,12 @@ public class Utils {
         else{
             doc = loadXMLFromString(inner.xml);
         }
-        
         NodeList nList = doc.getElementsByTagName("mxCell");
         NodeList nListGeo = doc.getElementsByTagName("mxGeometry");
         String value = "";
-        int source_v, target_v = 0;
+       
         String vertex_id = "";
+        int vertex_id2 = -1;
         Double x_coord,y_coord,w,h = 0.0;
         
         if(nList.getLength()>0){
@@ -124,17 +125,25 @@ public class Utils {
                 if("1".equals(((Element) nList.item(i)).getAttribute("vertex"))){ //vertex
                     value = ((Element) nList.item(i)).getAttribute("value");
                     x_coord = Double.parseDouble(((Element) nListGeo.item(i-2)).getAttribute("x"));
-                    vertex_id = ((Element) nList.item(i-2)).getAttribute("id");
+                    if("MxGraph".equals(inner.xml)){
+                        vertex_id = ((Element) nList.item(i-2)).getAttribute("id");
+                    }else{
+                        vertex_id = value;
+                    }
                     y_coord = Double.parseDouble(((Element) nListGeo.item(i-2)).getAttribute("y"));
                     w = Double.parseDouble(((Element) nListGeo.item(i-2)).getAttribute("width"));
                     h = Double.parseDouble(((Element) nListGeo.item(i-2)).getAttribute("height"));
+                    System.out.println(vertex_id);
                     Object v = inner.graph.insertVertex(parent, vertex_id, value, x_coord, y_coord, w, h);
+                   // System.out.println(v);
                     inner.vertex_array.add(v);
                     inner.vertex_id++;
                     inner.vertex_count++;
                 }
                 else{
-                    inner.vertex_array.add(null);
+                    if("MxGraph".equals(inner.xml)){  
+                        inner.vertex_array.add(null);
+                    }
                 }
             }
         }
@@ -142,22 +151,44 @@ public class Utils {
         if(nList.getLength()>0){
             for (int i = 0; i < nList.getLength(); i++) {
                 if("1".equals(((Element) nList.item(i)).getAttribute("edge"))){ //vertex
-                    source_v = Integer.parseInt(((Element) nList.item(i)).getAttribute("source"));
-                    target_v = Integer.parseInt(((Element) nList.item(i)).getAttribute("target"));
-                //    System.out.println("Source id:" + source_v + "Dest id:" + target_v);
-                    if("MxGraph".equals(inner.xml))
+                    if("MxGraph".equals(inner.xml)){       
+                        int source_v = Integer.parseInt(((Element) nList.item(i)).getAttribute("source"));
+                        int target_v = Integer.parseInt(((Element) nList.item(i)).getAttribute("target"));
                         inner.graph.insertEdge(parent, null, "", inner.vertex_array.get(source_v), inner.vertex_array.get(target_v));
-                    else
-                        inner.graph.insertEdge(parent, null, "", inner.vertex_array.get(source_v), inner.vertex_array.get(target_v));
-                    inner.edge_count++;
+                    }else{
+                        String source_v = ((Element) nList.item(i)).getAttribute("source");
+                        String target_v = ((Element) nList.item(i)).getAttribute("target");
+                        mxCell o_source = findInVertexList(inner.vertex_array,source_v);
+                        mxCell o_target = findInVertexList(inner.vertex_array,target_v);
+                        inner.graph.insertEdge(parent, null, "", o_source, o_target);
+                    }
+                inner.edge_count++;
                 }
             }
-            System.out.println("Inserted edges");
         }
         Main.vertex_text.setText("Number of vertexes: " + inner.vertex_count);
         Main.edge_text.setText("Number of edges: " + inner.edge_count);
     }
     
+    /**
+     * Loops through vertex_array for specific array
+     * @param vertex_array array of nodes
+     * @param id of element we are looking for
+     * @return mxCell to insert
+     */
+    public mxCell findInVertexList(ArrayList<Object> vertex_array, String id){
+        mxCell cell = null;
+        for(int i = 0; i < vertex_array.size();i++){
+            cell = (mxCell)vertex_array.get(i);
+            if(cell != null){
+                String id_elem = cell.getId();
+                if(id_elem.equals(id)){
+                    break;
+                }
+            }
+        }
+        return cell;
+    }
     
     public void deleteAll(InnerFrame inner){
         inner.graph.removeCells(inner.graph.getChildCells(inner.graph.getDefaultParent(), true, true));
