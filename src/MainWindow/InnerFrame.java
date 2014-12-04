@@ -39,6 +39,9 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
     public boolean menu = true;
     public Object first,second = null;
     
+    public int waitTime = 1;
+    public boolean pausePressed = false;
+    
     public ArrayList<Object> vertex_array;
     
     public mxGraphComponent graphComponent;
@@ -137,16 +140,16 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
 
     @Override
     public void internalFrameClosing(InternalFrameEvent e) {
-        int ret = JOptionPane.showConfirmDialog(this, "All unsaved progress will be discarded!!\nDo you still wish to close this graph?", 
-                "Close graph", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        int ret = JOptionPane.showConfirmDialog(null, "All unsaved progress will be discarded!!\nDo you still wish to close this graph?", 
+                "Close graph", JOptionPane.YES_NO_OPTION);
         
         if(ret == JOptionPane.YES_OPTION){
-            Main.action_performed.setText(Main.action_performed.getText() + "\nclosing");
-            this.dispose();
+            Main.action_performed.setText(Main.action_performed.getText() + "\n"+this.chartName + " closed");
+            dispose();
         }
-        
-        
-        //throw new UnsupportedOperationException("Not supported yet.");
+        else{
+            setDefaultCloseOperation(JInternalFrame.DO_NOTHING_ON_CLOSE);
+        }
     }
 
     @Override
@@ -161,17 +164,17 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
 
     @Override
     public void internalFrameIconified(InternalFrameEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void internalFrameDeiconified(InternalFrameEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void internalFrameActivated(InternalFrameEvent e) {
-        Main.action_performed.setText(Main.action_performed.getText()+"\nframe activated");
+        //Main.action_performed.setText(Main.action_performed.getText()+"\nframe activated");
         this.parent.SlowDownButton.setEnabled(this.clickable);
         this.parent.StepBackButton.setEnabled(this.clickable);
         this.parent.PlayButton.setEnabled(this.clickable);

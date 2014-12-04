@@ -219,6 +219,8 @@ public class MainFrame extends JFrame implements MouseListener,MouseWheelListene
         /******************************************************
          * Adding buttons to their locations
          *****************************************************/
+        
+        
         /* infoPanel */
         Main.infoPanel.add(Main.scroll_area);
         Main.infoPanel.add(Main.vertex_text);

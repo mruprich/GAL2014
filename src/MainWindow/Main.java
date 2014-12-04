@@ -8,12 +8,15 @@ package MainWindow;
 
 //TODO
 /*
--dodelat osetreni kdyz neni vybrany graf
+-dopsat Fleuryho algoritmus aspon pseudokodem na git
+-ukladani obrazku - chtelo by to aspon nejaky padding
+-pridat kontrolu zavreni celeho programu!!
+
+
 -load musi splnovat .xml - a hlavne loadovat graphml!!
 
 -zkusit obarvit nejaky uzly
 -chyba pri loadu nacteneho grafu a pridani fci(na to se podivam ja)
--vybrani umisteni na ulozeni obrazku
 -muzes si vypsat vsechny uzly a priradit k nim hrany, do nejake Mapy
 -dva pruchody v jednom si projit vsecky uzly a dat do mapy v druhem vsechny hrany a prirazovat true false
 
@@ -23,6 +26,10 @@ package MainWindow;
 
 -pri close nejak kontrolovat zda je graf nejak upravenej od posledniho savu?!?! jde to vubec??
 -u prvniho new chart neni krizek ani resize
+
+-pri startu zakazat tlacitka dole!
+-melo by to vytvaret posloupnost uzlu ktery se prochazely
+-zkusit nejaky graphml
 
 */
 

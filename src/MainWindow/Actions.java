@@ -32,6 +32,8 @@ import static javax.swing.JOptionPane.WARNING_MESSAGE;
 import static javax.swing.JOptionPane.YES_NO_OPTION;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.xml.sax.SAXException;
@@ -94,7 +96,7 @@ public class Actions{
                             if (saveName.endsWith(".xml")){
                                 saveName = saveLoc.getSelectedFile().getAbsolutePath();
                                 fileName = saveLoc.getSelectedFile().getName();
-                                Main.action_performed.setText(Main.action_performed.getText() + "\n" + saveName);
+                                Main.action_performed.setText(Main.action_performed.getText() + "\nChart save to " + saveName);
                                 try{//saving file to its chosen location
                                     PrintWriter out = new PrintWriter(saveName);
                                     out.println(inner.xml);
@@ -104,6 +106,7 @@ public class Actions{
                                 }
                                 inner.notSaved = false;
                                 inner.setTitle(fileName);
+                                inner.chartName = fileName;
                             }
                             else{
                                 Main.action_performed.setText(Main.action_performed.getText() + "\n" + "Extension needs to be .xml");
@@ -207,7 +210,8 @@ public class Actions{
                             fileName = saveLoc.getSelectedFile().getName();
                             
                             image = mxCellRenderer.createBufferedImage(inner.graph, null, 1, Color.WHITE, true, null);
-                            
+                            //BufferedImage finalImage = new BufferedImage(image.getWidth()+50, image.getHeight()+50, image.getType());
+                            //Main.action_performed.setText(Main.action_performed.getText()+"\n"+image.getWidth() + " " + image.getHeight());
                             try {
                                 ImageIO.write(image, "PNG", new File(saveName));
                                 Main.action_performed.setText(Main.action_performed.getText()+"\n"+"Image saved to " + fileName);
@@ -266,12 +270,16 @@ public class Actions{
                 help.setTitle("Help");
                 help.setSize(500, 500);
                 
-                
                 JTabbedPane insideHelp = new JTabbedPane();
                 
                 JComponent authors = Main.utils.createTab();
                 JComponent controls = Main.utils.createTab();
                 JComponent about = Main.utils.createTab();
+                
+                JTextArea authorsText = new JTextArea();
+                authorsText.setEditable(false);
+                authorsText.setText("This program was created by\nDaniel Javorsky and Michal Ruprich");
+                authors.add(authorsText);
                 
                 insideHelp.addTab("About", about);
                 insideHelp.addTab("Controls", controls);
@@ -299,10 +307,12 @@ public class Actions{
                     Object[] cells = inner.graph.getSelectionCells();
                     
                     int odd_vertexes = 0;
+                    int vertexes = 0;
                     
                     for(Object c: cells){
                         mxCell cell = (mxCell) c;
                         if(cell.isVertex()){
+                            vertexes++;
                             if(cell.getEdgeCount()%2 == 1){
                                 odd_vertexes++;
                                 if (inner.first==null){
@@ -321,6 +331,9 @@ public class Actions{
                         inner.first = null;
                         inner.second = null;
                         inner.graph.getSelectionModel().clear();
+                    }
+                    else if(vertexes==0){
+                        JOptionPane.showMessageDialog(frame, "The graph is empty. Nothing to do here...");
                     }
                     else{
                         inner.clickable = true;

@@ -5,6 +5,7 @@
  */
 package MainWindow;
 
+import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxEvent;
@@ -53,7 +54,7 @@ public class Utils {
             public void invoke(Object sender, mxEventObject evt)  {
                 frame.edge_count++;
                 Main.edge_text.setText("Number of edges: " + frame.edge_count);
-                Main.action_performed.setText(Main.action_performed.getText()+"\n"+"Edge created.");
+                //Main.action_performed.setText(Main.action_performed.getText()+"\n"+"Edge created.");
             }
         });
         
@@ -66,7 +67,7 @@ public class Utils {
                 frame.vertex_id++;
                 frame.vertex_count++;
                 Main.vertex_text.setText("Number of vertexes: " + frame.vertex_count);
-                Main.action_performed.setText(Main.action_performed.getText()+"\n"+"Vertex created.");
+                //Main.action_performed.setText(Main.action_performed.getText()+"\n"+"Vertex created.");
             }
         });
 //f.getContentPane().add(BorderLayout.CENTER, graphComponent);
@@ -232,9 +233,19 @@ public class Utils {
         JPanel panel = new JPanel();
         JLabel aboutLabel = new JLabel();
         aboutLabel.setHorizontalAlignment(JLabel.CENTER);
-        panel.setLayout(new GridLayout(1,1));
         panel.add(aboutLabel);
            
         return panel;
+    }
+    
+    /***** this function will perform one step through the graph *****/
+    public void oneStepFwd(){
+        Main.action_performed.setText(Main.action_performed.getText()+"\nOneStepFwd");
+        
+    }
+    
+    /***** This function will perform one step backward *****/
+    public void oneStepBack(){
+        Main.action_performed.setText(Main.action_performed.getText()+"\nOneStepBack");
     }
 }
