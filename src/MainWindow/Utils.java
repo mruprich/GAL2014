@@ -110,7 +110,8 @@ public class Utils {
                     }
                     list_x.add(frame.x);
                     list_y.add(frame.y);
-                    frame.graph.insertVertex(parent, null, frame.vertex_id, frame.x-40, frame.y-10, 80, 30);
+                    Object v = frame.graph.insertVertex(parent, null, frame.vertex_id, frame.x-40, frame.y-10, 80, 30);
+                    frame.vertexes.add(v);
                     frame.vertex_id++;
                     frame.vertex_count++;
                     Main.vertex_text.setText("Number of vertexes: " + frame.vertex_count);
@@ -275,6 +276,7 @@ public class Utils {
         inner.vertex_count = 0;
         inner.edge_count = 0;
         inner.vertex_array.clear();
+        inner.vertexes.clear();
         Main.vertex_text.setText("Number of vertexes: " + inner.vertex_count);
         Main.edge_text.setText("Number of edges: " + inner.edge_count);
     }

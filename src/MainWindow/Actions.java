@@ -9,6 +9,7 @@ import com.mxgraph.io.mxCodec;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.util.mxCellRenderer;
 import com.mxgraph.util.mxUtils;
+import com.mxgraph.view.mxGraph;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -343,6 +344,15 @@ public class Actions{
                         JOptionPane.showMessageDialog(frame, "The graph is empty. Nothing to do here...");
                     }
                     else{
+                        //GET GRAPH COPY
+                        inner.graphCopy = new mxGraph();
+                        inner.graphCopy.addCells(inner.graph.cloneCells(inner.graph.getChildCells(inner.graph.getDefaultParent())));
+                        /* KONTROLA ZE SE TO ZOBRAZILO SPRAVNE */
+                        inner.graphCopy.getChildVertices(inner.graphCopy.getDefaultParent());
+                        mxCodec codec = new mxCodec();
+                        String check = mxUtils.getXml(codec.encode(inner.graphCopy.getModel()));//getXml(codec.encode(inner.graph.getModel()));
+                        System.out.println(check);
+                        /* END OF CHECK */
                         inner.actualVert = inner.first;
                         inner.clickable = true;
                         inner.menu = false;
