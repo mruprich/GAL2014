@@ -139,6 +139,7 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
         
         this.vertex_array = new ArrayList<Object>();
         this.vertexes = new ArrayList<Object>();
+        
         System.out.println("az sem dosel");
     }
     

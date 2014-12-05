@@ -53,9 +53,9 @@ public class Actions{
             public void actionPerformed(ActionEvent e){
                 //Thread newThread = new Thread();
                 //newThread.start();
-                InnerFrame newFrame = new InnerFrame(500,500,++Main.f.innerFrameCount, Main.f);
+                InnerFrame newFrame = new InnerFrame(500,500,++frame.innerFrameCount, frame);
                 Main.utils.createComp(newFrame);
-                Main.action_performed.setText(Main.action_performed.getText() + "\n" + "chart" + Main.f.innerFrameCount + " created");
+                Main.action_performed.setText(Main.action_performed.getText() + "\n" + "chart" + frame.innerFrameCount + " created");
                 //Main.f.threads.add(newThread);
                 //InnerFrame newFrame = new InnerFrame(500,500,++frame.innerFrameCount, frame);
                 //Main.utils.createComp(newFrame);

@@ -214,7 +214,7 @@ public class InnerActions {
     public void fillVertexMap(InnerFrame inner){
         inner.vertexMap = new HashMap();
         
-        for(int i = 0; i < inner.vertexes.size(); i++){
+        for(int i = 0; i < inner.vertex_array.size(); i++){
             mxCell vertex = (mxCell)inner.vertexes.get(i);
             String id = vertex.getId();
             System.out.println("prochazim");

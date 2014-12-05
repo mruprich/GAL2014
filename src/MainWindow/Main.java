@@ -47,7 +47,7 @@ import javax.swing.JDesktopPane;
 public class Main {
     
     /*****   swing components *****/
-    static public MainFrame f;
+    static public JFrame f;
     
     static public JPanel graphPanel;
     static public JPanel mainPanel;
@@ -70,7 +70,7 @@ public class Main {
     
 
     public static void main(String[] args) {
-        f = new MainFrame();
+        MainFrame f = new MainFrame();
         Actions buttonActions = new Actions(f);
         controls = new InnerActions(f, desktopPanel);
         
