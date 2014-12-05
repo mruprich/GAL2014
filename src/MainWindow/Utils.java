@@ -132,7 +132,6 @@ public class Utils {
                     if("MxGraph".equals(inner.xml)){
                         vertex_id = ((Element) nList.item(i-2)).getAttribute("id");
                     }else{
-                        
                         vertex_id = value;
                     }
                     y_coord = Double.parseDouble(((Element) nListGeo.item(i-2)).getAttribute("y"));
