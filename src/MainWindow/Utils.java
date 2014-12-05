@@ -134,6 +134,7 @@ public class Utils {
                     }else{
                         vertex_id = value;
                     }
+                    
                     y_coord = Double.parseDouble(((Element) nListGeo.item(i-2)).getAttribute("y"));
                     w = Double.parseDouble(((Element) nListGeo.item(i-2)).getAttribute("width"));
                     h = Double.parseDouble(((Element) nListGeo.item(i-2)).getAttribute("height"));
