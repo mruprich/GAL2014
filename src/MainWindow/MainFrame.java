@@ -32,33 +32,35 @@ import javax.swing.border.EmptyBorder;
  */
 public class MainFrame extends JFrame implements MouseListener,MouseWheelListener,KeyListener{
     
-//    /*****  "global" variables  *****/
-      public int innerFrameCount = 0;
-      public int activeFrame = 0;
-      
-      public static JDesktopPane deskPanel;
-      
-      public ArrayList<Object> innerFrameArray;
-      
-      /***** Buttons *****/
-      public JButton NewButton;
-      public JButton SaveButton;
-      public JButton LoadButton;
-      public JButton DeleteButton;
-      public JButton SaveAsImage;
-      public JButton OrientedButton;
-      public JButton StartButton;
-      public JButton HelpButton;
-      
-      /***** controls buttons *****/
-      public JButton SlowDownButton;
-      public JButton StepBackButton;
-      public JButton PlayButton;
-      public JButton PauseButton;
-      public JButton AbortButton;
-      public JButton StepFwdButton;
-      public JButton SpeedUpButton;
-      public JButton ReeditButton;
+    /*****  "global" variables  *****/
+    public ArrayList<Thread> threads;
+
+    public int innerFrameCount = 0;
+    public int activeFrame = 0;
+
+    public static JDesktopPane deskPanel;
+
+    public ArrayList<Object> innerFrameArray;
+
+    /***** Buttons *****/
+    public JButton NewButton;
+    public JButton SaveButton;
+    public JButton LoadButton;
+    public JButton DeleteButton;
+    public JButton SaveAsImage;
+    public JButton OrientedButton;
+    public JButton StartButton;
+    public JButton HelpButton;
+
+    /***** controls buttons *****/
+    public JButton SlowDownButton;
+    public JButton StepBackButton;
+    public JButton PlayButton;
+    public JButton PauseButton;
+    public JButton AbortButton;
+    public JButton StepFwdButton;
+    public JButton SpeedUpButton;
+    public JButton ReeditButton;
       
 
     public MainFrame() {
@@ -66,9 +68,9 @@ public class MainFrame extends JFrame implements MouseListener,MouseWheelListene
         Main.utils = new Utils();
         
         /***** Main window *****/
-        Main.f = new JFrame();
-        Main.f.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        Main.f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //Main.f = new MainFrame();
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         /********************************************************************
         * Main pannels
@@ -229,11 +231,11 @@ public class MainFrame extends JFrame implements MouseListener,MouseWheelListene
         /* ADD COMPONENTS TO FRAME AT THE END */
         Main.graphPanel.add(BorderLayout.CENTER,Main.desktopPanel);
         Main.graphPanel.add(BorderLayout.PAGE_END, Main.controlsPanel);
-        Main.f.getContentPane().add(BorderLayout.CENTER, Main.graphPanel);
-        Main.f.getContentPane().add(BorderLayout.EAST, Main.mainPanel);
+        this.getContentPane().add(BorderLayout.CENTER, Main.graphPanel);
+        this.getContentPane().add(BorderLayout.EAST, Main.mainPanel);
         /* END OF ADDING */
         
-        Main.f.setVisible(true);
+        this.setVisible(true);
         
         /* REVALIDATE ALL JPANELS AND JFRAME AFTER INICIALIZATION */
         Main.graphPanel.revalidate();
@@ -242,8 +244,8 @@ public class MainFrame extends JFrame implements MouseListener,MouseWheelListene
         Main.controlsPanel.repaint();      
         Main.mainPanel.revalidate();
         Main.mainPanel.repaint();
-        Main.f.revalidate();
-        Main.f.repaint();
+        this.revalidate();
+        this.repaint();
         /* END OF REVALIDATION */ 
     }
     

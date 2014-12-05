@@ -19,6 +19,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Dictionary;
 import javax.swing.JOptionPane;
 
 
@@ -41,6 +42,7 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
     public Object first,second = null;
     
     public int[][] matrix;
+    public Dictionary vertexMap;
     
     public int waitTime = 1;
     public boolean pausePressed = false;
@@ -232,5 +234,9 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
             }
         }
         return -1;
+    }
+    
+    public void getVertexMap(){
+        
     }
 }

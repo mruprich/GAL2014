@@ -49,12 +49,15 @@ public class Actions{
         Main.buttonPanel.add(frame.NewButton);
         frame.NewButton.addActionListener(new ActionListener()
         {
+            @Override
             public void actionPerformed(ActionEvent e){
+                Thread newThread = new CustomThread();
+                newThread.start();
+                //Main.f.threads.add(newThread);
+                //InnerFrame newFrame = new InnerFrame(500,500,++frame.innerFrameCount, frame);
+                //Main.utils.createComp(newFrame);
                 
-                InnerFrame newFrame = new InnerFrame(500,500,++frame.innerFrameCount, frame);
-                Main.utils.createComp(newFrame);
-                
-                Main.action_performed.setText(Main.action_performed.getText() + "\n" + "chart" + frame.innerFrameCount + " created");
+                //Main.action_performed.setText(Main.action_performed.getText() + "\n" + "chart" + frame.innerFrameCount + " created");
             }
         });
         
