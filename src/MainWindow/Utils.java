@@ -7,6 +7,7 @@ package MainWindow;
 
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGraphModel;
+import com.mxgraph.model.mxGraphModel.mxGeometryChange;
 import com.mxgraph.model.mxICell;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxConstants;
@@ -17,6 +18,11 @@ import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxStylesheet;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.MouseInfo;
+import java.awt.Point;
+import java.awt.PointerInfo;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -26,6 +32,7 @@ import java.io.PrintWriter;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import java.util.logging.Level;
@@ -33,6 +40,8 @@ import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -50,6 +59,10 @@ import org.xml.sax.SAXException;
  */
 public class Utils {
     
+    private ArrayList<Integer> list_x = new ArrayList<Integer>();
+    private ArrayList<Integer> list_y = new ArrayList<Integer>();
+    private int index = -1;
+    
     public void createComp(InnerFrame frame){
         frame.graphComponent = new mxGraphComponent(frame.graph);
         //graphComponent.setSize(new Dimension(300, 300));
@@ -63,22 +76,108 @@ public class Utils {
             }
         });
         
+        frame.graph.addListener(mxEvent.CELLS_MOVED, new mxEventSource.mxIEventListener(){
+            @Override
+            public void invoke(Object sender, mxEventObject evt) {
+                 Map<String, Object> props = evt.getProperties();
+                 Object[] cells = (Object[]) props.get("cells");
+                 if ((cells != null) && (cells.length > 0)) {
+                    mxCell cell = (mxCell) frame.graph.getSelectionCell();
+                    
+                    //get current mouse info to get initial position of cell
+                    PointerInfo a = MouseInfo.getPointerInfo();
+                    Point b = a.getLocation();
+                    int x = (int) b.getX();
+                    int y = (int) b.getY();
+                    //end of current mouse info
+                    int dx = ((Double) props.get("dx")).intValue();
+                    int dy = ((Double) props.get("dy")).intValue();
+                    
+                    int prev_x = 0;
+                    int prev_y = 0;
+                    
+                    if(x > dx) prev_x = x - dx;
+                    else prev_x = x + dx;
+                    
+                    if(y > dx) prev_y = y - dy;
+                    else prev_y = y + dy;
+                    
+                    goThroughList(prev_x,prev_y,list_x,80,frame,"change",x, y);
+                }
+             }
+        });
+
         frame.graphComponent.getGraphControl().addMouseListener(new MouseAdapter(){
             @Override
             public void mouseClicked(MouseEvent e) {
-                frame.x = e.getX();
-                frame.y = e.getY();
-                frame.graph.insertVertex(parent, null, frame.vertex_id, frame.x-40, frame.y-10, 80, 30);
-                frame.vertex_id++;
-                frame.vertex_count++;
-                Main.vertex_text.setText("Number of vertexes: " + frame.vertex_count);
-                //Main.action_performed.setText(Main.action_performed.getText()+"\n"+"Vertex created.");
+                if(SwingUtilities.isLeftMouseButton(e)){
+                    frame.x = e.getX();
+                    frame.y = e.getY();
+                    
+                    int x = e.getX();
+                    int y = e.getY();
+
+                    mxCell cell = goThroughList(x,y,list_x,80,frame,"",0,0);
+                    if(cell != null){
+                        return;
+                    }
+                        
+                    list_x.add(frame.x);
+                    list_y.add(frame.y);
+                    
+                    frame.graph.insertVertex(parent, null, frame.vertex_id, frame.x-40, frame.y-10, 80, 30);
+                    frame.vertex_id++;
+                    frame.vertex_count++;
+                    Main.vertex_text.setText("Number of vertexes: " + frame.vertex_count);
+                    //Main.action_performed.setText(Main.action_performed.getText()+"\n"+"Vertex created.");
+                    }
+                    else{
+                        int x = e.getX();
+                        int y = e.getY();
+
+                        goThroughList(x,y,list_x,80,frame,"remove",0,0);
+                        
+                        frame.graph.getModel().remove(frame.graph.getSelectionCell());
+                        frame.vertex_id--;
+                        frame.vertex_count--;
+                        Main.vertex_text.setText("Number of vertexes: " + frame.vertex_count);
+                    }
             }
         });
 //f.getContentPane().add(BorderLayout.CENTER, graphComponent);
         frame.add(frame.graphComponent, BorderLayout.CENTER);
     }
     
+    public mxCell goThroughList(int x,int y, ArrayList<Integer> list,int limit,InnerFrame frame, String action, int new_position_x, int new_position_y){
+        mxCell cell = null;
+        for(int i = 0; i < list.size();i++){
+            int ele = list.get(i);
+            if(ele < x + limit && ele > x - limit){
+                int ele_y = list_y.get(i);
+                if(ele_y < 30 + y && ele_y > y - 30){
+                    index = i;
+                    cell = (mxCell) frame.graphComponent.getCellAt(ele, ele_y, false);
+                    if(action == "remove"){
+                        list_x.remove(i);
+                        list_y.remove(i);
+                        return null;
+                    }
+                    else if(action == "change"){
+                        list_x.remove(i);
+                        list_y.remove(i);
+                           
+                        System.out.println("x:" + new_position_x);
+                        System.out.println("y:" + new_position_y);
+
+                        list_x.add(new_position_x);
+                        list_y.add(new_position_y);
+                    }
+                    return cell;
+                } 
+            }
+        }
+        return cell;
+    }
     
     /***** OpenFile funkce pro Load *****/
     public boolean OpenFile(InnerFrame inner) throws SAXException, IOException, ParserConfigurationException, TransformerException{
@@ -139,8 +238,10 @@ public class Utils {
                     h = Double.parseDouble(((Element) nListGeo.item(i-2)).getAttribute("height"));
                     System.out.println(vertex_id);
                     Object v = inner.graph.insertVertex(parent, vertex_id, value, x_coord, y_coord, w, h);
-                   // System.out.println(v);
                     inner.vertex_array.add(v);
+                    
+                    list_x.add(x_coord.intValue());
+                    list_y.add(y_coord.intValue());
                     
                     mxCell vert = (mxCell) v;
                     if(vert.isVertex()){
