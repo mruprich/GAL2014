@@ -51,8 +51,11 @@ public class Actions{
         {
             @Override
             public void actionPerformed(ActionEvent e){
-                Thread newThread = new CustomThread();
-                newThread.start();
+                //Thread newThread = new Thread();
+                //newThread.start();
+                InnerFrame newFrame = new InnerFrame(500,500,++Main.f.innerFrameCount, Main.f);
+                Main.utils.createComp(newFrame);
+                Main.action_performed.setText(Main.action_performed.getText() + "\n" + "chart" + Main.f.innerFrameCount + " created");
                 //Main.f.threads.add(newThread);
                 //InnerFrame newFrame = new InnerFrame(500,500,++frame.innerFrameCount, frame);
                 //Main.utils.createComp(newFrame);
@@ -359,6 +362,7 @@ public class Actions{
                         inner.parent.StartButton.setEnabled(inner.menu);
                         
                         Main.utils.graphMatrix(inner);
+                        Main.controls.fillVertexMap(inner);
                         
                         inner.graph.getSelectionModel().clear();
                         inner.graph.setCellsEditable(false);

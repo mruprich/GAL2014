@@ -15,14 +15,14 @@ public class CustomThread extends Thread {
         
     }
     
-    @Override
-    public void start(){
-        
-        InnerFrame newFrame = new InnerFrame(500,500,++Main.f.innerFrameCount, Main.f);
-        
-        
-        Main.utils.createComp(newFrame);
-                
-        Main.action_performed.setText(Main.action_performed.getText() + "\n" + "chart" + Main.f.innerFrameCount + " created");
-    }
+//    @Override
+//    public void start(){
+//        
+////        InnerFrame newFrame = new InnerFrame(500,500,++Main.f.innerFrameCount, Main.f);
+//        
+//        
+//        Main.utils.createComp(newFrame);
+//                
+//        Main.action_performed.setText(Main.action_performed.getText() + "\n" + "chart" + Main.f.innerFrameCount + " created");
+//    }
 }

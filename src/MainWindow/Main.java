@@ -66,12 +66,13 @@ public class Main {
     static public JTextArea action_performed;
     
     static public Utils utils;
+    static public InnerActions controls;
     
 
     public static void main(String[] args) {
         f = new MainFrame();
         Actions buttonActions = new Actions(f);
-        InnerActions controls = new InnerActions(f, desktopPanel);
+        controls = new InnerActions(f, desktopPanel);
         
         
         

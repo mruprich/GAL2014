@@ -8,6 +8,9 @@ package MainWindow;
 import com.mxgraph.model.mxCell;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Dictionary;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Random;
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
@@ -207,6 +210,31 @@ public class InnerActions {
         });
     }
 
+    /***** Fills dictionary vertexMap *****/
+    public void fillVertexMap(InnerFrame inner){
+        inner.vertexMap = new HashMap();
+        
+        for(int i = 0; i < inner.vertexes.size(); i++){
+            mxCell vertex = (mxCell)inner.vertexes.get(i);
+            String id = vertex.getId();
+            System.out.println("prochazim");
+            inner.vertexMap.put(id, i);
+        }
+        
+        if(inner.vertex_array.isEmpty()){
+            System.out.println("prazdny");
+        }
+        for(Object key: inner.vertexMap.keySet()){
+	    System.out.println(key + ": " + inner.vertexMap.get(key));
+        }
+//        for (Enumeration e = inner.vertexMap.keys(); e.hasMoreElements();) {
+//            System.out.println(e.nextElement());
+//        }
+    }
+    
+    
+    
+    
     /***** this function will perform one step through the graph *****/
     public void oneStepFwd(){
         InnerFrame inner = (InnerFrame)Main.desktopPanel.getSelectedFrame();

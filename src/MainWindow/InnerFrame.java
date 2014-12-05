@@ -20,6 +20,8 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JOptionPane;
 
 
@@ -42,7 +44,7 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
     public Object first,second = null;
     
     public int[][] matrix;
-    public Dictionary vertexMap;
+    public Map vertexMap;
     
     public int waitTime = 1;
     public boolean pausePressed = false;
@@ -137,6 +139,7 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
         
         this.vertex_array = new ArrayList<Object>();
         this.vertexes = new ArrayList<Object>();
+        System.out.println("az sem dosel");
     }
     
     public void setInnerFrameSize(int width, int height){
