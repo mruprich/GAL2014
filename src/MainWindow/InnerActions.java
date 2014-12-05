@@ -65,7 +65,7 @@ public class InnerActions {
                 InnerFrame inner = (InnerFrame)Main.desktopPanel.getSelectedFrame();
                 
                 inner.pausePressed = false;
-                
+                /*
                 inner.play = new Thread();
                 inner.play.start();
                 
@@ -79,7 +79,7 @@ public class InnerActions {
             
             
                     oneStepFwd();
-                }
+                }*/
 //                Thread play = new Thread(){
 //                    @Override
 //                    public void run(){
@@ -211,9 +211,9 @@ public class InnerActions {
     public void oneStepFwd(){
         InnerFrame inner = (InnerFrame)Main.desktopPanel.getSelectedFrame();
         Main.action_performed.setText(Main.action_performed.getText()+"\nOneStepFwd");
-        Random rand = new Random();
+        /*Random rand = new Random();
         int  n = rand.nextInt(inner.vertexes.size()-1);
-        Main.utils.countDFS(inner.graph, (mxCell)inner.vertexes.get(n), inner);
+        Main.utils.countDFS(inner.graph, (mxCell)inner.vertexes.get(n), inner);*/
     }
 
     /***** This function will perform one step backward *****/

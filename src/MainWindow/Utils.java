@@ -279,8 +279,8 @@ public class Utils {
     }
     
     /***** Function for DFS - returns number of vertexes accessible from the actual vertex *****/
-    public int countDFS(mxGraph graph, mxCell vertex, InnerFrame inner){
-        
+    public void countDFS(mxGraph graph, mxCell vertex, InnerFrame inner){
+        /*
         int result = 0;
         
         Stack stack = new Stack();
@@ -307,7 +307,7 @@ public class Utils {
                 }
             }
         }
-        
+        */
         /*
         for(Object c: cells){
             mxCell cell = (mxCell) c;
@@ -316,7 +316,7 @@ public class Utils {
             }
         }*/
         
-        return result;
+        //return result;
     }
     
     
