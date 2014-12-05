@@ -42,15 +42,19 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
     public boolean edited = false;
     public boolean menu = true;
     public Object first,second = null;
+    public Object actualVert = null;
     
     public int[][] matrix;
     public Map vertexMap;
+    public Map edgeMap;
     
     public int waitTime = 1;
     public boolean pausePressed = false;
+    public boolean abortPressed = false;
     
     public ArrayList<Object> vertex_array;
     public ArrayList<Object> vertexes;//this is for actual vertexes only!!
+    public ArrayList<Object> edges;
     
     public mxGraphComponent graphComponent;
     public mxGraph graph;
@@ -139,6 +143,7 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
         
         this.vertex_array = new ArrayList<Object>();
         this.vertexes = new ArrayList<Object>();
+        this.edges = new ArrayList<Object>();
         
         System.out.println("az sem dosel");
     }

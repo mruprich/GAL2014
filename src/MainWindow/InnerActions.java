@@ -6,8 +6,11 @@
 package MainWindow;
 
 import com.mxgraph.model.mxCell;
+import com.mxgraph.model.mxICell;
+import com.mxgraph.view.mxGraph;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -68,40 +71,14 @@ public class InnerActions {
                 InnerFrame inner = (InnerFrame)Main.desktopPanel.getSelectedFrame();
                 
                 inner.pausePressed = false;
-                /*
-                inner.play = new Thread();
-                inner.play.start();
+                if(inner.first != null){
+                    System.out.println("neni prazdny");
+                }
                 
-                
-                while(!inner.pausePressed){
-                    try{
-                        inner.play.sleep(1000);
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(InnerActions.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-            
-            
-                    oneStepFwd();
-                }*/
-//                Thread play = new Thread(){
-//                    @Override
-//                    public void run(){
-                        //performAlg();
-//                    }
-//                };
-//                play.start();
-                
-                //while(!inner.pausePressed){
-//                    try {
-//    Thread.sleep(1000);                 //1000 milliseconds is one second.
-//} catch(InterruptedException ex) {
-//    Thread.currentThread().interrupt();
-//}
-                    
-                    
-                    
+                //while(!inner.abortPressed){
+                    //Main.controls.wait(inner.waitTime);
+                    Main.controls.oneStepFwd((mxCell)inner.actualVert);
                 //}
-                
             }
         });
         
@@ -144,7 +121,7 @@ public class InnerActions {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                oneStepFwd();
+                //oneStepFwd();
             }
         });
         
@@ -211,19 +188,16 @@ public class InnerActions {
     }
 
     /***** Fills dictionary vertexMap *****/
-    public void fillVertexMap(InnerFrame inner){
+    public void fillVertexMap(InnerFrame inner){       
         inner.vertexMap = new HashMap();
+        inner.edgeMap = new HashMap();
         
-        for(int i = 0; i < inner.vertex_array.size(); i++){
+        for(int i = 0; i < inner.vertexes.size(); i++){
             mxCell vertex = (mxCell)inner.vertexes.get(i);
             String id = vertex.getId();
-            System.out.println("prochazim");
             inner.vertexMap.put(id, i);
         }
-        
-        if(inner.vertex_array.isEmpty()){
-            System.out.println("prazdny");
-        }
+
         for(Object key: inner.vertexMap.keySet()){
 	    System.out.println(key + ": " + inner.vertexMap.get(key));
         }
@@ -232,18 +206,106 @@ public class InnerActions {
 //        }
     }
     
+//    
+//    new Thread()
+//{
+//public void run() {
+//krok vypoctu;
+//sleep();
+//}
+//}.start();
+    public void countDFS(mxGraph graph, mxCell vertex, InnerFrame inner){
+        
+    }
+    
+    public void wait (int n){
+        long t0,t1;
+        t0=System.currentTimeMillis();
+        do{
+            t1=System.currentTimeMillis();
+        }
+        while (t1-t0<1000);
+    }
     
     
     
     /***** this function will perform one step through the graph *****/
-    public void oneStepFwd(){
+    public void oneStepFwd(mxCell vertex){
         InnerFrame inner = (InnerFrame)Main.desktopPanel.getSelectedFrame();
         Main.action_performed.setText(Main.action_performed.getText()+"\nOneStepFwd");
+        
+        ArrayList<Object> edges = new ArrayList();
+        mxCell edge = null;
+        
+        if(vertex.getEdgeCount() > 1) {
+            Random rand = new Random();
+            int n = rand.nextInt(vertex.getEdgeCount() - 1);
+            
+            edges.addAll(getEdges(vertex.getId()));// = getEdges(vertex.getId());
+        }
+        else if(vertex.getEdgeCount() == 1){
+            System.out.println("jen jeden edge");
+            edge = getEdge(vertex.getId());
+            System.out.println(edge.getSource().getId());
+            inner.graph.getModel().beginUpdate();
+            try {
+                System.out.println(edge.getSource().getId());
+                inner.actualVert = edge.getTarget();
+                inner.graph.getModel().remove( edge);
+                
+            } finally {
+                inner.graph.getModel().endUpdate();
+            }
+        }
+        
+        
+        
         /*Random rand = new Random();
         int  n = rand.nextInt(inner.vertexes.size()-1);
         Main.utils.countDFS(inner.graph, (mxCell)inner.vertexes.get(n), inner);*/
     }
 
+    public ArrayList<Object> getEdges(String source){
+        InnerFrame inner = (InnerFrame)Main.desktopPanel.getSelectedFrame();
+        inner.graph.selectAll();
+        Object[] edges = inner.graph.getSelectionCells();
+        
+        ArrayList ret = new ArrayList();
+        
+        for(Object c:edges){
+            mxCell cell = (mxCell)c;
+            if(cell.isEdge() && cell.getSource().getId() == source){
+                ret.add(cell);
+            }
+        }
+        
+        inner.graph.getSelectionModel().clear();
+        
+        return ret;
+    }
+    
+    public mxCell getEdge(String source){
+        InnerFrame inner = (InnerFrame)Main.desktopPanel.getSelectedFrame();
+        inner.graph.selectAll();
+        Object[] edges = inner.graph.getSelectionCells();
+        
+        mxCell ret=null;
+        
+        System.out.println("pred for");
+        for(Object c:edges){
+            mxCell cell = (mxCell)c;
+            if(cell.isEdge() && cell.getSource().getId().equals(source)){
+                ret = cell;
+                System.out.println("true");
+            }
+            System.out.println("pruchod");
+        }
+        
+        inner.graph.getSelectionModel().clear();
+        
+        return ret;
+    }
+    
     /***** This function will perform one step backward *****/
     public void oneStepBack(){
         Main.action_performed.setText(Main.action_performed.getText()+"\nOneStepBack");

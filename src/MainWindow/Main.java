@@ -32,6 +32,8 @@ package MainWindow;
 -melo by to vytvaret posloupnost uzlu ktery se prochazely
 -zkusit nejaky graphml
 
+-kdyz zavru samotny okynko uvnitr tak se musi prehodit aktivace buttonu
+
 */
 
 import javax.swing.JFrame;

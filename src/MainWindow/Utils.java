@@ -215,6 +215,7 @@ public class Utils {
                     list_x.add(x_coord.intValue());
                     list_y.add(y_coord.intValue());
                     mxCell vert = (mxCell) v;
+                    
                     if(vert.isVertex()){
                         inner.vertexes.add(v);
                     }
@@ -336,7 +337,7 @@ public class Utils {
         return panel;
     }
     /***** Function for DFS - returns number of vertexes accessible from the actual vertex *****/
-    public void countDFS(mxGraph graph, mxCell vertex, InnerFrame inner){
+    //public void countDFS(mxGraph graph, mxCell vertex, InnerFrame inner){
         /*
         int result = 0;
         Stack stack = new Stack();
@@ -368,7 +369,7 @@ public class Utils {
         }
         }*/
 //return result;
-    }
+    //}
     public void graphMatrix(InnerFrame inner){
         InnerFrame frame = (InnerFrame) inner;
         frame.matrix = new int[(frame.vertex_count)][(frame.vertex_count)];

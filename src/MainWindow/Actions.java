@@ -337,11 +337,13 @@ public class Actions{
                         inner.first = null;
                         inner.second = null;
                         inner.graph.getSelectionModel().clear();
+                        inner.actualVert = null;
                     }
                     else if(vertexes==0){
                         JOptionPane.showMessageDialog(frame, "The graph is empty. Nothing to do here...");
                     }
                     else{
+                        inner.actualVert = inner.first;
                         inner.clickable = true;
                         inner.menu = false;
                         
@@ -362,7 +364,9 @@ public class Actions{
                         inner.parent.StartButton.setEnabled(inner.menu);
                         
                         Main.utils.graphMatrix(inner);
-                        Main.controls.fillVertexMap(inner);
+                        Main.controls.fillVertexMap(inner);  
+                        
+                        //.addCells(graph1.cloneCells(graph1.getChildCells(graph1.getDefaultParent())));
                         
                         inner.graph.getSelectionModel().clear();
                         inner.graph.setCellsEditable(false);
