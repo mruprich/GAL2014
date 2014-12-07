@@ -5,8 +5,10 @@
 */
 package MainWindow;
 
+import com.mxgraph.io.mxCodec;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxICell;
+import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxGraph;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -112,7 +114,29 @@ public class InnerActions {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                Main.action_performed.setText(Main.action_performed.getText() + "\nAbort Pressed");
+               Main.action_performed.setText(Main.action_performed.getText() + "\nAbort Pressed");
+               InnerFrame inner = (InnerFrame)Main.desktopPanel.getSelectedFrame();
+               
+                while(inner.edges_walk.size()>0){
+                    inner.graph.getModel().beginUpdate();
+                    try {
+                        java.lang.Object parent = inner.graph.getDefaultParent();
+                        mxCell cell = (mxCell)inner.edges_walk.get(inner.edges_walk.size()-1);
+                        inner.edges_walk.remove(inner.edges_walk.size()-1);
+                        String id = cell.getId();
+                        Object target = cell.getTarget();
+                        Object source = cell.getSource();
+                        inner.graph.insertEdge(parent, id, "", source, target);
+
+                        inner.graph.getModel().setStyle(inner.actualVert, "fillColor=gray");
+                        inner.actualVert = (mxCell)cell.getSource();
+                        inner.graph.getModel().setStyle(inner.actualVert, "fillColor=gray");
+                        }
+                    finally{
+                        inner.graph.getModel().endUpdate();
+                    }
+                }
+                inner.edges_walk.clear();
             }
         });
         
@@ -240,15 +264,16 @@ public class InnerActions {
                 else{
                     inner.actualVert = (mxCell)edge.getTarget();
                     inner.walkthrough.put(inner.actualVert.getId(), edge.getTarget().getId());
-                }
+                }     
                 inner.graph.getModel().setStyle(inner.actualVert, "fillColor=#80c280");
                 
                 inner.step++;
                 inner.finalSequence.add(inner.actualVert.getId());
                 System.out.println(edge.getId() + ":" + edge.getTarget().getId() + ":" + edge.getSource().getId());
                 inner.printSequence.add((String) inner.actualVert.getValue());
+                /* insert edge into array for walkthrough */ 
+                inner.edges_walk.add(edge);
                 
-                System.out.println(edge);
                 inner.graph.getModel().remove(edge);
             } finally {
                 inner.graph.getModel().endUpdate();
@@ -305,24 +330,23 @@ public class InnerActions {
             edge = (mxCell) found.get(n);
             
             //uchovam si source a target hrany kterou zkoumam
-            /*Object source = edge.getSource();
+            Object source = edge.getSource();
             Object target = edge.getTarget();
             String id_edge = edge.getId();
-            */
+            
             //nejdrive DFS i s touto hranou
             int count1 = countDFS(inner.graph, inner.actualVert, inner);
             System.out.println("dfs count1: "+count1);
             //inner.graph.getModel().remove(edge);
-            inner.graph.getModel().setVisible(edge, false);
+            inner.graph.getModel().remove(edge);
             //pak dfs bez te hrany
             int count2 = countDFS(inner.graph, inner.actualVert, inner);
             System.out.println("dfs count2: "+count2);
             
-           
             //tady ji musim nejak vratit do grafu DANONE
             java.lang.Object parent = inner.graph.getDefaultParent();
             /* kopie edge */
-            inner.graph.getModel().setVisible(edge, true);
+            inner.graph.insertEdge(parent, id_edge, "", source, target);
             
             if(count1 > count2){
                 if(n==0){
@@ -352,8 +376,30 @@ public class InnerActions {
     
     
     /***** This function will perform one step backward *****/
-    public void oneStepBack(){
+    public void oneStepBack(){    
         Main.action_performed.setText(Main.action_performed.getText()+"\nOneStepBack");
+        InnerFrame inner = (InnerFrame)Main.desktopPanel.getSelectedFrame();
+        if(inner.edges_walk.size()>0){
+            inner.graph.getModel().beginUpdate();
+            try {
+                java.lang.Object parent = inner.graph.getDefaultParent();
+                mxCell cell = (mxCell)inner.edges_walk.get(inner.edges_walk.size()-1);
+                inner.edges_walk.remove(inner.edges_walk.size()-1);
+                String id = cell.getId();
+                Object target = cell.getTarget();
+                Object source = cell.getSource();
+                inner.graph.insertEdge(parent, id, "", source, target);
+
+                inner.graph.getModel().setStyle(inner.actualVert, "fillColor=none");
+                inner.actualVert = (mxCell)cell.getSource();
+                inner.graph.getModel().setStyle(inner.actualVert, "fillColor=#80c280");
+            }
+            finally{
+                inner.graph.getModel().endUpdate();
+            }
+        }else{
+            Main.action_performed.setText(Main.action_performed.getText()+"\nEnd of walkthrough");
+        }
     }
     
     public void performAlg(){

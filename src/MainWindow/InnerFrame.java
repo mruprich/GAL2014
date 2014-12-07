@@ -58,6 +58,7 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
     public ArrayList<Object> vertex_array;
     public ArrayList<Object> vertexes;//this is for actual vertexes only!!
     public ArrayList<Object> edges;
+    public ArrayList<Object> edges_walk;
     
     public mxGraphComponent graphComponent;
     public mxGraph graph;
@@ -146,6 +147,7 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
         
         this.vertex_array = new ArrayList<Object>();
         this.vertexes = new ArrayList<Object>();
+        this.edges_walk = new ArrayList<Object>();
         this.edges = new ArrayList<Object>();
         this.finalSequence = new ArrayList<String>();
         this.printSequence = new ArrayList<String>();
