@@ -73,12 +73,15 @@ public class InnerActions {
                 
                 inner.pausePressed = false;
                 if(inner.first != null){
-                    System.out.println("neni prazdny");
+                    inner.actualVert = (mxCell) inner.first;
+                    
                 }
                 
                 //while(!inner.abortPressed){
                 //Main.controls.wait(inner.waitTime);
-                Main.controls.oneStepFwd();
+                inner.printSequence.add((String) inner.actualVert.getValue());
+                inner.parent.PlayButton.setEnabled(false);
+                
                 //}
             }
         });
@@ -101,7 +104,7 @@ public class InnerActions {
         });
         
         
-        main.AbortButton = new JButton("Abort");
+        main.AbortButton = new JButton("Start Over");
         Main.controlsPanel.add(main.AbortButton);
         main.AbortButton.setEnabled(false);
         main.AbortButton.addActionListener(new ActionListener()
@@ -122,7 +125,7 @@ public class InnerActions {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                //oneStepFwd();
+                oneStepFwd();
             }
         });
         
@@ -221,32 +224,36 @@ public class InnerActions {
     /***** this function will perform one step through the graph *****/
     public void oneStepFwd(){
         InnerFrame inner = (InnerFrame)Main.desktopPanel.getSelectedFrame();
-        Main.action_performed.setText(Main.action_performed.getText()+"\nOneStepFwd");
         
         mxCell edge = getEdge((mxCell)inner.actualVert);
         
-        inner.graph.getModel().beginUpdate();
-        try {
-            System.out.println(edge.getSource().getId());
-            
-            
-            if(inner.actualVert.getId().equals(edge.getTarget().getId())){
-                inner.actualVert = (mxCell)edge.getSource();
-                inner.walkthrough.put(inner.actualVert.getId(), edge.getSource().getId());
-                
-            }
-            else{
-                inner.actualVert = (mxCell)edge.getTarget();
-//                inner.pathMap.put(edge.getSource().getId(), edge.getTarget().getId());
-                inner.walkthrough.put(inner.actualVert.getId(), edge.getTarget().getId());
-            }
-            Main.action_performed.setText(Main.action_performed.getText()+"\n"+inner.actualVert.getId());
-            System.out.println(inner.actualVert.getId());
-            inner.graph.getModel().remove(edge);
-        } finally {
-            inner.graph.getModel().endUpdate();
-        }
+        if(edge != null){
         
+            inner.graph.getModel().beginUpdate();
+            try {
+                inner.graph.getModel().setStyle(inner.actualVert, "fillColor=none");
+                
+                if(inner.actualVert.getId().equals(edge.getTarget().getId())){
+                    inner.actualVert = (mxCell)edge.getSource();
+                    inner.walkthrough.put(inner.actualVert.getId(), edge.getSource().getId());
+                }
+                else{
+                    inner.actualVert = (mxCell)edge.getTarget();
+                    inner.walkthrough.put(inner.actualVert.getId(), edge.getTarget().getId());
+                }
+                inner.graph.getModel().setStyle(inner.actualVert, "fillColor=#80c280");
+                
+                inner.step++;
+                inner.finalSequence.add(inner.actualVert.getId());
+                inner.printSequence.add((String) inner.actualVert.getValue());
+                inner.graph.getModel().remove(edge);
+            } finally {
+                inner.graph.getModel().endUpdate();
+            }
+        }
+        else{
+            printFinal(inner);
+        }
         
         
         /*Random rand = new Random();
@@ -292,14 +299,31 @@ public class InnerActions {
             int n = rand.nextInt(found.size()-1);
             System.out.println("vice edgu, edge: "+vertex.getEdgeCount()+", found: "+found.size());
             edge = (mxCell) found.get(n);
+            
+            //uchovam si source a target hrany kterou zkoumam
+            mxCell source = (mxCell)edge.getSource();
+            mxCell target = (mxCell)edge.getTarget();
+            
+            //nejdrive DFS i s touto hranou
             int count1 = countDFS(inner.graph, inner.actualVert, inner);
             System.out.println("dfs count1: "+count1);
             inner.graph.getModel().remove(edge);
+            
+            //pak dfs bez te hrany
             int count2 = countDFS(inner.graph, inner.actualVert, inner);
             System.out.println("dfs count2: "+count2);
             
+            //tady ji musim nejak vratit do grafu DANONE
+            java.lang.Object parent = inner.graph.getDefaultParent();
+            inner.graph.insertEdge(parent, null, "", source, target);
+            
             if(count1 < count2){
-                n = rand.nextInt(found.size()-1);
+                if(n==0){
+                    n++;
+                }
+                else{
+                    n--;
+                }
                 edge = (mxCell) found.get(n);
             }
         }
@@ -307,6 +331,10 @@ public class InnerActions {
             System.out.println("jen jeden edge, "+found.size());
             edge = (mxCell) found.get(0);
             System.out.println(edge.getSource().getId());
+        }
+        else{
+            inner.graph.getSelectionModel().clear();
+            return null;
         }
         
         inner.graph.getSelectionModel().clear();
@@ -362,6 +390,14 @@ public class InnerActions {
                 }
             }
         return ret;
+    }
+        
+    public void printFinal(InnerFrame inner){
+        String finalSeq="";
+        for(int i =0;i<inner.printSequence.size() -1;i++){
+            finalSeq += inner.printSequence.get(i)+", ";
+        }
+        Main.action_performed.setText(Main.action_performed.getText()+"\n"+finalSeq);
     }
 }
 

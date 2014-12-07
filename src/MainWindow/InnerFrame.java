@@ -44,6 +44,7 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
     public boolean menu = true;
     public Object first,second = null;
     public mxCell actualVert = null;
+    int step = 0;
     
     public int[][] matrix;
     public Map vertexMap;
@@ -71,6 +72,7 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
     Thread play;
     
     public ArrayList<String> finalSequence;//final sequence of vertexes
+    public ArrayList<String> printSequence;
     
     public boolean notSaved;
     
@@ -145,6 +147,8 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
         this.vertex_array = new ArrayList<Object>();
         this.vertexes = new ArrayList<Object>();
         this.edges = new ArrayList<Object>();
+        this.finalSequence = new ArrayList<String>();
+        this.printSequence = new ArrayList<String>();
         
         this.vertexMap = new HashMap();
         this.pathMap = new HashMap();
