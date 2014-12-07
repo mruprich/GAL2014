@@ -77,12 +77,12 @@ public class InnerActions {
                     
                 }
                 
-                //while(!inner.abortPressed){
-                //Main.controls.wait(inner.waitTime);
-                inner.printSequence.add((String) inner.actualVert.getValue());
                 inner.parent.PlayButton.setEnabled(false);
-                
-                //}
+                /*while(!inner.abortPressed){
+                    Main.controls.wait(inner.waitTime);
+                    //oneStepFwd();
+                    //inner.printSequence.add((String) inner.actualVert.getValue());
+                }*/
             }
         });
         
@@ -245,7 +245,10 @@ public class InnerActions {
                 
                 inner.step++;
                 inner.finalSequence.add(inner.actualVert.getId());
+                System.out.println(edge.getId() + ":" + edge.getTarget().getId() + ":" + edge.getSource().getId());
                 inner.printSequence.add((String) inner.actualVert.getValue());
+                
+                System.out.println(edge);
                 inner.graph.getModel().remove(edge);
             } finally {
                 inner.graph.getModel().endUpdate();
@@ -271,6 +274,7 @@ public class InnerActions {
         mxCell edge = null;
         
         System.out.println("velikost cells pokazde: "+cells.length);
+        System.out.println(vertex);
         if(vertex.getEdgeCount() == 1){
             System.out.println("velikost cells: "+cells.length);
         }
@@ -301,15 +305,15 @@ public class InnerActions {
             edge = (mxCell) found.get(n);
             
             //uchovam si source a target hrany kterou zkoumam
-            mxCell source = (mxCell)edge.getSource();
-            mxCell target = (mxCell)edge.getTarget();
+            /*Object source = edge.getSource();
+            Object target = edge.getTarget();
             String id_edge = edge.getId();
+            */
             //nejdrive DFS i s touto hranou
             int count1 = countDFS(inner.graph, inner.actualVert, inner);
             System.out.println("dfs count1: "+count1);
-            mxCell edge_replace = edge; //uchovame si dany edge
-            inner.graph.getModel().remove(edge);
-            
+            //inner.graph.getModel().remove(edge);
+            inner.graph.getModel().setVisible(edge, false);
             //pak dfs bez te hrany
             int count2 = countDFS(inner.graph, inner.actualVert, inner);
             System.out.println("dfs count2: "+count2);
@@ -317,7 +321,9 @@ public class InnerActions {
            
             //tady ji musim nejak vratit do grafu DANONE
             java.lang.Object parent = inner.graph.getDefaultParent();
-            inner.graph.insertEdge(parent, id_edge, "", source, target);
+            /* kopie edge */
+            inner.graph.getModel().setVisible(edge, true);
+            
             if(count1 < count2){
                 if(n==0){
                     n++;
@@ -325,7 +331,7 @@ public class InnerActions {
                 else{
                     n--;
                 }
-                edge = (mxCell) found.get(n);
+                edge = (mxCell) found.get(n); 
             }
         }
         else if(vertex.getEdgeCount() == 1){
