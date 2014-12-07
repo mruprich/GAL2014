@@ -21,6 +21,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.swing.JOptionPane;
 
@@ -42,11 +43,12 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
     public boolean edited = false;
     public boolean menu = true;
     public Object first,second = null;
-    public Object actualVert = null;
+    public mxCell actualVert = null;
     
     public int[][] matrix;
     public Map vertexMap;
-    public Map edgeMap;
+    public Map pathMap;
+    public LinkedHashMap walkthrough;
     
     public int waitTime = 1;
     public boolean pausePressed = false;
@@ -68,7 +70,6 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
     
     Thread play;
     
-    public ArrayList<Object> walkthrough;//for particular steps
     public ArrayList<String> finalSequence;//final sequence of vertexes
     
     public boolean notSaved;
@@ -144,6 +145,10 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
         this.vertex_array = new ArrayList<Object>();
         this.vertexes = new ArrayList<Object>();
         this.edges = new ArrayList<Object>();
+        
+        this.vertexMap = new HashMap();
+        this.pathMap = new HashMap();
+        this.walkthrough = new LinkedHashMap();
         
         System.out.println("az sem dosel");
     }
@@ -234,11 +239,11 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
         this.pausePressed = true;
     }
     
-    public int getArrayIndex(int id){
+    public int getArrayIndex(String id){
         for(int i=0; i<this.vertexes.size(); i++){
             mxCell vertex = (mxCell) this.vertexes.get(i);
             
-            if(Integer.parseInt(vertex.getId()) == id){
+            if(vertex.getId().equals(id)){
                 return i;
             }
         }

@@ -178,6 +178,8 @@ public class Utils {
         inner.xml = graphmlToMxgraph.convertLoaded(inner.soubor);
         return true;
     }
+    
+    
     public void setGraph(InnerFrame inner) throws Exception{
         deleteAll(inner);
         java.lang.Object parent = inner.graph.getDefaultParent();
@@ -338,40 +340,8 @@ public class Utils {
         panel.add(aboutLabel);
         return panel;
     }
-    /***** Function for DFS - returns number of vertexes accessible from the actual vertex *****/
-    //public void countDFS(mxGraph graph, mxCell vertex, InnerFrame inner){
-        /*
-        int result = 0;
-        Stack stack = new Stack();
-        ArrayList<mxCell> array = new ArrayList();
-        Object[] cells = graph.getSelectionCells();
-        for(Object c:cells){
-        mxCell cell = (mxCell) c;
-        if(cell.isVertex() && cell!=vertex){
-        array.add(cell);
-        }
-        }
-        stack.add(vertex);
-        while(!stack.empty()){
-        mxCell actualVertex = (mxCell)stack.pop(); //take vertex from stack
-        Main.action_performed.setText(Main.action_performed.getText()+"\nvertex: "+actualVertex.getId());
-        int index = inner.getArrayIndex(Integer.getInteger(actualVertex.getId()));
-        for(int i=0; i<inner.vertexes.size(); i++){
-        if(inner.matrix[index][i] == 1){
-        stack.add(inner.vertexes.get(i));
-        }
-        }
-        }
-        */
-        /*
-        for(Object c: cells){
-        mxCell cell = (mxCell) c;
-        if(cell.isVertex()){
-        Main.action_performed.setText(Main.action_performed.getText()+"\n"+"vertex: "+cell.getValue());
-        }
-        }*/
-//return result;
-    //}
+    
+    
     public void graphMatrix(InnerFrame inner){
         InnerFrame frame = (InnerFrame) inner;
         frame.matrix = new int[(frame.vertex_count)][(frame.vertex_count)];
@@ -386,24 +356,22 @@ public class Utils {
         for(Object c:cells){
             mxCell cell = (mxCell) c;
             if(cell.isEdge()){
-                int x = Integer.parseInt(cell.getSource().getId());
-                int y = Integer.parseInt(cell.getTarget().getId());
-                int index_x = frame.getArrayIndex(x);
-                int index_y = frame.getArrayIndex(y);
+                int index_x = frame.getArrayIndex(cell.getSource().getId());
+                int index_y = frame.getArrayIndex(cell.getTarget().getId());
                 if(index_x != -1 && index_y != -1){
                     frame.matrix[index_x][index_y] = 1;
                     frame.matrix[index_y][index_x] = 1;
                 }
-//System.out.print("connection at: "+x+","+y+"\n");
             }
         }
+        
 //debug
-        for(int i=0; i<frame.vertex_count; i++){
-            for(int j=0; j<frame.vertex_count; j++){
-                System.out.print(frame.matrix[i][j]);
-            }
-            System.out.print("\n");
-        }
+//        for(int i=0; i<frame.vertex_count; i++){
+//            for(int j=0; j<frame.vertex_count; j++){
+//                System.out.print(frame.matrix[i][j]);
+//            }
+//            System.out.print("\n");
+//        }
     }
 }
 /*vertex

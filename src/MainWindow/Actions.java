@@ -353,7 +353,7 @@ public class Actions{
                         String check = mxUtils.getXml(codec.encode(inner.graphCopy.getModel()));//getXml(codec.encode(inner.graph.getModel()));
                         System.out.println(check);
                         /* END OF CHECK */
-                        inner.actualVert = inner.first;
+                        inner.actualVert = (mxCell)inner.first;
                         inner.clickable = true;
                         inner.menu = false;
                         

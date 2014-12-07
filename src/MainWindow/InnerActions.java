@@ -1,8 +1,8 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
+*/
 package MainWindow;
 
 import com.mxgraph.model.mxCell;
@@ -15,6 +15,7 @@ import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.Stack;
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 import java.util.concurrent.TimeUnit;
@@ -76,8 +77,8 @@ public class InnerActions {
                 }
                 
                 //while(!inner.abortPressed){
-                    //Main.controls.wait(inner.waitTime);
-                    Main.controls.oneStepFwd((mxCell)inner.actualVert);
+                //Main.controls.wait(inner.waitTime);
+                Main.controls.oneStepFwd();
                 //}
             }
         });
@@ -186,27 +187,17 @@ public class InnerActions {
             }
         });
     }
-
-    /***** Fills dictionary vertexMap *****/
-    public void fillVertexMap(InnerFrame inner){       
-        inner.vertexMap = new HashMap();
-        inner.edgeMap = new HashMap();
-        
+    
+    /***** Fills dictionary vertexMap - in the map - "vertex_id" -> vertex_position_in_matrix *****/
+    public void fillVertexMap(InnerFrame inner){
         for(int i = 0; i < inner.vertexes.size(); i++){
             mxCell vertex = (mxCell)inner.vertexes.get(i);
             String id = vertex.getId();
             inner.vertexMap.put(id, i);
         }
-
-        for(Object key: inner.vertexMap.keySet()){
-	    System.out.println(key + ": " + inner.vertexMap.get(key));
-        }
-//        for (Enumeration e = inner.vertexMap.keys(); e.hasMoreElements();) {
-//            System.out.println(e.nextElement());
-//        }
     }
     
-//    
+//
 //    new Thread()
 //{
 //public void run() {
@@ -214,9 +205,7 @@ public class InnerActions {
 //sleep();
 //}
 //}.start();
-    public void countDFS(mxGraph graph, mxCell vertex, InnerFrame inner){
-        
-    }
+
     
     public void wait (int n){
         long t0,t1;
@@ -230,32 +219,32 @@ public class InnerActions {
     
     
     /***** this function will perform one step through the graph *****/
-    public void oneStepFwd(mxCell vertex){
+    public void oneStepFwd(){
         InnerFrame inner = (InnerFrame)Main.desktopPanel.getSelectedFrame();
         Main.action_performed.setText(Main.action_performed.getText()+"\nOneStepFwd");
         
-        ArrayList<Object> edges = new ArrayList();
-        mxCell edge = null;
+        mxCell edge = getEdge((mxCell)inner.actualVert);
         
-        if(vertex.getEdgeCount() > 1) {
-            Random rand = new Random();
-            int n = rand.nextInt(vertex.getEdgeCount() - 1);
-            
-            edges.addAll(getEdges(vertex.getId()));// = getEdges(vertex.getId());
-        }
-        else if(vertex.getEdgeCount() == 1){
-            System.out.println("jen jeden edge");
-            edge = getEdge(vertex.getId());
+        inner.graph.getModel().beginUpdate();
+        try {
             System.out.println(edge.getSource().getId());
-            inner.graph.getModel().beginUpdate();
-            try {
-                System.out.println(edge.getSource().getId());
-                inner.actualVert = edge.getTarget();
-                inner.graph.getModel().remove( edge);
+            
+            
+            if(inner.actualVert.getId().equals(edge.getTarget().getId())){
+                inner.actualVert = (mxCell)edge.getSource();
+                inner.walkthrough.put(inner.actualVert.getId(), edge.getSource().getId());
                 
-            } finally {
-                inner.graph.getModel().endUpdate();
             }
+            else{
+                inner.actualVert = (mxCell)edge.getTarget();
+//                inner.pathMap.put(edge.getSource().getId(), edge.getTarget().getId());
+                inner.walkthrough.put(inner.actualVert.getId(), edge.getTarget().getId());
+            }
+            Main.action_performed.setText(Main.action_performed.getText()+"\n"+inner.actualVert.getId());
+            System.out.println(inner.actualVert.getId());
+            inner.graph.getModel().remove(edge);
+        } finally {
+            inner.graph.getModel().endUpdate();
         }
         
         
@@ -264,58 +253,115 @@ public class InnerActions {
         int  n = rand.nextInt(inner.vertexes.size()-1);
         Main.utils.countDFS(inner.graph, (mxCell)inner.vertexes.get(n), inner);*/
     }
-
-    public ArrayList<Object> getEdges(String source){
-        InnerFrame inner = (InnerFrame)Main.desktopPanel.getSelectedFrame();
-        inner.graph.selectAll();
-        Object[] edges = inner.graph.getSelectionCells();
-        
-        ArrayList ret = new ArrayList();
-        
-        for(Object c:edges){
-            mxCell cell = (mxCell)c;
-            if(cell.isEdge() && cell.getSource().getId() == source){
-                ret.add(cell);
-            }
-        }
-        
-        inner.graph.getSelectionModel().clear();
-        
-        return ret;
-    }
     
-    public mxCell getEdge(String source){
+    
+    public mxCell getEdge(mxCell vertex){
         InnerFrame inner = (InnerFrame)Main.desktopPanel.getSelectedFrame();
         inner.graph.selectAll();
-        Object[] edges = inner.graph.getSelectionCells();
         
-        mxCell ret=null;
+        Object[] cells = inner.graph.getSelectionCells();
+        ArrayList found = new ArrayList();
+        mxCell edge = null;
         
-        System.out.println("pred for");
-        for(Object c:edges){
+        System.out.println("velikost cells pokazde: "+cells.length);
+        if(vertex.getEdgeCount() == 1){
+            System.out.println("velikost cells: "+cells.length);
+        }
+        
+        for(Object c:cells){
             mxCell cell = (mxCell)c;
-            if(cell.isEdge() && cell.getSource().getId().equals(source)){
-                ret = cell;
-                System.out.println("true");
+            if(cell.isEdge() && (cell.getSource().getId().equals(vertex.getId()) || cell.getTarget().getId().equals(vertex.getId()))){
+                found.add(cell);
+//                if(inner.pathMap.containsKey(cell.getSource().getId()) && !inner.pathMap.get(cell.getSource().getId()).equals(cell.getTarget().getId())){
+//                    found.add(cell);
+//                }
+//                else if(inner.pathMap.containsKey(cell.getTarget().getId()) && !inner.pathMap.get(cell.getTarget().getId()).equals(cell.getSource().getId())){
+//                    found.add(cell);
+//                }
             }
-            System.out.println("pruchod");
         }
         
         inner.graph.getSelectionModel().clear();
         
-        return ret;
+        Main.action_performed.setText(Main.action_performed.getText()+"\n"+inner.actualVert.getId()+": "+inner.actualVert.getEdgeCount());
+        //ArrayList<Object> edges;
+        if(vertex.getEdgeCount() > 1) {
+            //edges = new ArrayList();
+            
+            Random rand = new Random();
+            int n = rand.nextInt(found.size()-1);
+            System.out.println("vice edgu, edge: "+vertex.getEdgeCount()+", found: "+found.size());
+            edge = (mxCell) found.get(n);
+            int count1 = countDFS(inner.graph, inner.actualVert, inner);
+            System.out.println("dfs count1: "+count1);
+            inner.graph.getModel().remove(edge);
+            int count2 = countDFS(inner.graph, inner.actualVert, inner);
+            System.out.println("dfs count2: "+count2);
+            
+            if(count1 < count2){
+                n = rand.nextInt(found.size()-1);
+                edge = (mxCell) found.get(n);
+            }
+        }
+        else if(vertex.getEdgeCount() == 1){
+            System.out.println("jen jeden edge, "+found.size());
+            edge = (mxCell) found.get(0);
+            System.out.println(edge.getSource().getId());
+        }
+        
+        inner.graph.getSelectionModel().clear();
+        
+        return edge;
     }
+
+    
     
     /***** This function will perform one step backward *****/
     public void oneStepBack(){
         Main.action_performed.setText(Main.action_performed.getText()+"\nOneStepBack");
     }
-
+    
     public void performAlg(){
         InnerFrame inner = (InnerFrame)Main.desktopPanel.getSelectedFrame();
         
         
         
     }
-}
     
+        public int countDFS(mxGraph graph, mxCell vertex, InnerFrame inner){
+            int ret = 0;
+            Stack stack = new Stack();
+            Main.utils.graphMatrix(inner);
+            
+            graph.selectAll();
+            Object[] cells = graph.getSelectionCells();    
+            ArrayList<mxCell> array = new ArrayList();
+        
+//            for(Object c:cells){
+//                mxCell cell = (mxCell) c;
+//                if(cell.isVertex() && cell!=vertex){
+//                    array.add(cell);
+//                }
+//            }
+            
+            stack.add(vertex);
+            
+            while(!stack.empty()){
+                mxCell actualVertex = (mxCell)stack.pop(); //take vertex from stack
+                ret++;
+                array.add(actualVertex);
+                Main.action_performed.setText(Main.action_performed.getText()+"\nvertex: "+actualVertex.getId());
+                int index = inner.getArrayIndex(vertex.getId());
+                
+                for(int i=0; i<inner.vertexes.size(); i++){
+                    if(inner.matrix[index][i] == 1){
+                        if(!array.contains(inner.vertexes.get(i))){
+                            stack.add(inner.vertexes.get(i));
+                        }
+                    }
+                }
+            }
+        return ret;
+    }
+}
+
