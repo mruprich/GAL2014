@@ -324,7 +324,7 @@ public class InnerActions {
             /* kopie edge */
             inner.graph.getModel().setVisible(edge, true);
             
-            if(count1 < count2){
+            if(count1 > count2){
                 if(n==0){
                     n++;
                 }
@@ -390,7 +390,7 @@ public class InnerActions {
                 
                 for(int i=0; i<inner.vertexes.size(); i++){
                     if(inner.matrix[index][i] == 1){
-                        if(!array.contains(inner.vertexes.get(i))){
+                        if(!array.contains((mxCell)inner.vertexes.get(i))){
                             stack.add(inner.vertexes.get(i));
                         }
                     }
