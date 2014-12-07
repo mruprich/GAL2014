@@ -303,20 +303,21 @@ public class InnerActions {
             //uchovam si source a target hrany kterou zkoumam
             mxCell source = (mxCell)edge.getSource();
             mxCell target = (mxCell)edge.getTarget();
-            
+            String id_edge = edge.getId();
             //nejdrive DFS i s touto hranou
             int count1 = countDFS(inner.graph, inner.actualVert, inner);
             System.out.println("dfs count1: "+count1);
+            mxCell edge_replace = edge; //uchovame si dany edge
             inner.graph.getModel().remove(edge);
             
             //pak dfs bez te hrany
             int count2 = countDFS(inner.graph, inner.actualVert, inner);
             System.out.println("dfs count2: "+count2);
             
+           
             //tady ji musim nejak vratit do grafu DANONE
             java.lang.Object parent = inner.graph.getDefaultParent();
-            inner.graph.insertEdge(parent, null, "", source, target);
-            
+            inner.graph.insertEdge(parent, id_edge, "", source, target);
             if(count1 < count2){
                 if(n==0){
                     n++;
