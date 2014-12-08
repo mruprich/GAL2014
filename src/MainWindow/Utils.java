@@ -113,7 +113,7 @@ public class Utils {
                     }
                     list_x.add(frame.x);
                     list_y.add(frame.y);
-                    Object v = frame.graph.insertVertex(parent, null, frame.vertex_id, frame.x-40, frame.y-10, 80, 30);
+                    Object v = frame.graph.insertVertex(parent, null, frame.vertex_id, frame.x-40, frame.y-10, 80, 30,"fillColor=none");
                     frame.vertexes.add(v);
                     frame.vertex_id++;
                     frame.vertex_count++;
@@ -223,7 +223,7 @@ public class Utils {
                         y_coord = Double.parseDouble(((Element) nListGeo.item(i-2)).getAttribute("y"));
                         w = Double.parseDouble(((Element) nListGeo.item(i-2)).getAttribute("width"));
                         h = Double.parseDouble(((Element) nListGeo.item(i-2)).getAttribute("height"));
-                        Object v = inner.graph.insertVertex(parent, vertex_id, value, x_coord, y_coord, w, h);
+                        Object v = inner.graph.insertVertex(parent, vertex_id, value, x_coord, y_coord, w, h,"fillColor=none");
                         inner.vertex_array.add(v);
                         list_x.add(x_coord.intValue());
                         list_y.add(y_coord.intValue());
