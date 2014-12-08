@@ -93,7 +93,7 @@ public class XMLconvertor {
         width.setValue("80.0");
         vertex.setValue("1");
         as.setValue("geometry");
-        attr_loop1.setValue(Integer.toString(i));
+        attr_loop1.setValue(Integer.toString(i+2));
         attr2.setValue("1");
         
         mx = doc.createElement("mxCell");
@@ -135,12 +135,17 @@ public class XMLconvertor {
         y2.setValue(Target_representation.get(i).toString());*/
         attr2.setValue("1");
         as.setValue("geometry");
-        attr_loop.setValue(Integer.toString(i+Node_representation.size()+2));
+        attr_loop.setValue(Integer.toString(i+Node_representation.size()));
         edge.setValue("1");    
         point_source.setValue("sourcePoint");
         point_target.setValue("targetPoint");
-        source_v.setValue(Source_representation.get(i));
-        target_v.setValue(Target_representation.get(i));
+        if(Source_representation.get(i).matches("-?\\d+")){
+            source_v.setValue(Integer.toString(Integer.parseInt(Source_representation.get(i))+1));
+            target_v.setValue(Integer.toString(Integer.parseInt(Target_representation.get(i))+1));      
+        }else{
+            source_v.setValue(Source_representation.get(i));
+            target_v.setValue(Target_representation.get(i));        
+        }
         style.setValue("");
         edge_v.setValue("");
         relative.setValue("1");
@@ -172,6 +177,7 @@ public class XMLconvertor {
     //get string
     StringBuffer sb = outWriter.getBuffer(); 
     String finalstring = sb.toString();
+    System.out.println(finalstring);
     return finalstring;
     }
     
