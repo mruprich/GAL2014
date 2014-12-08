@@ -128,9 +128,12 @@ public class InnerActions {
                         Object source = cell.getSource();
                         inner.graph.insertEdge(parent, id, "", source, target);
 
-                        inner.graph.getModel().setStyle(inner.actualVert, "fillColor=gray");
-                        inner.actualVert = (mxCell)cell.getSource();
-                        inner.graph.getModel().setStyle(inner.actualVert, "fillColor=gray");
+                        inner.graph.getModel().setStyle(inner.actualVert, "fillColor=none");
+                        if(inner.actualVert == (mxCell)cell.getSource())
+                            inner.actualVert = (mxCell)cell.getTarget();
+                        else
+                             inner.actualVert = (mxCell)cell.getSource();
+                        inner.graph.getModel().setStyle(inner.actualVert, "fillColor=#80c280");
                         }
                     finally{
                         inner.graph.getModel().endUpdate();
