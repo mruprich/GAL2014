@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Random;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -171,7 +172,6 @@ public class XMLconvertor {
     //get string
     StringBuffer sb = outWriter.getBuffer(); 
     String finalstring = sb.toString();
-    System.out.println(finalstring);
     return finalstring;
     }
     
@@ -192,22 +192,30 @@ public class XMLconvertor {
         }
         NodeList nList = doc.getElementsByTagName("node");
         NodeList nListE = doc.getElementsByTagName("edge");
+        NodeList edge_directed = doc.getElementsByTagName("graph");
+        for(int i = 0; i < edge_directed.getLength();i++){
+            if(((Element) edge_directed.item(i)).getAttribute("edgedefault").equals("directed")){
+                return "directed";
+            }
+        }
         for (int temp = 0; temp < nList.getLength(); temp++) {
+            Random ran = new Random();
+            x_coord = ran.nextInt(600);
+            y_coord = ran.nextInt(400);
             Node_representation.add(((Element) nList.item(temp)).getAttribute("id"));
             x_node_representation.add(x_coord);
             y_node_representation.add(y_coord);
-            x_coord += 100;
+            /*x_coord += 100;
             if(x_coord > 800){ //maximalne 8x za sebou vertex
                 x_coord = 0;
                 y_coord += 50;
-            }
+            }*/
         }
         
         for (int temp = 0; temp < nListE.getLength(); temp++) {
             Source_representation.add(((Element) nListE.item(temp)).getAttribute("source"));
             Target_representation.add(((Element) nListE.item(temp)).getAttribute("target"));
         }
-        System.out.println("a");
         result = convertToMx();
         return result;
     }

@@ -349,9 +349,9 @@ public class Actions{
                         inner.graphCopy.addCells(inner.graph.cloneCells(inner.graph.getChildCells(inner.graph.getDefaultParent())));
                         /* KONTROLA ZE SE TO ZOBRAZILO SPRAVNE */
                         inner.graphCopy.getChildVertices(inner.graphCopy.getDefaultParent());
-                        mxCodec codec = new mxCodec();
+                        /*mxCodec codec = new mxCodec();
                         String check = mxUtils.getXml(codec.encode(inner.graphCopy.getModel()));//getXml(codec.encode(inner.graph.getModel()));
-                        System.out.println(check);
+                        System.out.println(check);*/
                         /* END OF CHECK */
                         inner.actualVert = (mxCell)inner.first;
                         inner.clickable = true;
