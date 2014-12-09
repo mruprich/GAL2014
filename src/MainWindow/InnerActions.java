@@ -282,6 +282,8 @@ public class InnerActions {
                 inner.graph.getModel().remove(edge);
             } finally {
                 inner.graph.getModel().endUpdate();
+                inner.graph.refresh();
+                inner.graphComponent.refresh();
             }
         }
         else{
@@ -341,7 +343,7 @@ public class InnerActions {
             //tady ji musim nejak vratit do grafu DANONE
             java.lang.Object parent = inner.graph.getDefaultParent();
             /* kopie edge */
-            inner.graph.insertEdge(parent, id_edge, "", source, target);
+            edge = (mxCell)inner.graph.insertEdge(parent, id_edge, "", source, target);
             
             Main.action_performed.setText(Main.action_performed.getText()+"\ncount1: "+count1+" count2: "+count2);
             
@@ -364,7 +366,7 @@ public class InnerActions {
         }
         
         inner.graph.getSelectionModel().clear();
-        
+        System.out.println("Edge + " + edge);
         return edge;
     }
 
