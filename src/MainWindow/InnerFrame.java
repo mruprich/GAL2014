@@ -27,6 +27,8 @@ import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.xml.bind.Marshaller.Listener;
@@ -63,6 +65,7 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
     public boolean abortPressed = false;
     
     public ArrayList<Object> vertex_array;
+    public ArrayList<Object> vertex_array_copy;
     public ArrayList<Object> vertexes;//this is for actual vertexes only!!
     public ArrayList<Object> edges;
     public ArrayList<Object> edges_walk;
@@ -166,6 +169,7 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
         this.chartName = this.title;
         
         this.vertex_array = new ArrayList<Object>();
+        this.vertex_array_copy = new ArrayList<Object>();
         this.vertexes = new ArrayList<Object>();
         this.edges_walk = new ArrayList<Object>();
         this.edges = new ArrayList<Object>();
@@ -248,7 +252,11 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
         this.parent.StartButton.setEnabled(this.menu);
         
         if(this.startPressed){
-            Main.utils.fillView(this);
+            try {
+                Main.utils.fillView(this);
+            } catch (Exception ex) {
+                Logger.getLogger(InnerFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         
         this.moveToFront();

@@ -399,6 +399,7 @@ public class Utils {
     public void fillView(InnerFrame inner){
         //BufferedImage image;
         inner.image = mxCellRenderer.createBufferedImage(inner.graph, null, 1, Color.WHITE, true, null);
+        inner.label = new JLabel(new ImageIcon(inner.image));
         Main.viewPanel.add(inner.label);
         Main.f.revalidate();
         Main.f.repaint();
