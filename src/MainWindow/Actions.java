@@ -307,11 +307,16 @@ public class Actions{
             public void actionPerformed(ActionEvent e)
             {
                 InnerFrame inner = (InnerFrame)Main.desktopPanel.getSelectedFrame();
+               
                 if(inner == null){
                     JOptionPane.showMessageDialog(frame, "A graph document must be selected to load a graph.");
                 }
                 else{
                     inner.graph.selectAll();
+                    
+                    inner.pausePressed = false;
+                
+                    
                     
                     Object[] cells = inner.graph.getSelectionCells();
                     
@@ -355,6 +360,18 @@ public class Actions{
                         String check = mxUtils.getXml(codec.encode(inner.graphCopy.getModel()));//getXml(codec.encode(inner.graph.getModel()));
                         System.out.println(check);*/
                         /* END OF CHECK */
+                      
+                        if(inner.first != null){
+                        inner.actualVert = (mxCell) inner.first;
+                        }                   
+                        else{
+                            Random rand = new Random();
+                            int n = rand.nextInt(inner.vertexes.size()-1);
+                            inner.actualVert = (mxCell) inner.vertexes.get(n);
+                        }
+
+                        inner.parent.PlayButton.setEnabled(false);
+
                         
                         inner.clickable = true;
                         inner.menu = false;

@@ -31,7 +31,7 @@ import java.util.logging.Logger;
 public class InnerActions {
     public InnerActions(MainFrame main,JDesktopPane inner){
         main.SlowDownButton = new JButton("SlowDown");
-        Main.controlsPanel.add(main.SlowDownButton);
+        //Main.controlsPanel.add(main.SlowDownButton);
         main.SlowDownButton.setEnabled(false);
         main.SlowDownButton.addActionListener(new ActionListener()
         {
@@ -64,7 +64,7 @@ public class InnerActions {
         
         
         main.PlayButton = new JButton("Play");
-        Main.controlsPanel.add(main.PlayButton);
+       // Main.controlsPanel.add(main.PlayButton);
         main.PlayButton.setEnabled(false);
         main.PlayButton.addActionListener(new ActionListener()
         {
@@ -95,7 +95,7 @@ public class InnerActions {
         
         
         main.PauseButton = new JButton("Pause");
-        Main.controlsPanel.add(main.PauseButton);
+        //Main.controlsPanel.add(main.PauseButton);
         main.PauseButton.setEnabled(false);
         main.PauseButton.addActionListener(new ActionListener()
         {
@@ -119,32 +119,7 @@ public class InnerActions {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-               Main.action_performed.setText(Main.action_performed.getText() + "\nAbort Pressed");
-               InnerFrame inner = (InnerFrame)Main.desktopPanel.getSelectedFrame();
-               
-                while(inner.edges_walk.size()>0){
-                    inner.graph.getModel().beginUpdate();
-                    try {
-                        java.lang.Object parent = inner.graph.getDefaultParent();
-                        mxCell cell = (mxCell)inner.edges_walk.get(inner.edges_walk.size()-1);
-                        inner.edges_walk.remove(inner.edges_walk.size()-1);
-                        String id = cell.getId();
-                        Object target = cell.getTarget();
-                        Object source = cell.getSource();
-                        inner.graph.insertEdge(parent, id, "", source, target);
-
-                        inner.graph.getModel().setStyle(inner.actualVert, "fillColor=none");
-                        if(inner.actualVert == (mxCell)cell.getSource())
-                            inner.actualVert = (mxCell)cell.getTarget();
-                        else
-                             inner.actualVert = (mxCell)cell.getSource();
-                        inner.graph.getModel().setStyle(inner.actualVert, "fillColor=#80c280");
-                        }
-                    finally{
-                        inner.graph.getModel().endUpdate();
-                    }
-                }
-                inner.edges_walk.clear();
+               startOver();
             }
         });
         
@@ -163,7 +138,7 @@ public class InnerActions {
         
         
         main.SpeedUpButton = new JButton("SpeedUp");
-        Main.controlsPanel.add(main.SpeedUpButton);
+        //Main.controlsPanel.add(main.SpeedUpButton);
         main.SpeedUpButton.setEnabled(false);
         main.SpeedUpButton.addActionListener(new ActionListener()
         {
@@ -183,7 +158,7 @@ public class InnerActions {
         });
         
         /***** Reedit button *****/
-        main.ReeditButton = new JButton("Reedit");
+        main.ReeditButton = new JButton("Re-edit");
         Main.controlsPanel.add(main.ReeditButton);
         main.ReeditButton.setEnabled(false);
         main.ReeditButton.addActionListener( new ActionListener()
@@ -211,7 +186,7 @@ public class InnerActions {
                 inner.parent.DeleteButton.setEnabled(inner.menu);
                 inner.parent.StartButton.setEnabled(inner.menu);
                 
-                
+                startOver();
                 inner.graph.getSelectionModel().clear();
                 
                 inner.graphComponent.getGraphControl().addMouseListener(inner.compListener);
@@ -220,6 +195,34 @@ public class InnerActions {
         });
     }
     
+    public void startOver(){
+        Main.action_performed.setText(Main.action_performed.getText() + "\nAbort Pressed");
+               InnerFrame inner = (InnerFrame)Main.desktopPanel.getSelectedFrame();
+               
+                while(inner.edges_walk.size()>0){
+                    inner.graph.getModel().beginUpdate();
+                    try {
+                        java.lang.Object parent = inner.graph.getDefaultParent();
+                        mxCell cell = (mxCell)inner.edges_walk.get(inner.edges_walk.size()-1);
+                        inner.edges_walk.remove(inner.edges_walk.size()-1);
+                        String id = cell.getId();
+                        Object target = cell.getTarget();
+                        Object source = cell.getSource();
+                        inner.graph.insertEdge(parent, id, "", source, target);
+
+                        inner.graph.getModel().setStyle(inner.actualVert, "fillColor=none");
+                        if(inner.actualVert == (mxCell)cell.getSource())
+                            inner.actualVert = (mxCell)cell.getTarget();
+                        else
+                             inner.actualVert = (mxCell)cell.getSource();
+                        inner.graph.getModel().setStyle(inner.actualVert, "fillColor=#80c280");
+                        }
+                    finally{
+                        inner.graph.getModel().endUpdate();
+                    }
+                }
+                inner.edges_walk.clear();
+    }
     /***** Fills dictionary vertexMap - in the map - "vertex_id" -> vertex_position_in_matrix *****/
     public void fillVertexMap(InnerFrame inner){
         for(int i = 0; i < inner.vertexes.size(); i++){
