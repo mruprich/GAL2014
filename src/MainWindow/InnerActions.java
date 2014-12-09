@@ -85,11 +85,6 @@ public class InnerActions {
                 }
                 
                 inner.parent.PlayButton.setEnabled(false);
-                /*while(!inner.abortPressed){
-                    Main.controls.wait(inner.waitTime);
-                    //oneStepFwd();
-                    //inner.printSequence.add((String) inner.actualVert.getValue());
-                }*/
             }
         });
         
@@ -119,7 +114,10 @@ public class InnerActions {
             @Override
             public void actionPerformed(ActionEvent e)
             {
+                InnerFrame inner = (InnerFrame)Main.desktopPanel.getSelectedFrame();
                startOver();
+               if(!inner.parent.StepFwdButton.isEnabled())
+                   inner.parent.StepFwdButton.setEnabled(true);
             }
         });
         
@@ -187,17 +185,33 @@ public class InnerActions {
                 inner.parent.StartButton.setEnabled(inner.menu);
                 
                 startOver();
+                inner.graph.getModel().beginUpdate();
+                inner.graph.getModel().setStyle(inner.actualVert, "fillColor=none");
+                inner.graph.getModel().endUpdate();
+                
+                
                 inner.graph.getSelectionModel().clear();
                 
-                inner.graphComponent.getGraphControl().addMouseListener(inner.compListener);
+                Main.utils.removeView(inner);
+                inner.startPressed=false;
+                
+                //inner.graphComponent.getGraphControl().addMouseListener(inner.compListener);
                 
             }
         });
     }
     
     public void startOver(){
-        Main.action_performed.setText(Main.action_performed.getText() + "\nAbort Pressed");
+        Main.action_performed.setText(Main.action_performed.getText() + "\nThe graph was reset");
+        
                InnerFrame inner = (InnerFrame)Main.desktopPanel.getSelectedFrame();
+               inner.parent.StepBackButton.setEnabled(false);
+               
+               
+               Random rand = new Random();
+               int n = rand.nextInt(inner.vertexes.size()-1);
+               
+               //inner.actualVert = (mxCell) inner.vertexes.get(n);
                
                 while(inner.edges_walk.size()>0){
                     inner.graph.getModel().beginUpdate();
@@ -222,6 +236,9 @@ public class InnerActions {
                     }
                 }
                 inner.edges_walk.clear();
+                
+                
+                
     }
     /***** Fills dictionary vertexMap - in the map - "vertex_id" -> vertex_position_in_matrix *****/
     public void fillVertexMap(InnerFrame inner){
@@ -276,27 +293,27 @@ public class InnerActions {
                 inner.graph.getModel().setStyle(inner.actualVert, "fillColor=#80c280");
                 
                 inner.step++;
-                inner.finalSequence.add(inner.actualVert.getId());
-                System.out.println("pokus: "+edge.getId() + ":" + edge.getTarget().getId() + ":" + edge.getSource().getId());
-                inner.printSequence.add((String) inner.actualVert.getValue());
+                inner.finalSequence.add(inner.actualVert);
+                //inner.printSequence.add((String) inner.actualVert.getValue());
+                
                 /* insert edge into array for walkthrough */ 
                 inner.edges_walk.add(edge);
+                
                 
                 inner.graph.getModel().remove(edge);
             } finally {
                 inner.graph.getModel().endUpdate();
                 inner.graph.refresh();
                 inner.graphComponent.refresh();
+                if(!inner.parent.StepBackButton.isEnabled()){
+                    inner.parent.StepBackButton.setEnabled(true);
+                }
             }
         }
         else{
+            inner.parent.StepFwdButton.setEnabled(false);
             printFinal(inner);
         }
-        
-        
-        /*Random rand = new Random();
-        int  n = rand.nextInt(inner.vertexes.size()-1);
-        Main.utils.countDFS(inner.graph, (mxCell)inner.vertexes.get(n), inner);*/
     }
     
     
@@ -308,24 +325,15 @@ public class InnerActions {
         ArrayList found = new ArrayList();
         mxCell edge = null;
         
-        System.out.println(vertex);
-        
         for(Object c:cells){
             mxCell cell = (mxCell)c;
             if(cell.isEdge() && (cell.getSource().getId().equals(vertex.getId()) || cell.getTarget().getId().equals(vertex.getId()))){
                 found.add(cell);
-//                if(inner.pathMap.containsKey(cell.getSource().getId()) && !inner.pathMap.get(cell.getSource().getId()).equals(cell.getTarget().getId())){
-//                    found.add(cell);
-//                }
-//                else if(inner.pathMap.containsKey(cell.getTarget().getId()) && !inner.pathMap.get(cell.getTarget().getId()).equals(cell.getSource().getId())){
-//                    found.add(cell);
-//                }
             }
         }
         
         inner.graph.getSelectionModel().clear();
         
-        Main.action_performed.setText(Main.action_performed.getText()+"\n"+inner.actualVert.getId()+": "+inner.actualVert.getEdgeCount());
         //ArrayList<Object> edges;
         if(vertex.getEdgeCount() > 1) {
             //edges = new ArrayList();
@@ -348,8 +356,6 @@ public class InnerActions {
             /* kopie edge */
             edge = (mxCell)inner.graph.insertEdge(parent, id_edge, "", source, target);
             
-            Main.action_performed.setText(Main.action_performed.getText()+"\ncount1: "+count1+" count2: "+count2);
-            
             if(count1 > count2){
                 if(n==0)
                     n++;
@@ -369,7 +375,6 @@ public class InnerActions {
         }
         
         inner.graph.getSelectionModel().clear();
-        System.out.println("Edge + " + edge);
         return edge;
     }
 
@@ -377,14 +382,18 @@ public class InnerActions {
     
     /***** This function will perform one step backward *****/
     public void oneStepBack(){    
-        Main.action_performed.setText(Main.action_performed.getText()+"\nOneStepBack");
         InnerFrame inner = (InnerFrame)Main.desktopPanel.getSelectedFrame();
+        if(!inner.parent.StepFwdButton.isEnabled()){
+            inner.parent.StepFwdButton.setEnabled(true);
+        }
+        
         if(inner.edges_walk.size()>0){
             inner.graph.getModel().beginUpdate();
             try {
                 java.lang.Object parent = inner.graph.getDefaultParent();
                 mxCell cell = (mxCell)inner.edges_walk.get(inner.edges_walk.size()-1);
                 inner.edges_walk.remove(inner.edges_walk.size()-1);
+                inner.finalSequence.remove(inner.finalSequence.size()-1);
                 String id = cell.getId();
                 Object target = cell.getTarget();
                 Object source = cell.getSource();
@@ -400,7 +409,7 @@ public class InnerActions {
                 inner.graph.getModel().endUpdate();
             }
         }else{
-            Main.action_performed.setText(Main.action_performed.getText()+"\nEnd of walkthrough");
+            inner.parent.StepBackButton.setEnabled(false);
         }
     }
     
@@ -415,22 +424,7 @@ public class InnerActions {
             int ret = 0;
             Stack stack = new Stack();
             ArrayList<String> array = new ArrayList();
-            //Main.utils.graphMatrix(inner);
-            
-            
-            //graph.selectAll();
-            //Object[] cells = graph.getSelectionCells();    
-            
-        
-//            for(Object c:cells){
-//                mxCell cell = (mxCell) c;
-//                if(cell.isVertex() && cell!=vertex){
-//                    array.add(cell);
-//                }
-//            }
-            
-            //getNeighbors(inner, (mxCell)vertex);
-            
+  
             stack.add(vertex);
             
             while(!stack.empty()){
@@ -442,39 +436,13 @@ public class InnerActions {
                 ArrayList<mxCell> arr = new ArrayList<mxCell>();
                 arr.addAll(getNeighbors(inner, (mxCell) actualVertex));//get all neighbors of vertex
                 
-                Main.action_performed.setText(Main.action_performed.getText()+"\nvertex: "+actualVertex.getId());
-                
                 for(mxCell a:arr){
                     if(!arrayContains(array, a.getId()) && stack.search(a) == -1){
-                        //System.out.println("adding: "+a.getId());
                         stack.add(a);
                         
                     }
                 }
-                
-//                mxCell cell = (mxCell)stack.peek();
-//                System.out.println("vrchol: "+cell.getId());
-                
-                System.out.print("array: ");
-                for(String a:array){
-                    System.out.print(a+" ");
-                }
-                System.out.println();
-//                int index = inner.getArrayIndex(vertex.getId());
-//                
-//                
-//                //Object[] edges = 
-//                
-//                for(int i=0; i<inner.vertexes.size(); i++){
-//                    if(inner.matrix[index][i] == 1){
-//                        if(!array.contains((mxCell)inner.vertexes.get(i))){
-//                            stack.add(inner.vertexes.get(i));
-//                        }
-//                    }
-//                }
             }
-            Main.action_performed.setText(Main.action_performed.getText()+"\nDFScount: "+ret+", velikost pole: "+array.size());
-            
         return ret;
     }
         
@@ -506,24 +474,23 @@ public class InnerActions {
                 }
             }
         }
-        
-        //System.out.println("pocet sousedu uzlu "+vertex.getId()+": "+ret.size());
-        //debug
-//        for(int i = 0; i < ret.size(); i++){
-//            System.out.print(ret.get(i).getValue() + " ");
-//        }
-//        System.out.println();
-        
-        
         return ret;
     }
         
     public void printFinal(InnerFrame inner){
         String finalSeq="";
-        for(int i =0;i<inner.printSequence.size() -1;i++){
-            finalSeq += inner.printSequence.get(i)+", ";
+        boolean first = true;
+        for(int i =0;i<inner.finalSequence.size() -1;i++){
+            mxCell cell = (mxCell) inner.finalSequence.get(i);
+            if(first){
+                finalSeq += cell.getValue();
+                first = false;
+            }
+            else{
+                finalSeq += ", "+cell.getValue();
+            }
         }
-        Main.action_performed.setText(Main.action_performed.getText()+"\n"+finalSeq);
+        Main.action_performed.setText(Main.action_performed.getText()+"\nFinal sequence: "+finalSeq);
     }
 }
 

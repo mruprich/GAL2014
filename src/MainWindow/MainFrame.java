@@ -74,6 +74,7 @@ public class MainFrame extends JFrame implements MouseListener,MouseWheelListene
         /***** Pannel for controls inside graph *****/
         Main.controlsPanel = new JPanel();
         Main.controlsPanel.setLayout(new BorderLayout());
+        Main.controlsPanel.setBorder(new EmptyBorder(15,15,15,15));
         Main.controlsPanel.setPreferredSize(new Dimension(300, 70));
         Main.controlsPanel.setLayout(new GridLayout(1,7));
         /***** Pannel on the right side *****/
@@ -87,18 +88,30 @@ public class MainFrame extends JFrame implements MouseListener,MouseWheelListene
         /***** Pannel for displying info about graph *****/
         Main.infoPanel = new JPanel();
         Main.infoPanel.setLayout(new BoxLayout(Main.infoPanel, BoxLayout.Y_AXIS));
-        Main.infoPanel.setPreferredSize(new Dimension(100, 270));
+        Main.infoPanel.setPreferredSize(new Dimension(100, 170));
         /***** Panel for buttons *****/
         Main.buttonPanel = new JPanel();
         Main.buttonPanel.setLayout(new GridLayout(5,1));
-        Main.buttonPanel.setPreferredSize(new Dimension(100, 70));
+        Main.buttonPanel.setPreferredSize(new Dimension(100, 150));
+        
+        Main.viewPanel = new JPanel();
+        Main.viewPanel.setLayout(new BorderLayout());
+        Main.viewPanel.setBorder(new LineBorder(Color.BLACK));
+        Main.viewPanel.setPreferredSize(new Dimension(100, 250));
+        
+        Main.centerPanel  = new JPanel();
+        Main.centerPanel.setLayout(new BorderLayout());
+        Main.centerPanel.add(Main.buttonPanel, BorderLayout.PAGE_START);
+        Main.centerPanel.add(Main.viewPanel, BorderLayout.CENTER);
+        
+        
         /***** Panel for start button *****/
         Main.startPanel = new JPanel();
         Main.startPanel.setLayout(new BorderLayout());
         Main.startPanel.setBorder(new EmptyBorder(15,20,15,20));
         Main.startPanel.setPreferredSize(new Dimension(100, 70));
         Main.mainPanel.add(Main.infoPanel, BorderLayout.PAGE_START);
-        Main.mainPanel.add(Main.buttonPanel, BorderLayout.CENTER);
+        Main.mainPanel.add(Main.centerPanel, BorderLayout.CENTER);
         Main.mainPanel.add(Main.startPanel, BorderLayout.PAGE_END);
         /******************************************************
          * Frames in infoPanel
@@ -108,6 +121,7 @@ public class MainFrame extends JFrame implements MouseListener,MouseWheelListene
         Main.action_performed = new JTextArea(4,1);//JTextArea(Document doc, String text, int rows, int columns)
         Main.action_performed.setSize(new Dimension(100,150));
         Main.action_performed.append("Chart inicialized");
+        Main.action_performed.setEditable(false);
         Main.scroll_area = new JScrollPane(Main.action_performed);
         /***** Vertex info *****/
         Main.vertex_text = new JTextArea();
@@ -119,66 +133,8 @@ public class MainFrame extends JFrame implements MouseListener,MouseWheelListene
         Main.edge_text.setEditable(false);
         Main.edge_text.setMaximumSize(basicDim);
         Main.edge_text.append("Number of edges: 0");
-// /***** FWD button *****/
-// JButton FurtherButton = new JButton("->");
-// FurtherButton.addActionListener( new ActionListener()
-// {
-// public void actionPerformed(ActionEvent e)
-// {
-// double s = graph.getView().getScale();
-// Rectangle rect = graphComponent.getGraphControl().getVisibleRect();
-// rect.translate(50, 100);
-// graphComponent.getGraphControl().scrollRectToVisible(rect, true);
-// action_performed.setText(action_performed.getText()+"\n"+"Forward step.");
-// }
-// });
-//
-// /***** StepBackButton *****/
-// JButton StepBackButton = new JButton("STEP BACK!");
-////StepBackButton.setSize(new Dimension(100, 80));
-////try {
-//// Image img = ImageIO.read(getClass().getResource("pokus.png"));
-//// StepBackButton.setIcon(new ImageIcon(img.getScaledInstance(StepBackButton.getWidth(), StepBackButton.getHeight(), 0)));
-////} catch (IOException ex) {
-////}
-//
-// StepBackButton.addActionListener( new ActionListener()
-// {
-// public void actionPerformed(ActionEvent e)
-// {
-// action_performed.setText(action_performed.getText()+"\n"+"One small step back...");
-// }
-// });
-//
-// /***** StepFwdButton *****/
-// JButton StepFwdButton = new JButton("FORWARD!");
-// StepFwdButton.addActionListener( new ActionListener()
-// {
-// public void actionPerformed(ActionEvent e)
-// {
-// action_performed.setText(action_performed.getText()+"\n"+"One small step forward...");
-// }
-// });
-//
-// /***** SpeedUpButton *****/
-// JButton SpeedUpButton = new JButton("FASTER!");
-// SpeedUpButton.addActionListener( new ActionListener()
-// {
-// public void actionPerformed(ActionEvent e)
-// {
-// action_performed.setText(action_performed.getText()+"\n"+"Faster! Faster!");
-// }
-// });
-//
-// /***** SlowDownButton *****/
-// JButton SlowDownButton = new JButton("SLOWER!");
-// SlowDownButton.addActionListener( new ActionListener()
-// {
-// public void actionPerformed(ActionEvent e)
-// {
-// action_performed.setText(action_performed.getText()+"\n"+"Not so fast dude!");
-// }
-// });
+        
+        
         /***** WindowListener to make sure window isnt closed prematurely *****/
         Main.f.addWindowListener(new WindowAdapter(){
             @Override

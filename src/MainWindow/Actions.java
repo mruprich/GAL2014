@@ -307,7 +307,7 @@ public class Actions{
             public void actionPerformed(ActionEvent e)
             {
                 InnerFrame inner = (InnerFrame)Main.desktopPanel.getSelectedFrame();
-               
+                
                 if(inner == null){
                     JOptionPane.showMessageDialog(frame, "A graph document must be selected to load a graph.");
                 }
@@ -315,8 +315,6 @@ public class Actions{
                     inner.graph.selectAll();
                     
                     inner.pausePressed = false;
-                
-                    
                     
                     Object[] cells = inner.graph.getSelectionCells();
                     
@@ -360,24 +358,29 @@ public class Actions{
                         String check = mxUtils.getXml(codec.encode(inner.graphCopy.getModel()));//getXml(codec.encode(inner.graph.getModel()));
                         System.out.println(check);*/
                         /* END OF CHECK */
-                      
+                        
                         if(inner.first != null){
-                        inner.actualVert = (mxCell) inner.first;
-                        }                   
+                            inner.actualVert = (mxCell) inner.first;
+                        }
                         else{
                             Random rand = new Random();
                             int n = rand.nextInt(inner.vertexes.size()-1);
                             inner.actualVert = (mxCell) inner.vertexes.get(n);
                         }
-
+                        inner.finalSequence.add(inner.actualVert);
+                        
+                        inner.graph.getModel().beginUpdate();
+                        inner.graph.getModel().setStyle(inner.actualVert, "fillColor=#80c280");
+                        inner.graph.getModel().endUpdate();
+                        
                         inner.parent.PlayButton.setEnabled(false);
-
+                        
                         
                         inner.clickable = true;
                         inner.menu = false;
                         
                         inner.parent.SlowDownButton.setEnabled(inner.clickable);
-                        inner.parent.StepBackButton.setEnabled(inner.clickable);
+                        //inner.parent.StepBackButton.setEnabled(inner.clickable);
                         inner.parent.PlayButton.setEnabled(inner.clickable);
                         inner.parent.PauseButton.setEnabled(inner.clickable);
                         inner.parent.AbortButton.setEnabled(inner.clickable);
@@ -393,7 +396,10 @@ public class Actions{
                         inner.parent.StartButton.setEnabled(inner.menu);
                         
 //                        Main.utils.graphMatrix(inner);
-//                        
+                        
+                        Main.utils.fillView(inner);
+                        inner.startPressed = true;
+                        
                         Main.controls.fillVertexMap(inner);
                         
                         inner.graph.getSelectionModel().clear();

@@ -39,6 +39,8 @@ public class Main {
     static public JPanel controlsPanel;
     static public JPanel buttonPanel;
     static public JPanel startPanel;
+    static public JPanel viewPanel;
+    static public JPanel centerPanel;
     
     static public JTextArea vertex_text;
     static public JTextArea edge_text;

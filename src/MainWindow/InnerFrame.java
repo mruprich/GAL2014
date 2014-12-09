@@ -19,6 +19,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.xml.bind.Marshaller.Listener;
 
@@ -49,6 +51,7 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
     public Object first,second = null;
     public mxCell actualVert = null;
     int step = 0;
+    public boolean startPressed = false;
     
     public int[][] matrix;
     public Map vertexMap;
@@ -79,12 +82,15 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
     
     Thread play;
     
-    public ArrayList<String> finalSequence;//final sequence of vertexes
+    public ArrayList<Object> finalSequence;//final sequence of vertexes
     public ArrayList<String> printSequence;
     
     public boolean notSaved;
     
     public MainFrame parent;
+    
+    public BufferedImage image;
+    public JLabel label;
     
     public InnerFrame(int count){  
         Main.desktopPanel.add(this); 
@@ -163,14 +169,12 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
         this.vertexes = new ArrayList<Object>();
         this.edges_walk = new ArrayList<Object>();
         this.edges = new ArrayList<Object>();
-        this.finalSequence = new ArrayList<String>();
+        this.finalSequence = new ArrayList<Object>();
         this.printSequence = new ArrayList<String>();
         
         this.vertexMap = new HashMap();
         this.pathMap = new HashMap();
         this.walkthrough = new LinkedHashMap();
-        
-        System.out.println("az sem dosel");
     }
     
     public void setInnerFrameSize(int width, int height){
@@ -243,6 +247,10 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
         this.parent.DeleteButton.setEnabled(this.menu);
         this.parent.StartButton.setEnabled(this.menu);
         
+        if(this.startPressed){
+            Main.utils.fillView(this);
+        }
+        
         this.moveToFront();
     }
 
@@ -256,7 +264,9 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
     @Override
     public void internalFrameDeactivated(InternalFrameEvent e) {
         this.moveToBack();
-        this.pausePressed = true;
+        if(this.startPressed){
+            Main.utils.removeView(this);
+        }
     }
     
     public int getArrayIndex(String id){

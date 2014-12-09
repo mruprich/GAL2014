@@ -6,17 +6,20 @@
 package MainWindow;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.util.mxCellRenderer;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxEventSource;
 import com.mxgraph.view.mxStylesheet;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.PointerInfo;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -26,6 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -48,6 +52,8 @@ public class Utils {
     private ArrayList<Integer> list_x = new ArrayList<Integer>();
     private ArrayList<Integer> list_y = new ArrayList<Integer>();
     private int index = -1;
+    private Object image;
+    private Object imgage;
     public void createComp(InnerFrame frame){
         frame.graphComponent = new mxGraphComponent(frame.graph);
 //graphComponent.setSize(new Dimension(300, 300));
@@ -388,28 +394,21 @@ public class Utils {
         }
         
         System.out.println("edges_count: "+edges_count);
-      
-        
-//debug
-//        for(int i=0; i<frame.vertex_count; i++){
-//            for(int j=0; j<frame.vertex_count; j++){
-//                System.out.print(frame.matrix[i][j]);
-//            }
-//            System.out.print("\n");
-//        }
+    }
+    
+    public void fillView(InnerFrame inner){
+        //BufferedImage image;
+        inner.image = mxCellRenderer.createBufferedImage(inner.graph, null, 1, Color.WHITE, true, null);
+        Main.viewPanel.add(inner.label);
+        Main.f.revalidate();
+        Main.f.repaint();
+    }
+    
+    public void removeView(InnerFrame inner){
+        inner.image = null;
+        Main.viewPanel.remove(inner.label);
+        inner.label = null;
+        Main.f.revalidate();
+        Main.f.repaint();
     }
 }
-/*vertex
-<mxCell id="2" parent="1" value="0" vertex="1">
-<mxGeometry as="geometry" height="30.0" width="80.0" x="230.0" y="103.0"/>
-</mxCell>
-vzdycky indexovat uzel s -2
-*/
-/*edge
-<mxCell edge="1" id="9" parent="1" source="2" style="" target="4" value="">
-<mxGeometry as="geometry" relative="1">
-<mxPoint as="sourcePoint" x="270.0" y="120.0"/>
-<mxPoint as="targetPoint" x="160.0" y="250.0"/>
-</mxGeometry>
-</mxCell>
-*/
