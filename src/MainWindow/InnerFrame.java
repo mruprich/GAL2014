@@ -17,6 +17,9 @@ import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxGraphView;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseListener;
+import java.beans.PropertyVetoException;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Dictionary;
@@ -24,6 +27,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.swing.JOptionPane;
+import javax.xml.bind.Marshaller.Listener;
 
 
 /**
@@ -65,6 +69,9 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
     public mxGraphView view;
     public String xml;
     
+    public MouseListener compListener;
+    public Listener graphListener;
+    
     /***** These will be used by algorithm to delete original graph step by step *****/
     public mxGraphComponent graphComponentCopy;
     public mxGraph graphCopy;
@@ -105,6 +112,13 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
         innerFrameId = count;
         this.parent = frame;
         
+        try{
+            this.setMaximum(true);
+        }
+        catch (PropertyVetoException e) {
+            // Vetoed by internalFrame
+            // ... possibly add some handling for this case
+        }
         this.setVisible(true);
     }
     
@@ -138,7 +152,7 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
     private void setDefaults(int count){
         this.addInternalFrameListener(this);
         this.closable = true;
-        this.maximizable = true;
+        
         this.title = "chart" + count;
         this.resizable = true;
         

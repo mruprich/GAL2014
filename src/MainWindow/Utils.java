@@ -4,45 +4,31 @@
 * and open the template in the editor.
 */
 package MainWindow;
-import com.mxgraph.io.mxCodec;
-import com.mxgraph.io.mxGraphMlCodec;
 import com.mxgraph.model.mxCell;
-import com.mxgraph.model.mxGraphModel;
-import com.mxgraph.model.mxGraphModel.mxGeometryChange;
-import com.mxgraph.model.mxICell;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxEventSource;
-import com.mxgraph.util.mxUtils;
-import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxStylesheet;
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.PointerInfo;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.parsers.DocumentBuilder;
@@ -361,26 +347,48 @@ public class Utils {
     
     public void graphMatrix(InnerFrame inner){
         InnerFrame frame = (InnerFrame) inner;
-        frame.matrix = new int[(frame.vertex_count)][(frame.vertex_count)];
-//inicialize
-        for(int i=0; i<frame.vertex_count; i++){
-            for(int j=0; j<frame.vertex_count; j++){
-                frame.matrix[i][j] = 0;
+        
+        inner.matrix = new int[(inner.vertexes.size())][(inner.vertexes.size())];
+        //inicialize
+        for(int i=0; i<inner.vertexes.size(); i++){
+            for(int j=0; j<inner.vertexes.size(); j++){
+                inner.matrix[i][j] = 0;
             }
         }
-        frame.graph.selectAll();
-        Object[] cells = frame.graph.getSelectionCells();
+        
+        
+  
+        inner.graph.selectAll();
+        int edges_count = 0;
+        Object[] cells = inner.graph.getSelectionCells();
         for(Object c:cells){
             mxCell cell = (mxCell) c;
             if(cell.isEdge()){
-                int index_x = frame.getArrayIndex(cell.getSource().getId());
-                int index_y = frame.getArrayIndex(cell.getTarget().getId());
+                edges_count++;
+                int index_x = inner.getArrayIndex(cell.getSource().getId());
+                int index_y = inner.getArrayIndex(cell.getTarget().getId());
                 if(index_x != -1 && index_y != -1){
-                    frame.matrix[index_x][index_y] = 1;
-                    frame.matrix[index_y][index_x] = 1;
+                    inner.matrix[index_x][index_y] = 1;
+                    inner.matrix[index_y][index_x] = 1;
                 }
             }
         }
+        //debug
+        for(int i =0; i<inner.vertexes.size(); i++){
+            mxCell cell = (mxCell) inner.vertexes.get(i);
+            System.out.print(cell.getId()+" ");
+        }
+        System.out.println();
+        
+        for(int i = 0; i<inner.vertexes.size(); i++){
+            for(int j = 0; j<inner.vertexes.size(); j++){
+                System.out.print(inner.matrix[i][j]+" ");
+            }
+            System.out.println();
+        }
+        
+        System.out.println("edges_count: "+edges_count);
+      
         
 //debug
 //        for(int i=0; i<frame.vertex_count; i++){

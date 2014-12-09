@@ -15,6 +15,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -23,6 +25,8 @@ import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import javax.swing.border.LineBorder;
 import javax.swing.JDesktopPane;
+import javax.swing.JInternalFrame;
+import javax.swing.JOptionPane;
 import javax.swing.border.EmptyBorder;
 /**
  *
@@ -175,6 +179,20 @@ public class MainFrame extends JFrame implements MouseListener,MouseWheelListene
 // action_performed.setText(action_performed.getText()+"\n"+"Not so fast dude!");
 // }
 // });
+        /***** WindowListener to make sure window isnt closed prematurely *****/
+        Main.f.addWindowListener(new WindowAdapter(){
+            @Override
+            public void windowClosing(WindowEvent e){
+                int answer = JOptionPane.showConfirmDialog(Main.f, "Do you really want to quit the program?\n"
+                        + "Any unsaved work will be lost!", "Quit", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                if (answer == JOptionPane.YES_OPTION){
+                    System.exit(0);
+                }
+                else{
+                    Main.f.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+                }
+            }
+        });
         /******************************************************
          * Adding buttons to their locations
          *****************************************************/
@@ -200,6 +218,13 @@ public class MainFrame extends JFrame implements MouseListener,MouseWheelListene
         Main.f.repaint();
         /* END OF REVALIDATION */
     }
+    
+    public void closeOperation(){
+        
+        
+    }
+    
+    
     public int getInnerFrameCount(){
         return this.innerFrameCount;
     }

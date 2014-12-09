@@ -74,9 +74,14 @@ public class InnerActions {
                 InnerFrame inner = (InnerFrame)Main.desktopPanel.getSelectedFrame();
                 
                 inner.pausePressed = false;
+                
                 if(inner.first != null){
                     inner.actualVert = (mxCell) inner.first;
-                    
+                }                   
+                else{
+                    Random rand = new Random();
+                    int n = rand.nextInt(inner.vertexes.size()-1);
+                    inner.actualVert = (mxCell) inner.vertexes.get(n);
                 }
                 
                 inner.parent.PlayButton.setEnabled(false);
@@ -209,10 +214,7 @@ public class InnerActions {
                 
                 inner.graph.getSelectionModel().clear();
                 
-                inner.graph.setCellsEditable(true);
-                inner.graphComponent.setConnectable(true);
-                inner.graph.setEnabled(true);
-                inner.graphComponent.setEnabled(true);
+                inner.graphComponent.getGraphControl().addMouseListener(inner.compListener);
                 
             }
         });
@@ -272,7 +274,7 @@ public class InnerActions {
                 
                 inner.step++;
                 inner.finalSequence.add(inner.actualVert.getId());
-                System.out.println(edge.getId() + ":" + edge.getTarget().getId() + ":" + edge.getSource().getId());
+                System.out.println("pokus: "+edge.getId() + ":" + edge.getTarget().getId() + ":" + edge.getSource().getId());
                 inner.printSequence.add((String) inner.actualVert.getValue());
                 /* insert edge into array for walkthrough */ 
                 inner.edges_walk.add(edge);
@@ -301,11 +303,7 @@ public class InnerActions {
         ArrayList found = new ArrayList();
         mxCell edge = null;
         
-        System.out.println("velikost cells pokazde: "+cells.length);
         System.out.println(vertex);
-        if(vertex.getEdgeCount() == 1){
-            System.out.println("velikost cells: "+cells.length);
-        }
         
         for(Object c:cells){
             mxCell cell = (mxCell)c;
@@ -329,9 +327,7 @@ public class InnerActions {
             
             Random rand = new Random();
             int n = rand.nextInt(found.size()-1);
-            System.out.println("vice edgu, edge: "+vertex.getEdgeCount()+", found: "+found.size());
             edge = (mxCell) found.get(n);
-            
             //uchovam si source a target hrany kterou zkoumam
             Object source = edge.getSource();
             Object target = edge.getTarget();
@@ -339,32 +335,28 @@ public class InnerActions {
             
             //nejdrive DFS i s touto hranou
             int count1 = countDFS(inner.graph, inner.actualVert, inner);
-            System.out.println("dfs count1: "+count1);
-            //inner.graph.getModel().remove(edge);
             inner.graph.getModel().remove(edge);
             //pak dfs bez te hrany
             int count2 = countDFS(inner.graph, inner.actualVert, inner);
-            System.out.println("dfs count2: "+count2);
-            
             //tady ji musim nejak vratit do grafu DANONE
             java.lang.Object parent = inner.graph.getDefaultParent();
             /* kopie edge */
             inner.graph.insertEdge(parent, id_edge, "", source, target);
             
+            Main.action_performed.setText(Main.action_performed.getText()+"\ncount1: "+count1+" count2: "+count2);
+            
             if(count1 > count2){
-                if(n==0){
+                if(n==0)
                     n++;
-                }
-                else{
+                else
                     n--;
-                }
-                edge = (mxCell) found.get(n); 
+                            
+                edge = (mxCell)found.get(n); 
             }
+            
         }
         else if(vertex.getEdgeCount() == 1){
-            System.out.println("jen jeden edge, "+found.size());
             edge = (mxCell) found.get(0);
-            System.out.println(edge.getSource().getId());
         }
         else{
             inner.graph.getSelectionModel().clear();
@@ -417,11 +409,13 @@ public class InnerActions {
         public int countDFS(mxGraph graph, mxCell vertex, InnerFrame inner){
             int ret = 0;
             Stack stack = new Stack();
-            Main.utils.graphMatrix(inner);
+            ArrayList<String> array = new ArrayList();
+            //Main.utils.graphMatrix(inner);
             
-            graph.selectAll();
-            Object[] cells = graph.getSelectionCells();    
-            ArrayList<mxCell> array = new ArrayList();
+            
+            //graph.selectAll();
+            //Object[] cells = graph.getSelectionCells();    
+            
         
 //            for(Object c:cells){
 //                mxCell cell = (mxCell) c;
@@ -430,23 +424,92 @@ public class InnerActions {
 //                }
 //            }
             
+            //getNeighbors(inner, (mxCell)vertex);
+            
             stack.add(vertex);
             
             while(!stack.empty()){
-                mxCell actualVertex = (mxCell)stack.pop(); //take vertex from stack
                 ret++;
-                array.add(actualVertex);
-                Main.action_performed.setText(Main.action_performed.getText()+"\nvertex: "+actualVertex.getId());
-                int index = inner.getArrayIndex(vertex.getId());
+                mxCell actualVertex = (mxCell)stack.pop(); //take vertex from stack
                 
-                for(int i=0; i<inner.vertexes.size(); i++){
-                    if(inner.matrix[index][i] == 1){
-                        if(!array.contains((mxCell)inner.vertexes.get(i))){
-                            stack.add(inner.vertexes.get(i));
-                        }
+                array.add(actualVertex.getId());//array contains checked vertexes
+                
+                ArrayList<mxCell> arr = new ArrayList<mxCell>();
+                arr.addAll(getNeighbors(inner, (mxCell) actualVertex));//get all neighbors of vertex
+                
+                Main.action_performed.setText(Main.action_performed.getText()+"\nvertex: "+actualVertex.getId());
+                
+                for(mxCell a:arr){
+                    if(!arrayContains(array, a.getId()) && stack.search(a) == -1){
+                        //System.out.println("adding: "+a.getId());
+                        stack.add(a);
+                        
                     }
                 }
+                
+//                mxCell cell = (mxCell)stack.peek();
+//                System.out.println("vrchol: "+cell.getId());
+                
+                System.out.print("array: ");
+                for(String a:array){
+                    System.out.print(a+" ");
+                }
+                System.out.println();
+//                int index = inner.getArrayIndex(vertex.getId());
+//                
+//                
+//                //Object[] edges = 
+//                
+//                for(int i=0; i<inner.vertexes.size(); i++){
+//                    if(inner.matrix[index][i] == 1){
+//                        if(!array.contains((mxCell)inner.vertexes.get(i))){
+//                            stack.add(inner.vertexes.get(i));
+//                        }
+//                    }
+//                }
             }
+            Main.action_performed.setText(Main.action_performed.getText()+"\nDFScount: "+ret+", velikost pole: "+array.size());
+            
+        return ret;
+    }
+        
+    public boolean arrayContains(ArrayList<String> array, String id){
+        for(String s:array){
+            if(s.equals(id)){
+                return true;
+            }
+        }
+        
+        
+        return false;
+    }
+        
+    public ArrayList<mxCell> getNeighbors(InnerFrame inner, mxCell vertex){
+        inner.graph.selectAll();
+        Object[] cells = inner.graph.getSelectionCells();
+        
+        ArrayList<mxCell> ret = new ArrayList<mxCell>();
+        
+        for(Object c:cells){
+            mxCell cell = (mxCell) c;
+            if(cell.isEdge()){
+                if(cell.getSource().getId().equals(vertex.getId())){
+                    ret.add((mxCell) cell.getTarget());
+                }
+                else if(cell.getTarget().getId().equals(vertex.getId())){
+                    ret.add((mxCell) cell.getSource());
+                }
+            }
+        }
+        
+        //System.out.println("pocet sousedu uzlu "+vertex.getId()+": "+ret.size());
+        //debug
+//        for(int i = 0; i < ret.size(); i++){
+//            System.out.print(ret.get(i).getValue() + " ");
+//        }
+//        System.out.println();
+        
+        
         return ret;
     }
         

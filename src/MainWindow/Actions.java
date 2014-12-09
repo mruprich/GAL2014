@@ -1,8 +1,8 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
+*/
 package MainWindow;
 
 import com.mxgraph.io.mxCodec;
@@ -14,11 +14,13 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -126,7 +128,7 @@ public class Actions{
                 }
             }
         });
-
+        
         
         /***** LOAD button *****/
         frame.LoadButton = new JButton("Load");
@@ -144,7 +146,7 @@ public class Actions{
                 else{
                     boolean ret = false;
                     try {
-                       ret = Main.utils.OpenFile(inner);
+                        ret = Main.utils.OpenFile(inner);
                     } catch (SAXException | IOException | ParserConfigurationException | TransformerException ex) {
                         Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -163,7 +165,7 @@ public class Actions{
                 
             }
         });
-     
+        
         
         /***** CRUSH button *****/
         frame.DeleteButton = new JButton("Erase graph");
@@ -203,12 +205,12 @@ public class Actions{
                 if(inner == null){
                     JOptionPane.showMessageDialog(frame, "A graph document must be selected to load a graph.");
                 }
-                else{    
+                else{
                     JFileChooser saveLoc = new JFileChooser();
                     FileNameExtensionFilter locFilter = new FileNameExtensionFilter("png files (*.png)", "png");//only png files will be used
                     saveLoc.setFileFilter(locFilter);
                     int retVal = saveLoc.showSaveDialog(frame);
-
+                    
                     /***** Checking extension and getting absolute path to chosen file *****/
                     if(retVal == saveLoc.APPROVE_OPTION) {
                         saveName = saveLoc.getSelectedFile().getName();
@@ -225,7 +227,7 @@ public class Actions{
                             } catch (IOException ex) {
                                 Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
                             }
-                    //String filename = inner.chartName;
+                            //String filename = inner.chartName;
                         }
                         else{
                             JOptionPane.showMessageDialog(frame, "Graph needs to be save as .png image");
@@ -240,29 +242,29 @@ public class Actions{
         Main.buttonPanel.add(frame.OrientedButton);
         frame.OrientedButton.addActionListener( new ActionListener()
         {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                InnerFrame inner = (InnerFrame)Main.desktopPanel.getSelectedFrame();
-                
-                if(inner == null){
-                    JOptionPane.showMessageDialog(frame, "A graph document must be selected to load a graph.");
-                }
-                else{
-                    if(inner.edge_style){
-                        Main.utils.applyEdgeDefaults(inner);
-                        frame.OrientedButton.setText("Oriented edges");
-                        inner.edge_style = false;
-                        Main.action_performed.setText(Main.action_performed.getText()+"\n"+"Edges arent oriented.");
-                    }
-                    else{
-                        Main.utils.applyEdgeDefaultsOriented(inner);
-                        frame.OrientedButton.setText("Unoriented edges");
-                        Main.action_performed.setText(Main.action_performed.getText()+"\n"+"Edges are now oriented.");
-                        inner.edge_style = true;
-                    }
-                }
-            }
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+        InnerFrame inner = (InnerFrame)Main.desktopPanel.getSelectedFrame();
+        
+        if(inner == null){
+        JOptionPane.showMessageDialog(frame, "A graph document must be selected to load a graph.");
+        }
+        else{
+        if(inner.edge_style){
+        Main.utils.applyEdgeDefaults(inner);
+        frame.OrientedButton.setText("Oriented edges");
+        inner.edge_style = false;
+        Main.action_performed.setText(Main.action_performed.getText()+"\n"+"Edges arent oriented.");
+        }
+        else{
+        Main.utils.applyEdgeDefaultsOriented(inner);
+        frame.OrientedButton.setText("Unoriented edges");
+        Main.action_performed.setText(Main.action_performed.getText()+"\n"+"Edges are now oriented.");
+        inner.edge_style = true;
+        }
+        }
+        }
         });*/
         
         /***** Help button *****/
@@ -353,7 +355,7 @@ public class Actions{
                         String check = mxUtils.getXml(codec.encode(inner.graphCopy.getModel()));//getXml(codec.encode(inner.graph.getModel()));
                         System.out.println(check);*/
                         /* END OF CHECK */
-                        inner.actualVert = (mxCell)inner.first;
+                        
                         inner.clickable = true;
                         inner.menu = false;
                         
@@ -373,10 +375,9 @@ public class Actions{
                         inner.parent.DeleteButton.setEnabled(inner.menu);
                         inner.parent.StartButton.setEnabled(inner.menu);
                         
-                        Main.utils.graphMatrix(inner);
-                        Main.controls.fillVertexMap(inner);  
-                        
-                        //.addCells(graph1.cloneCells(graph1.getChildCells(graph1.getDefaultParent())));
+//                        Main.utils.graphMatrix(inner);
+//                        
+                        Main.controls.fillVertexMap(inner);
                         
                         inner.graph.getSelectionModel().clear();
                         inner.graph.setCellsEditable(false);
