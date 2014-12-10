@@ -11,6 +11,7 @@ import com.mxgraph.util.mxCellRenderer;
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxGraph;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -34,9 +35,11 @@ import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.WARNING_MESSAGE;
 import static javax.swing.JOptionPane.YES_NO_OPTION;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.xml.sax.SAXException;
@@ -277,21 +280,98 @@ public class Actions{
             {
                 JFrame help = new JFrame();
                 help.setTitle("Help");
-                help.setSize(500, 500);
+                help.setSize(600, 500);
                 
                 JTabbedPane insideHelp = new JTabbedPane();
                 
-                JComponent authors = Main.utils.createTab();
-                JComponent controls = Main.utils.createTab();
-                JComponent about = Main.utils.createTab();
+                //inner tabs
+                JPanel authors = new JPanel();
+                authors.setSize(help.getWidth(), help.getHeight());
+                JPanel controls = new JPanel();
+                controls.setSize(help.getWidth(), help.getHeight());
+                JPanel about = new JPanel();
+                about.setSize(help.getWidth(), help.getHeight());
+                JPanel fleury = new JPanel();
+                fleury.setSize(help.getWidth(), help.getHeight());
                 
-                JTextArea authorsText = new JTextArea();
-                authorsText.setEditable(false);
-                authorsText.setText("This program was created by\nDaniel Javorsky and Michal Ruprich");
+                //inner tabs content
+                JLabel authorsText = new JLabel("<html><b>Authors of this program are:</b><br><br>"
+                        + "<pre>     Bc. Daniel Javorsky - javorskydanniel@gmail.com<br><br>"
+                        + "     Bc. Michal Ruprich - michalruprich@gmail.com</pre></html>", JLabel.LEFT);
+                authorsText.setPreferredSize(new Dimension(authors.getWidth()-20,authors.getHeight()-50));
+                authorsText.setVerticalAlignment(JLabel.TOP);
+                
+                
+                JLabel controlsText = new JLabel("<html><pre><b>This guide shows how to operate this program:</b><br><br>"
+                        + "The work desktop is a multidocument area. You can open multiple<br>"
+                        + "windows and work on more than one graph. Every time you hit <br>"
+                        + "one of the buttons on the right side, a graph window needs<br>"
+                        + "to be selected, otherwise nothing will happen.<br><br>"
+                        + "The graph can be created either by clicking inside <br>"
+                        + "selected graph window, or you can load your own graph. <br>"
+                        + "After you are satisfied with your graph, hit Start button.<br>"
+                        + "If your graph doesn't fullfil conditions for Fleury algorithm<br>"
+                        + "The program won't let you perform any algorithm operations. <br>"
+                        + "For Fleury's conditions see Fleury tab in Help.<br><br>"
+                        + "<b>Inner buttons description: </b><br><br>"
+                        + "     Step Back - takes one step back through the graph<br>"
+                        + "     Start Over - erases the graph and goes back to the start<br>"
+                        + "     Step Forward - takes one step forward through the graph<br>"
+                        + "     Re-edit - allows you to make changes in your graph<br>"
+                        + "</pre></html>", JLabel.LEFT);
+                controlsText.setPreferredSize(new Dimension(controls.getWidth()-20,controls.getHeight()-50));
+                controlsText.setVerticalAlignment(JLabel.TOP);
+                
+                JLabel fleuryText = new JLabel("<html><pre><b>Fleury's algorithm in a nutshell:</b><br><br>"
+                        + "<b>Euler tour</b><br>"
+                        + "A trail that traverses every edge of a graph is called an Eulerian tour.<br>"
+                        + "A tour of a connected graph is a closed walk that traverses each edge <br>"
+                        + "of graph at least once. Euler tour is a walk that traverses each edge <br>"
+                        + "<b>exactly</b> once. <br><br>"
+                        + "<b>Fleury's algorithm</b><br>"
+                        + "Fleury's algorithm is used for finding an Euler tour in a graph. <br>"
+                        + "Before traversing any edge in a graph, algorithm makes sure that <br>"
+                        + "a cut edge (let's call it a bridge) of untraced subgraph <br>"
+                        + "is taken only when there is no other alternative. <br><br>"
+                        + "Bridge<br>"
+                        + "Bridge is an edge which when traversed will divide untraced<br>"
+                        + "graph into two disconnected subgraphs.<br><br>"
+                        + "When is an edge a bridge?<br>"
+                        + "when the algorithm needs to decide whether en edge is a bridge <br>"
+                        + "or not, it counts number of accesible vertexes in an untraced <br>"
+                        + "subgraph with DFS. Then this edge is removed from the subgraph <br>"
+                        + " and DFS count number of accessible vertexes again. If the first <br>"
+                        + "count is a smaller number than the second, this edge is a bridge <br>"
+                        + "and another edge needs to be selected for next step."
+                        + "</pre></html>", JLabel.LEFT);
+                fleuryText.setPreferredSize(new Dimension(fleury.getWidth()-20,fleury.getHeight()-50));
+                fleuryText.setVerticalAlignment(JLabel.TOP);
+                
+                JLabel aboutText = new JLabel("<html><b>Program description:</b><br><br>"
+                        + "<pre>This program was developed to show how Fleury's algorithm works.<br>"
+                        + "Program can be used for graph creation as well as for editing<br>"
+                        + "previously created graphs.<br><br>"
+                        + "It is possible to save created graphs in xml format or save <br>"
+                        + "them as an image in png format. "
+                        + "The program is also capable<br>of loading graphs in graphml format. If there are<br>"
+                        + "no coordinates provided for vertexes in graphml file<br>"
+                        + "they will be generated randomly on the workspace and<br>"
+                        + "you can edit their positions and save for later use.<br><br>"
+                        + "The workspace is a multidocument area which means it is <br>"
+                        + "possible to works on multiple graphs at the same time.<br><br>"
+                        + "Enjoy!!!</pre></html>", JLabel.LEFT);
+                aboutText.setPreferredSize(new Dimension(about.getWidth()-20,about.getHeight()-50));
+                aboutText.setVerticalAlignment(JLabel.TOP);
+                
+                
                 authors.add(authorsText);
+                controls.add(controlsText);
+                about.add(aboutText);
+                fleury.add(fleuryText);
                 
                 insideHelp.addTab("About", about);
                 insideHelp.addTab("Controls", controls);
+                insideHelp.addTab("Fleury", fleury);
                 insideHelp.addTab("Authors", authors);
                 help.add(insideHelp);
                 help.setVisible(true);
@@ -379,13 +459,9 @@ public class Actions{
                         inner.clickable = true;
                         inner.menu = false;
                         
-                        inner.parent.SlowDownButton.setEnabled(inner.clickable);
                         //inner.parent.StepBackButton.setEnabled(inner.clickable);
-                        inner.parent.PlayButton.setEnabled(inner.clickable);
-                        inner.parent.PauseButton.setEnabled(inner.clickable);
                         inner.parent.AbortButton.setEnabled(inner.clickable);
                         inner.parent.StepFwdButton.setEnabled(inner.clickable);
-                        inner.parent.SpeedUpButton.setEnabled(inner.clickable);
                         inner.parent.ReeditButton.setEnabled(inner.clickable);
                         
                         inner.parent.NewButton.setEnabled(inner.menu);

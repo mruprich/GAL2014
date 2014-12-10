@@ -164,6 +164,7 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
         
         this.title = "chart" + count;
         this.resizable = true;
+        this.maximizable = true;
         
         this.notSaved = true;
         this.chartName = this.title;
@@ -206,6 +207,17 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
         if(ret == JOptionPane.YES_OPTION){
             Main.action_performed.setText(Main.action_performed.getText() + "\n"+this.chartName + " closed");
             dispose();
+            this.parent.StepBackButton.setEnabled(false);
+            this.parent.AbortButton.setEnabled(false);
+            this.parent.StepFwdButton.setEnabled(false);
+            this.parent.ReeditButton.setEnabled(false);
+            
+            this.parent.NewButton.setEnabled(true);
+            this.parent.SaveButton.setEnabled(true);
+            this.parent.LoadButton.setEnabled(true);
+            this.parent.SaveAsImage.setEnabled(true);
+            this.parent.DeleteButton.setEnabled(true);
+            this.parent.StartButton.setEnabled(true);
         }
         else{
             setDefaultCloseOperation(JInternalFrame.DO_NOTHING_ON_CLOSE);
@@ -235,13 +247,9 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
     @Override
     public void internalFrameActivated(InternalFrameEvent e) {
         //Main.action_performed.setText(Main.action_performed.getText()+"\nframe activated");
-        this.parent.SlowDownButton.setEnabled(this.clickable);
         this.parent.StepBackButton.setEnabled(this.clickable);
-        this.parent.PlayButton.setEnabled(this.clickable);
-        this.parent.PauseButton.setEnabled(this.clickable);
         this.parent.AbortButton.setEnabled(this.clickable);
         this.parent.StepFwdButton.setEnabled(this.clickable);
-        this.parent.SpeedUpButton.setEnabled(this.clickable);
         this.parent.ReeditButton.setEnabled(this.clickable);
         
         this.parent.NewButton.setEnabled(this.menu);
@@ -250,6 +258,9 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
         this.parent.SaveAsImage.setEnabled(this.menu);
         this.parent.DeleteButton.setEnabled(this.menu);
         this.parent.StartButton.setEnabled(this.menu);
+        
+        Main.vertex_text.setText("Number of vertexes: "+this.vertex_count);
+        Main.edge_text.setText("Number of edges: "+this.edge_count);
         
         if(this.startPressed){
             try {

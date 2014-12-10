@@ -344,9 +344,9 @@ public class Utils {
     }
     public JPanel createTab(){
         JPanel panel = new JPanel();
-        JLabel aboutLabel = new JLabel();
-        aboutLabel.setHorizontalAlignment(JLabel.CENTER);
-        panel.add(aboutLabel);
+        //JLabel aboutLabel = new JLabel();
+        //aboutLabel.setHorizontalAlignment(JLabel.CENTER);
+        //panel.add(aboutLabel);
         return panel;
     }
     
