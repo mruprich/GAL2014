@@ -14,9 +14,11 @@ import com.mxgraph.util.mxEventSource;
 import com.mxgraph.view.mxStylesheet;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.PointerInfo;
+import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -399,10 +401,20 @@ public class Utils {
     public void fillView(InnerFrame inner){
         //BufferedImage image;
         inner.image = mxCellRenderer.createBufferedImage(inner.graph, null, 1, Color.WHITE, true, null);
-        inner.label = new JLabel(new ImageIcon(inner.image));
+        BufferedImage resizedImage=resize(inner.image,300,300);
+        inner.label = new JLabel(new ImageIcon(resizedImage));
         Main.viewPanel.add(inner.label);
         Main.f.revalidate();
         Main.f.repaint();
+    }
+    
+    public static BufferedImage resize(BufferedImage image, int width, int height) {
+        BufferedImage bi = new BufferedImage(width, height, BufferedImage.TRANSLUCENT);
+        Graphics2D g2d = (Graphics2D) bi.createGraphics();
+        g2d.addRenderingHints(new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY));
+        g2d.drawImage(image, 0, 0, width, height, null);
+        g2d.dispose();
+        return bi;
     }
     
     public void removeView(InnerFrame inner){
