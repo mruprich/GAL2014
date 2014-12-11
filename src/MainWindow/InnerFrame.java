@@ -77,6 +77,7 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
     public mxGraph graph;
     public mxGraphView view;
     public String xml;
+    public boolean MouseListenerIsActive = true;
     
     public MouseListener compListener;
     public Listener graphListener;

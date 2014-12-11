@@ -21,6 +21,7 @@ import java.awt.PointerInfo;
 import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -96,32 +97,34 @@ public class Utils {
         frame.graphComponent.getGraphControl().addMouseListener(new MouseAdapter(){
             @Override
             public void mouseClicked(MouseEvent e) {
-                if(SwingUtilities.isLeftMouseButton(e)){
-                    frame.x = e.getX();
-                    frame.y = e.getY();
-                    int x = e.getX();
-                    int y = e.getY();
-                    mxCell cell = goThroughList(x,y,list_x,80,frame,"",0,0);
-                    if(cell != null){
-                        return;
+                if(frame.MouseListenerIsActive){
+                    if(SwingUtilities.isLeftMouseButton(e)){
+                        frame.x = e.getX();
+                        frame.y = e.getY();
+                        int x = e.getX();
+                        int y = e.getY();
+                        mxCell cell = goThroughList(x,y,list_x,80,frame,"",0,0);
+                        if(cell != null){
+                            return;
+                        }
+                        list_x.add(frame.x);
+                        list_y.add(frame.y);
+                        Object v = frame.graph.insertVertex(parent, null, frame.vertex_id, frame.x-40, frame.y-10, 80, 30,"fillColor=none");
+                        frame.vertexes.add(v);
+                        frame.vertex_id++;
+                        frame.vertex_count++;
+                        Main.vertex_text.setText("Number of vertexes: " + frame.vertex_count);
+    //Main.action_performed.setText(Main.action_performed.getText()+"\n"+"Vertex created.");
                     }
-                    list_x.add(frame.x);
-                    list_y.add(frame.y);
-                    Object v = frame.graph.insertVertex(parent, null, frame.vertex_id, frame.x-40, frame.y-10, 80, 30,"fillColor=none");
-                    frame.vertexes.add(v);
-                    frame.vertex_id++;
-                    frame.vertex_count++;
-                    Main.vertex_text.setText("Number of vertexes: " + frame.vertex_count);
-//Main.action_performed.setText(Main.action_performed.getText()+"\n"+"Vertex created.");
-                }
-                else{
-                    int x = e.getX();
-                    int y = e.getY();
-                    goThroughList(x,y,list_x,80,frame,"remove",0,0);
-                    frame.graph.getModel().remove(frame.graph.getSelectionCell());
-                    frame.vertex_id--;
-                    frame.vertex_count--;
-                    Main.vertex_text.setText("Number of vertexes: " + frame.vertex_count);
+                    else{
+                        int x = e.getX();
+                        int y = e.getY();
+                        goThroughList(x,y,list_x,80,frame,"remove",0,0);
+                        frame.graph.getModel().remove(frame.graph.getSelectionCell());
+                        frame.vertex_id--;
+                        frame.vertex_count--;
+                        Main.vertex_text.setText("Number of vertexes: " + frame.vertex_count);
+                    }
                 }
             }
         });

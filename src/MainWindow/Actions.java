@@ -486,7 +486,7 @@ public class Actions{
 //                            inner.graphComponent.getGraphControl().removeMouseListener(ml);
 //                        }
                         //inner.graphComponent.getGraphControl().removeMouseListener(null);
-                        
+                        inner.MouseListenerIsActive = false;
                     }
                 }
             }

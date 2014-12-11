@@ -195,8 +195,7 @@ public class InnerActions {
                 Main.utils.removeView(inner);
                 inner.startPressed=false;
                 
-                //inner.graphComponent.getGraphControl().addMouseListener(inner.compListener);
-                
+                inner.MouseListenerIsActive = true;    
             }
         });
     }
