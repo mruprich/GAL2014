@@ -165,6 +165,7 @@ public class Utils {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             inner.soubor = fc.getSelectedFile();
             inner.setTitle(fc.getSelectedFile().getName());
+            
         } else {
             System.err.println("Otevirani zruseno uzivatelem.");
             return false;
@@ -333,12 +334,13 @@ public class Utils {
         edgeStyle.setDefaultEdgeStyle(edge);
         inner.graph.setStylesheet(edgeStyle);
     }
+    
     public boolean saveFile(String location, InnerFrame inner, String filename){
         try{
             PrintWriter out = new PrintWriter(location);
             out.println(inner.xml);
             out.close();
-            Main.action_performed.setText(Main.action_performed.getText()+"\n"+filename+" succesfully saved");
+            Main.action_performed.setText(Main.action_performed.getText()+"\n"+inner.soubor.getName()+" succesfully saved");
         } catch (FileNotFoundException ex) {
             Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
         }

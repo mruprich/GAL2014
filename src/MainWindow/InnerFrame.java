@@ -60,6 +60,9 @@ public class InnerFrame extends JInternalFrame implements ActionListener,Interna
     public Map pathMap;
     public LinkedHashMap walkthrough;
     
+    public boolean bridgeFound = false;
+    public mxCell bridge = null;
+    
     public int waitTime = 1;
     public boolean pausePressed = false;
     public boolean abortPressed = false;

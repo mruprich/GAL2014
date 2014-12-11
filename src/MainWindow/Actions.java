@@ -126,7 +126,7 @@ public class Actions{
                         }
                     }
                     else{//File location has already been chosen, the file is just overwritten
-                        Main.utils.saveFile(saveName, inner, fileName);
+                        Main.utils.saveFile(inner.soubor.getAbsolutePath(), inner, fileName);
                     }
                 }
             }
@@ -144,7 +144,7 @@ public class Actions{
                 InnerFrame inner = (InnerFrame)Main.desktopPanel.getSelectedFrame();
                 
                 if(inner == null){
-                    JOptionPane.showMessageDialog(frame, "A chart document must be selected to load a graph.");
+                    JOptionPane.showMessageDialog(frame, "A graph document must be selected to load a graph.");
                 }
                 else{
                     boolean ret = false;
@@ -324,7 +324,7 @@ public class Actions{
                 
                 JLabel fleuryText = new JLabel("<html><pre><b>Fleury's algorithm in a nutshell:</b><br><br>"
                         + "<b>Euler tour</b><br>"
-                        + "A trail that traverses every edge of a graph is called an Eulerian tour.<br>"
+                        + "A trail that traverses every edge of a graph is called an Euler tour.<br>"
                         + "A tour of a connected graph is a closed walk that traverses each edge <br>"
                         + "of graph at least once. Euler tour is a walk that traverses each edge <br>"
                         + "<b>exactly</b> once. <br><br>"
@@ -471,20 +471,21 @@ public class Actions{
                         inner.parent.DeleteButton.setEnabled(inner.menu);
                         inner.parent.StartButton.setEnabled(inner.menu);
                         
-//                        Main.utils.graphMatrix(inner);
-                        
                         Main.utils.fillView(inner);
                         inner.startPressed = true;
                         
                         Main.controls.fillVertexMap(inner);
                         
                         inner.graph.getSelectionModel().clear();
-                        inner.graph.setCellsEditable(false);
+//                        inner.graph.setCellsEditable(false);
+//                        inner.graph.setEnabled(false);
+//                        inner.graphComponent.setConnectable(false);
                         inner.graph.setEnabled(false);
                         
-                        inner.graphComponent.setConnectable(false);
-                        inner.graphComponent.setEnabled(false);
-                        inner.graphComponent.getGraphControl().removeMouseListener(null);
+//                        for(MouseListener ml: inner.graphComponent.getGraphControl().getMouseListeners()){
+//                            inner.graphComponent.getGraphControl().removeMouseListener(ml);
+//                        }
+                        //inner.graphComponent.getGraphControl().removeMouseListener(null);
                         
                     }
                 }
