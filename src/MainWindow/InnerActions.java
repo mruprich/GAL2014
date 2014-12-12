@@ -222,7 +222,7 @@ public class InnerActions {
                         Object target = cell.getTarget();
                         Object source = cell.getSource();
                         inner.graph.insertEdge(parent, id, "", source, target);
-
+                        inner.edge_count++;
                         inner.graph.getModel().setStyle(inner.actualVert, "fillColor=none");
                         if(inner.actualVert == (mxCell)cell.getSource())
                             inner.actualVert = (mxCell)cell.getTarget();
@@ -234,6 +234,7 @@ public class InnerActions {
                         inner.graph.getModel().endUpdate();
                     }
                 }
+                Main.edge_text.setText("Number of edges: " + inner.edge_count);
                 inner.edges_walk.clear();
                 
                 
@@ -300,6 +301,8 @@ public class InnerActions {
                 
                 
                 inner.graph.getModel().remove(edge);
+                inner.edge_count--;
+                Main.edge_text.setText("Number of edges: " + inner.edge_count);
             } finally {
                 inner.graph.getModel().endUpdate();
                 inner.graph.refresh();
@@ -397,6 +400,10 @@ public class InnerActions {
                 Object target = cell.getTarget();
                 Object source = cell.getSource();
                 inner.graph.insertEdge(parent, id, "", source, target);
+                
+                inner.edge_count++;
+                Main.edge_text.setText("Number of edges: " + inner.edge_count);
+                
                 inner.graph.getModel().setStyle(inner.actualVert, "fillColor=none");
                 if(inner.actualVert == (mxCell)cell.getSource())
                     inner.actualVert = (mxCell)cell.getTarget();
